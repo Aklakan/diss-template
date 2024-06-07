@@ -1,0 +1,267 @@
+\documentclass[9pt,toc=listof,paper=portrait,paper=24cm:17cm,mpinclude=true,captions=outerbeside,usegeometry=true,\jobname]{scrbook}
+\usepackage{geometry} %[showframe]
+
+\areaset{10cm}{18.8cm}
+\setlength{\columnsep}{\marginparsep}   % the columnsep is used by KOMA captionbeside to separate the caption from the image
+
+\savegeometry{defaultpage}
+
+\usepackage{polyglossia}
+\usepackage{csquotes}
+\setmainlanguage{german}
+
+\usepackage{ragged2e}                           % RaggedLeft and RaggedRight commands (left align, right align)
+\usepackage[hang]{footmisc}                     % hanging footnote, possible ragged but this introduces new breaks and consequently new pages
+\usepackage{url}
+\usepackage{hyperref}                           % references in PDF
+\usepackage{cleveref}                           % provides \cref command
+\usepackage{fnpct}                              % footnotes and punctuation make 1. -> .1
+\usepackage{graphicx}                           % Include images
+\usepackage{caption}
+\usepackage{subcaption}                         % for subfigure
+\usepackage{newfloat}                           % for \DeclareFloatingEnvironment
+\usepackage[section]{placeins}                  % https://tex.stackexchange.com/questions/279/how-do-i-ensure-that-figures-appear-in-the-section-theyre-associated-with
+\usepackage[natbib=true,backend=biber,style=alphabetic-verb]{biblatex}
+\usepackage{mparhack}                           % For the right placement of marginpars. https://www.texfaq.org/FAQ-marginparside
+\usepackage{xparse}                             % for environments
+\usepackage[strict]{changepage}                 % for wider then the typearea
+\usepackage{shorttoc}
+\usepackage{calc}                               % for geometry calculations
+
+\setlength{\footnotemargin}{\parindent}
+
+% draw frame around the complete page
+%\usepackage{eso-pic}
+%\AddToShipoutPictureBG{\begin{tikzpicture}[overlay,remember picture]
+% \draw (current page.south west) rectangle (current page.north east);
+%\end{tikzpicture}}
+
+%% Configure Bibliography
+\addbibresource{references.bib}
+\DeclareRefcontext{web}{labelprefix=Web:}
+
+\setsansfont{Open Sans}[
+UprightFont = {* Condensed Light},
+ItalicFont = {* Condensed Light Italic},
+BoldFont = {* Condensed Bold},
+]
+
+\setkomafont{pageheadfoot}{\large\sffamily}
+\setkomafont{pagenumber}{\large\sffamily}
+
+% For more caption customization
+% https://tex.stackexchange.com/a/318175/11820
+
+\captionsetup[listing]{name={Listing}}
+
+\captionsetup{format=plain, labelfont={bf}, font=footnotesize}
+% , singlelinecheck=off
+
+% \begin{disfigure}[short title]{long title}{label}
+%   content
+% \end{disfigure}
+% Stared for wide figures
+\NewDocumentEnvironment{disenv}{ o m m }
+{
+  \checkoddpage
+  \ifoddpage
+    %odd
+    \captionsetup{justification=RaggedRight}
+  \else
+    %even
+    \captionsetup{justification=RaggedLeft}
+  \fi
+  \begin{captionbeside}%
+  [\IfValueTF{#1}{#1}{#2}]% short title
+  {#2\label{#3}}
+  [o]% caption on the outer document side
+  [\dimexpr\textwidth+\marginparwidth+\marginparsep\relax]% enlarge the used width
+  [0pt]*% align with the inner margin
+  \begin{minipage}[b]{\textwidth}
+}
+{
+  \end{minipage}
+  \end{captionbeside}
+}
+\NewDocumentEnvironment{disenv*}{ o m m }
+{
+  \begin{adjustwidth*}{}{\dimexpr-\marginparwidth+\marginparsep\relax}
+%  \begin{minipage}[b]{\dimexpr\textwidth+\marginparwidth+\marginparsep\relax}
+}
+{
+  \end{adjustwidth*}
+  \caption[\IfValueTF{#1}{#1}{#2}]{#2}
+  \label{#3}
+}
+
+\NewDocumentEnvironment{disfigure}{ o m m }
+{
+  \begin{figure}[htbp]
+    \begin{disenv}[#1]{#2}{#3}
+}
+{
+    \end{disenv}
+  \end{figure}
+}
+\NewDocumentEnvironment{disfigure*}{ o m m }
+{
+  \begin{figure}[htbp]
+    \begin{disenv*}[#1]{#2}{#3}
+}
+{
+    \end{disenv*}
+  \end{figure}
+}
+
+\NewDocumentEnvironment{dislisting}{ o m m }
+{
+  \begin{listing}[htbp]
+    \begin{disenv}[#1]{#2}{#3}
+}
+{
+    \end{disenv}
+  \end{listing}
+}
+\NewDocumentEnvironment{dislisting*}{ o m m }
+{
+  \begin{listing}[htbp]
+    \begin{disenv*}[#1]{#2}{#3}
+}
+{
+    \end{disenv*}
+  \end{listing}
+}
+
+\NewDocumentEnvironment{distable}{ o m m }
+{
+  \begin{table}[htbp]
+    \begin{disenv}[#1]{#2}{#3}
+}
+{
+    \end{disenv}
+  \end{table}
+}
+\NewDocumentEnvironment{distable*}{ o m m }
+{
+  \begin{table}[htbp]
+    \begin{disenv*}[#1]{#2}{#3}
+}
+{
+    \end{disenv*}
+  \end{table}
+}
+
+\newcommand{\chapcite}[1]{%
+  \citeauthor{#1}: \citetitle{#1} \cite{#1}%
+}
+\newcommand{\chapterref}[1]{%
+  \marginpar{%
+    \checkoddpage%
+    \ifoddpage%
+      %odd
+      \RaggedRight%
+    \else%
+      %even
+      \RaggedLeft%
+    \fi%
+    \footnotesize%
+    \vspace{.44\baselineskip}
+    \textcolor{black!80}{The results presented in this chapter were first published in #1}\par%
+  }
+}
+\newcommand{\partsecref}[1]{%
+  \marginpar{%
+    \checkoddpage%
+    \ifoddpage%
+      %odd
+      \RaggedRight%
+    \else%
+      %even
+      \RaggedLeft%
+    \fi%
+    \footnotesize%
+    \vspace{.44\baselineskip}
+    \textcolor{black!80}{Parts of this section were first published in #1}\par%
+  }
+}
+
+
+% Just a helper method for length
+% FROM https://tex.stackexchange.com/a/239496/11820
+\makeatletter
+\def\convertto#1#2{\strip@pt\dimexpr #2*65536/\number\dimexpr 1#1}
+\makeatother
+
+% avoid footnote break
+% https://tex.stackexchange.com/questions/68229/unwanted-pagebreak-in-footnote
+\interfootnotelinepenalty=10000
+% Avoid overfull hboxes
+\emergencystretch=1em
+
+% Highlight overfull hboxes
+%\overfullrule=1mm
+
+% Avoid Hurenkinder and so on
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+\usepackage{afterpage}
+\newcommand\blankpage{%
+\null
+\thispagestyle{empty}%
+%\addtocounter{page}{-1}%
+\newpage}
+
+%%% START OF CONTENT
+
+\title{The Dissertation Title}
+
+\author{Your Name}
+\date{2024-06-07}
+
+
+\makeatletter
+\newcommand{\myTitle}{\@title}
+\newcommand{\mySubtitle}{Some Subtitle}
+\newcommand{\myDocumentType}{Dissertation}
+\newcommand{\myName}{\@author}
+\newcommand{\myReihe}{Publikationen in der Informatik | Band X}
+\makeatother
+
+\hypersetup{
+  pdfauthor=\myName,
+  pdftitle=\myTitle,
+}
+
+%\recalctypearea
+\begin{document}
+
+\pagestyle{empty}
+\input{book-parts/frontfrontmatter}
+
+\pagestyle{headings}
+
+\newgeometry{%
+textwidth=\textwidth+\marginparwidth-\marginparsep,
+textheight=\textheight,
+top=1in+\voffset+\topmargin+\headheight+\headsep,
+inner=1in+\hoffset+\oddsidemargin,
+marginparsep=\marginparsep,
+marginparwidth=\marginparsep,
+}
+\savegeometry{widepage}
+\input{book-parts/preface}
+\clearpage
+
+\pagestyle{empty}
+\restoregeometry
+\input{book-parts/frontmatter}
+
+%\tableofcontents
+
+\include{sections/Introduction}
+
+
+
+\end{document}

@@ -1,0 +1,20 @@
+version: '3'
+
+tasks:
+  default:
+    summary: List all tasks
+    silent: true
+    cmds:
+      - task --list
+
+  build:
+    desc: Build the complete book
+    cmds:
+      - latexmk -xelatex main.tex
+
+  clear:
+    desc: Remove all temporary artifacts
+    cmds:
+      - latexmk -c
+      - cmd: rm *.bbl *.run.xml sections/*.aux
+        ignore_error: true

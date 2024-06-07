@@ -1,0 +1,76 @@
+\pagestyle{headings}
+
+\section*{Zusammenfassung}
+%\begin{german}
+Ziel dieser Arbeit ist es, die Entwicklung von RDF-Wissensbasen in verteilten kollaborativen Szenarien zu unterstützen.
+In dieser Arbeit wird eine neue Methodik für verteiltes kollaboratives Knowledge Engineering – „Quit“ – vorgestellt.
+Sie geht davon aus, dass es notwendig ist, während des gesamten Kooperationsprozesses Dissens auszudrücken und individuelle Arbeitsbereiche für jeden Mitarbeiter bereitzustellen.
+Der Ansatz ist von der Git-Methodik zum kooperativen Software Engineering inspiriert und basiert auf dieser.
+Die Analyse des Standes der Technik zeigt, dass kein System die Git-Methodik konsequent auf das Knowledge Engineering überträgt.
+Die Hauptmerkmale der Quit-Methodik sind unabhängige Arbeitsbereiche für jeden Benutzer und ein gemeinsamer verteilter Arbeitsbereich für die Zusammenarbeit.
+Während des gesamten Kollaborationsprozesses spielt die Data-Provenance eine wichtige Rolle.
+Zur Unterstützung der Methodik ist der Quit-Stack als eine Sammlung von Microservices implementiert, die es ermöglichen, die Semantic-Web-Datenstruktur und Standardschnittstellen in den verteilten Kollaborationsprozess zu integrieren.
+Zur Ergänzung der verteilten Datenerstellung werden geeignete Methoden zur Unterstützung des Datenverwaltungsprozesses erforscht.
+Diese Managementprozesse sind insbesondere die Erstellung und das Bearbeiten von Daten sowie die Publikation und Exploration von Daten.
+Die Anwendung der Methodik wird in verschiedenen Anwendungsfällen für die verteilte Zusammenarbeit an Organisationsdaten und an Forschungsdaten gezeigt.
+Weiterhin wird die Implementierung quantitativ mit ähnlichen Arbeiten verglichen.
+Abschließend lässt sich feststellen, dass der konsequente Ansatz der Quit-Methodik ein breites Spektrum von Szenarien zum verteilten Knowledge Engineering im Semantic Web ermöglicht.
+%\end{german}
+
+\clearpage
+%\pagebreak
+
+\section*{Abstract}
+The aim of this thesis is to support the development of RDF knowledge bases in a distributed collaborative setup.
+In this thesis a new methodology for distributed collaborative knowledge engineering – called Quit – is presented.
+It follows the premise that it is necessity to express dissent throughout a collaboration process and to provide individual workspaces for each collaborator.
+The approach is inspired by and based on the Git methodology for collaboration in software engineering.
+The state of the art analysis shows that no system is consequently transferring the Git methodology to knowledge engineering.
+The key features of the Quit methodology are independent workspaces for each user and a shared distributed workspace for the collaboration.
+Throughout the whole collaboration process data provenance plays an important role.
+To support the methodology the Quit Stack is implemented as a collection of microservices, that allow to integrate the Semantic Web data structure and standard interfaces with the distributed collaborative process.
+To complement the distributed data authoring, appropriate methods to support the data management process are researched.
+These management processes are in particular the creation and authoring of data as well as the publication and exploration of data.
+The application of the methodology is shown in various use cases for the distributed collaboration on organizational data and on research data.
+Further, the implementation is quantitatively compared to the related work.
+Finally, it can be concluded that the consequent approach followed by the Quit methodology enables a wide range of distributed Semantic Web knowledge engineering scenarios.
+
+%The methodology supports \emph{dissent} during the collaboration process and \emph{asynchrony} of individual workspaces on the distributed workspace.
+%To achieve this support atomic evolution operations are identified and stored in a canonical representation.
+%Based on this representation various methods are presented to \emph{synchronize} the workspaces, \emph{reconcile} diverged states of the workspaces, and track \emph{provenance} information during the collaborative process.
+
+%The relevant preliminaries are shown
+
+%It has the ability to handle dissent as a process of collaboration to reach consensus.
+%The results of the collaborative process can be published to a wide audience
+%The methodology is flexible in its adaption to new domains by providing the possibility to build domain-specific creating and authoring interfaces as well as domain-specific exploration interfaces.
+
+\clearpage
+
+\section*{Acknowledgements}
+The excitement for using the Semantic Web to organize data and communicate using the RDF data format was brought to me by the Agile Knowledge Engineering and Semantic Web (AKSW) work group at the Chair of Business Information Systems (BIS) at the Leipzig University and the Institute for Applied Informatics (InfAI).
+I want to thank the whole AKSW group as well es all students who supported our development and research.
+Among everyone there are some people who play a special role, Dr. Sebastian Tramp brought me into the whole topic, Norman Radtke accompanied me on my way through the Semantic Web from beginning until now, Dr. Michael Martin made so many things possible and keeps things running, and Simon Bin and many more invest much time and patience to keep our infrastructure running.
+I want to thank Prof. Dr. Klaus-Peter Fähnrich who gave us all the freedom for development and research.
+I want to thank Simone Angermann for keeping his spirit alive.
+I want to thank Prof. Dr. Sören Auer, he founded the AKSW group and constantly brings people to work together, he always gives me good advise.
+Especially, I want to thank my supervisor Prof. Dr. Thomas Riechert, he is there in the right moments and helps out with the right things, I'm grateful to work with him.
+
+Besides the people immediately around me there are so many more people in the Semantic Web community, who I could meet during conferences from whom I received feedback on my thoughts and work.
+In the community I especially want to thank Dr. Jeremy Debattista, Dr. Jürgen Umbrich, and Dr. Javier David Fernández Garcia for the organization of the MEPDaW 2017 and the organization of the subsequent shepherding program.
+I want to thank Prof. Dr. Olaf Hartig for his time and patience in being my shepherd.
+I want to thank the unknown reviewers of my papers for their critical and helpful reviews.
+
+A lot of my work was done during research projects funded by the European Commission from the European Regional Development Fund (ERDF), the German Federal Ministry of Education and Research (BMBF), and the Federal Ministry for Economic Affairs and Energy (BMWi).
+I also received a scholarship from the Science Foundation Ireland (SFI) for my time in Galway and I was supported by a travel grant from the German Academic Exchange Service (DAAD).
+
+My family and friends always support me, cook for me, host me, and give me the freedom I need.
+They had to endure my absence and motivated me to finish this thesis.
+I want to thank Dorothea, Timotheus, Tamar, Jonathan, Rafael, Katharina, Rahel, Florian, Rebekka, Tabea, Norman, Markus, Claudius, Sebastian, Franziska, Sebastian, Markus, and Barbara.
+They give me valuable remarks, ask important questions, shift my focus to the important things in life, and supported me in proofreading.
+My wife and my daughter had to bear with me working at the weekend and during holidays but still I receive special support and so much more from Tracy and Hodaja, thank you.
+
+\clearpage
+\renewcommand\pagemark{\usekomafont{pagenumber}\thepage}
+\setcounter{tocdepth}{1}
+\tableofcontents
