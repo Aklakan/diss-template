@@ -1,0 +1,1530 @@
+------------------ LSQ FRAMEWORK ------------------------
+
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.20 of 2017/10/04
+%
+%\documentclass[runningheads]{llncs}
+\documentclass[]{ceurart}
+\sloppy
+
+%
+%%%%%%%sub tables
+\usepackage{listings}
+\usepackage{booktabs,subcaption,amsfonts,dcolumn}
+\newcolumntype{d}[1]{D..{#1}}
+\newcommand\mc[1]{\multicolumn{1}{c}{#1}} 
+\usepackage{booktabs}
+\setlength{\heavyrulewidth}{1.5pt}
+\setlength{\abovetopsep}{4pt}
+\usepackage{ amssymb }
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+%%%%%%%%%%%%%%%
+\usepackage{comment}
+%\pgfplotsset{width=10cm,compat=1.9}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{pgf-pie}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage{todonotes}
+\usepackage{lststyles}
+
+\setuptodonotes{inline}
+
+\setlength{\heavyrulewidth}{1.5pt}
+\setlength{\abovetopsep}{4pt}
+%%% for patterns
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+\pgfplotsset{compat=newest}
+\usetikzlibrary{patterns}
+\makeatletter
+\pgfdeclarepatternformonly[\LineSpace]{my north east lines}{\pgfqpoint{-1pt}{-1pt}}{\pgfqpoint{\LineSpace}{\LineSpace}}{\pgfqpoint{\LineSpace}{\LineSpace}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{0.4pt}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\LineSpace + 0.1pt}{\LineSpace + 0.1pt}}
+    \pgfusepath{stroke}
+}
+\makeatother
+\newdimen\LineSpace
+\tikzset{
+    line space/.code={\LineSpace=#1},
+    line space=10pt
+}
+\providecommand*\defas{:\nolinebreak\mkern-1.2mu\nolinebreak=}
+\newcommand{\sns}{\ensuremath{\mathcal{S}}}
+\newcommand{\sn}{\ensuremath{S}}
+\newcommand{\rls}{\ensuremath{\mathcal{R}}}
+\newcommand{\rl}{\ensuremath{R}}
+%%%% end patterns
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+% \renewcommand\UrlFont{\color{blue}\rmfamily}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+%\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{thmtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\newcommand{\sdots}{\ifmmode\mathinner{\ldotp\kern-0.2em\ldotp\kern-0.2em\ldotp}\else\dots\fi}
+\newcommand{\dom}{\ifmmode\mathinner{\mathrm{dom}}\else\fi}
+\usepackage[ruled,vlined, linesnumbered]{algorithm2e}
+\usepackage{adjustbox}
+\newsavebox{\tempbox}
+
+%\lstset{ %
+%  basicstyle=\footnotesize\sf,        
+%  tabsize=2, columns=flexible
+%}
+
+\definecolor{lightblue}{rgb}{.95,.975,1}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+% TODO Add ttl definitions
+%\lstdefinelanguage{ttl}
+%{
+%}
+
+\begin{document}
+
+\copyrightyear{2022}
+\copyrightclause{Copyright for this paper by its authors.
+  Use permitted under Creative Commons License Attribution 4.0
+  International (CC BY 4.0).}
+
+\title{LSQ Framework: The LSQ Framework for SPARQL Query Log Processing}
+
+\conference{6th Workshop on Storing, Querying and Benchmarking Knowledge Graphs (QuWeDa) at ISWC 2022, virtual}
+
+\author[1]{Claus Stadler}[%
+orcid=0000-0001-9948-6458,
+email=cstadler@informatik.uni-leipzig.de,
+url=https://aksw.org/ClausStadler,
+]
+\cormark[1]
+%\fnmark[1]
+
+\author[2]{Muhammad Saleem}[%
+%orcid=TODO,
+email=saleem@mail.uni-paderborn.de,
+%url=,
+]
+\author[2]{Axel-Cyrille Ngonga Ngomo}[%
+%orcid=TODO,
+email=axel.ngonga@upb.de,
+%url=,
+]
+
+\address[1]{AKSW Research Group, University of Leipzig, Germany}
+\address[2]{Data Science Group, Department of Computer Science, Paderborn University, Germany}
+
+\cortext[1]{Corresponding author.}
+%\fnmark[1]
+%\fntext[1]{These authors contributed equally.}
+
+
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+%\author{Claus Stadler\inst{1}
+%\and
+%Muhammad Saleem\inst{2}
+%Axel-Cyrille Ngonga Ngomo\inst{1}
+%}
+%\authorrunning{C. Stadler et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+%\institute{
+%AKSW Research Group, University of Leipzig, Germany\\
+%\email{cstadler@informatik.uni-leipzig.de}
+%\and
+%Data Science Group, Department of Computer Science, Paderborn University,Germany\\
+%\email{muhammad.saleem@upb.de\\ axel.ngonga@upb.de}\\
+%%\url{https://www.dice-research.org/}
+%}
+
+
+
+%
+\begin{abstract}
+The Linked SPARQL Queries (LSQ) datasets contain real-world SPARQL queries collected from the query logs of the publicly available SPARQL endpoints.
+In LSQ, each SPARQL query is represented as RDF with various structural and data-driven features attached.
+In this paper, we present the LSQ Java framework for creating rich knowledge graphs from SPARQL query logs.
+The framework is able to RDFize SPARQL query logs, which are available in different formats, in a scalable way.
+Furthermore, the framework offers a set of static and dynamic enrichers. Static enrichers derive information from the queries, such as their number of basic graph patterns and projected variables or even a full SPIN model.
+Dynamic enrichment involves additional resources. For instance, the benchmark enricher executes queries against a SPARQL endpoint and collects query execution times and result set sizes.
+This framework has already been used to convert query logs of 27 public SPARQL endpoints, representing 43.95 million executions of 11.56 million
+unique SPARQL queries. The LSQ queries have been used in many use cases such as benchmarking based on real-world SPARQL queries,
+SPARQL adoption, caching, query optimization, useability analysis, and meta-querying.
+Realization of LSQ required devising novel software components to (a) improve scalability of RDF data processing with the Apache Spark Big Data framework and
+(b) ease operations of complex RDF data models such as controlled skolemization.
+Following the spirit of OpenSource software development and the "don't repeat yourself" (DRY) paradigm, the work on the LSQ framework also resulted in contributions to Apache Jena in order to make these improvements readily available outside of the LSQ context.
+%4.6.0 release
+
+%\textbf{Resource Type}: Software Framework \\
+%\textbf{Repository}: \url{http://w3id.org/lsq} \\
+%\textbf{License}: GNU General Public License v3.0 \\
+%\keywords{LSQ \and RDF \and Real-world queries}
+\end{abstract}
+
+\begin{keywords}
+  SPARQL\sep
+  RDF\sep
+  LSQ\sep
+  Query Log\sep
+  Software Framework
+\end{keywords}
+
+\maketitle
+
+
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%Introduction %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%end new code %%%%%%%%%%%
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+\section*{Acknowledgments}
+The authors also acknowldge the financial support for 3DFed (Grant no. 01QE2114B), KnowGraphs(Grant no. 860801)
+and by the Federal Ministry for Economics and Climate Action in the project CoyPu (project number 01MK21007A).
+ %\bibliographystyle{splncs04}
+ \bibliography{mybibliography,references}
+%
+
+
+\end{document}
+
+
+------------------- LSQ PAPER --------
+
+
+% Journal:
+%   Journal of Ambient Intelligence and Smart Environments (JAISE), IOS Press
+%   Web Intelligence and Agent Systems: An International Journal (wias)
+%   Semantic Web: Interoperability, Usability, Applicability (SW)
+% Latex 2e
+% Test file iosart2c.tex
+
+%[seceqn,secfloat,secthm,crcready]
+
+% options: wias, jaise, sw
+\documentclass[sw]{iosart2x}
+
+\usepackage{natbib}
+
+\usepackage[T1]{fontenc}
+\usepackage{times}%
+\usepackage{graphicx}
+\usepackage{balance}  % for  \balance command ON LAST PAGE  (only there!)
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+%\usepackage{moreverb}
+%\usepackage{listings}
+\usepackage{lststyles}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amssymb}
+\usepackage{paralist}
+\usepackage{amsmath}
+\usepackage{todonotes}
+\usepackage{pifont}
+\usepackage{microtype}
+\usepackage{xspace}
+\usepackage{colortbl}
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\yk}[1] {\textcolor{green}{[yk]\textit{#1}}}
+\newcommand{\ms}[1] {\textcolor{blue}{[ms]\textit{#1}}}
+\newcommand{\an}[1] {\textcolor{red}{[an]\textit{#1}}}
+\newcommand{\ah}[1] {\textcolor{violet}{[ah]\textit{#1}}}
+\newcommand{\cba}[1] {\textcolor{cyan}{[cba]\textit{#1}}}
+\newcommand{\ie}[1] {\textcolor{orange}{[ie]\textit{#1}}}
+%\usepackage[dvips]{hyperref}
+\usepackage{amsmath}
+\usepackage{dcolumn}
+%\usepackage{endnotes}
+\usepackage{graphics}
+\definecolor{gray}{gray}{0.8}
+\usepackage{booktabs}
+\usepackage{textcomp}
+\newcommand{\ntextnumero}{{\fontfamily{txr}\selectfont \textnumero}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\usepackage{tikz}
+\usepackage{natbib}
+\usetikzlibrary{shapes,arrows,positioning,fit,backgrounds}
+\newcommand{\hsp}{\vphantom{Ag}}
+\usepackage{comment}
+\usepackage[width=.75\textwidth]{caption}
+\usepackage{caption}
+
+\captionsetup[lstlisting]{font={footnotesize}}
+
+\renewcommand*\ttdefault{cmtt}
+
+%\usepackage{chngcntr}
+
+\hypersetup{draft}
+
+\lstset{ %
+  basicstyle=\footnotesize\sf,        
+  tabsize=2, columns=flexible
+}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks, linkcolor={black},
+    citecolor={black}, urlcolor={black},
+    pdftitle={LSQ 2.0: A Linked Dataset of SPARQL Query Logs},    % title
+    pdfauthor={Claus Stadler et al.	},     % author
+    pdfsubject={Semantic Web Journal},   % subject of the document
+    pdfkeywords={SPARQL;} {endpoints;} {Linked Data;} {queries;} {LSQ}, % list of keywords
+}
+
+\newcommand{\dbpedia}{\textsc{DBpedia}\xspace}
+\newcommand{\linkedgeodata}{\textsc{LinkedGeoData}\xspace}
+\newcommand{\swdf}{\textsc{SWDF}\xspace}
+\newcommand{\wikidata}{\textsc{Wikidata}\xspace}
+
+\newcommand{\biotrdf}{\textsc{Bio2RDF}\xspace}
+\newcommand{\affymetrix}{\textsc{Affymetrix}\xspace}
+\newcommand{\biomodels}{\textsc{BioModels}\xspace} % aka biomedels
+\newcommand{\ctd}{\textsc{CTD}\xspace}
+\newcommand{\dbsnp}{\textsc{dbSNP}\xspace}
+\newcommand{\drugbank}{\textsc{DrugBank}\xspace}
+\newcommand{\genage}{\textsc{GenAge}\xspace}
+\newcommand{\gendr}{\textsc{GenDR}\xspace}
+\newcommand{\go}{\textsc{GO}\xspace} % aka gene
+\newcommand{\goa}{\textsc{GOA}\xspace}
+\newcommand{\hgnc}{\textsc{HGNC}\xspace}
+\newcommand{\irefindex}{\textsc{iRefIndex}\xspace}
+\newcommand{\kegg}{\textsc{KEGG}\xspace}
+\newcommand{\linkedspl}{\textsc{LinkedSQP}\xspace}
+\newcommand{\mgi}{\textsc{MGI}\xspace}
+\newcommand{\ncbigene}{\textsc{NCBIGene}\xspace}
+\newcommand{\omim}{\textsc{OMIM}\xspace}
+\newcommand{\pharmgkb}{\textsc{PharmGKB}\xspace}
+\newcommand{\sabiork}{\textsc{SABIORK}\xspace}
+\newcommand{\sgd}{\textsc{SGD}\xspace}
+\newcommand{\sider}{\textsc{SIDER}\xspace}
+\newcommand{\taxonomy}{\textsc{Taxonomy}\xspace}
+\newcommand{\wormbase}{\textsc{Wormbase}\xspace}
+
+%\ms{Saleem please use this command while doing any edits}
+%\yk{Yasar please use this command while doing any edits}
+%\ah{Ali please use this command while doing any edits}
+%\ie{Ivan please use this command while doing any edits}
+%\an{Axel please use this command while doing any edits}
+
+\begin{document}
+\begin{frontmatter}                           % The preamble begins here.
+
+%
+%\pretitle{Pretitle}
+\title{LSQ 2.0: A Linked Dataset of\\SPARQL Query Logs}
+
+\runningtitle{LSQ 2.0: A Linked Dataset of SPARQL Query Logs}
+%\subtitle{Subtitle}
+
+%\review{Name Surname, University, Country}{Name Surname, University, Country}{Name Surname, University, Country}
+
+\author[A]{\fnms{Claus} \snm{Stadler}\thanks{Corresponding author: cstadler@informatik.uni-leipzig.de}},
+\author[A]{\fnms{Muhammad} \snm{Saleem}},
+\author[B]{\fnms{Qaiser} \snm{Mehmood}},
+\author[C]{\fnms{Carlos} \snm{Buil-Aranda}},
+\author[D]{\fnms{Michel} \snm{Dumontier}},
+\author[E]{\fnms{Aidan} \snm{Hogan}},
+\author[A]{\fnms{Axel-Cyrille} \snm{Ngonga Ngomo}}
+
+\runningauthor{Claus Stadler et al.}
+\address[A]{Universit\"at Leipzig, IFI/AKSW, PO 100920, D-04009 Leipzig
+%\\E-mail: \{cstadler,saleem,ngonga\}@informatik.uni-leipzig.de
+}
+\address[B]{Insight Center for Data Analytics, National University of Ireland, Galway
+%\\E-mail: \{yasar.khan,ali.hasnain\}@insight-centre.org
+}
+%\address[C]{Computer Science III Institute, University of Bonn, Germany
+%%\\E-mail: jens.lehmann@cs.uni-bonn.de
+%}
+%\address[D]{Fraunhofer IAIS, St. Augustin, Germany
+%%\\E-mail: jens.lehmann@iais.fraunhofer.de
+%}
+\address[C]{IMFD; Informatics Department, Universidad Técnica Federico Santa María, Chile
+%\\E-mail: cbuil@inf.utfsm.cl
+}
+\address[D]{Institute of Data Science, Maastricht University, Maastricht, The Netherlands
+%\\E-mail: ahogan@dcc.uchile.cl
+}
+\address[E]{IMFD; Department of Computer Science, University of Chile, Santiago, Chile
+%\\E-mail: ahogan@dcc.uchile.cl
+}
+
+\begin{abstract}
+We present the Linked SPARQL Queries (LSQ) dataset, which currently describes 43.95 million executions of 11.56 million unique SPARQL queries extracted from the logs of 27 different endpoints. The LSQ dataset provides RDF descriptions of each such query, which are indexed in a public LSQ endpoint, allowing interested parties to find queries with the characteristics they require. We begin by describing the use cases envisaged for the LSQ dataset, which include applications for research on common features of queries, for building custom benchmarks, and for designing user interfaces. We then discuss how LSQ has been used in practice since the release of four initial SPARQL logs in 2015. We discuss the model and vocabulary that we use to represent these queries in RDF. We then provide a brief overview of the 27 endpoints from which we extracted queries in terms of the domain to which they pertain and the data they contain. We provide statistics on the queries included from each log, including the number of query executions, unique queries, as well as distributions of queries for a variety of selected characteristics. We finally discuss how the LSQ dataset is hosted and how it can be accessed and leveraged by interested parties for their use cases.
+\end{abstract}
+
+\begin{keyword}
+SPARQL federation\sep Web of Data\sep RDF
+\end{keyword}
+
+\end{frontmatter}
+
+
+\paragraph{Acknowledgements} We thank the OpenLink Software team for hosting the DBpedia SPARQL endpoint and for making the logs available to us. Hogan was supported by Fondecyt Grant No.\ 1181896 and by ANID – Millennium Science Initiative Program – Code ICN17\_002. Buil-Aranda was supported by Fondecyt Iniciación Grant No.\ 11170714 and by ANID – Millennium Science Initiative Program – Code ICN17\_002. This work was also partially supported by the German Federal Ministry of Education and Research (BMBF) within the EuroStars project E!114681 3DFed under the grant no 01QE2114, project RAKI (01MD19012D) and project KnowGraphs (No 860801). 
+
+
+\balance
+
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+\bibliography{references}  % vldb_sample.bib is the name of the Bibliography in this case
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+
+\end{document}
+
+
+
+%\section{The LSQ Dataset in Practice}\label{sec:practice}
+%
+%We have made the LSQ dataset available through three media: (i) dereferenceable Linked Data, (ii) flat dumps and (iii) a SPARQL endpoint. In this section, we wish to provide some concrete queries that can be issued against the LSQ SPARQL endpoint in order to derive insights relevant to each of the use cases discussed in Section~\ref{sec:usecase}.
+%
+%\subsection{UC1 Facilitating Benchmark Generation:} LSQ can help users generate custom benchmarks by selecting real-world queries meeting certain criteria. Listing \ref{QueryUC1} is an example SPARQL query over LSQ that provides a list of 50 queries with additional parameters set for both structural and data-driven criteria useful for creating custom benchmarks~\cite{AlucHOD14}.  
+%
+%
+%\begin{lstlisting}[caption = {UC1: Collect 50 benchmark queries having more than 10 results, fewer than 5 triple patterns, using filters, with an execution time below 50 ms},label = {QueryUC1},basicstyle={\scriptsize\ttfamily},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0]
+%PREFIX lsq: <http://lsq.aksw.org/vocab#>
+%PREFIX sp: <http://spinrdf.org/sp#>
+%SELECT ?query  FROM <http://data.semanticweb.org>
+% WHERE {
+%    ?id sp:text ?query ; lsq:resultSize ?rs ; lsq:triplePatterns ?tp ;
+%        lsq:runTimeMs ?rt ; lsq:usesFeature lsq:Filter . 
+%   FILTER (?rs > 10 && ?tp <5  && ?rt < 50 ) }
+%LIMIT 50
+%\end{lstlisting}
+%
+%%Listing \ref{lst:benchmarking} provides the average statistics across different static and runtime features of LSQ. These information are important for SPARQL benchmark designing \cite{}. 
+%
+%
+%\subsection{UC2 SPARQL Adoption}
+%
+%The Linked SQ dataset can also be used to gain insights into how the SPARQL query language is being used in practice, be that to find out how features are used and combined (Listing~\ref{lst:bio11query}) or to see, for example, what kinds of joins are most common (Listing~\ref{lst:bio12query})
+%
+%\begin{lstlisting}[caption = {UC2: The number of queries using both \texttt{UNION} and \texttt{FILTER}},label = {lst:bio11query},basicstyle={\scriptsize\ttfamily},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0]
+%PREFIX lsq: <http://lsq.aksw.org/vocab#>
+%SELECT COUNT(?queryId) AS ?unionFilterCount
+%WHERE {  ?queryId  lsq:usesFeature lsq:Union , lsq:Filter . }
+%\end{lstlisting}
+%
+%
+%\subsection{UC3 Caching}
+%
+%The Linked SQ dataset can also be used to find useful patterns to cache, commonly repeated queries, or to create realistic caching benchmarks using the timestamp of execution times. Listing~\ref{lst:bio13query} gives an example of an LSQ query that finds the most frequently executed queries that take a long time to compute but have small result sizes that can be cheaply cached.
+%
+%\begin{lstlisting}[caption = {UC3: Get top query executions for smaller result set queries.},label = {lst:bio13query},basicstyle={\scriptsize\ttfamily},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0]
+%PREFIX lsq:<http://lsq.aksw.org/vocab#>
+%PREFIX sp:<http://spinrdf.org/sp#>
+%SELECT DISTINCT ?query COUNT(?exs) AS ?exsCount
+% WHERE {
+%    ?id sp:text ?query ; lsq:resultSize ?rs ; lsq:execution ?exs ; lsq:runTimeMs ?rt . 
+%    FILTER (?rs < 100 && ?rt > 10000)}
+%  GROUP BY ?query ORDER BY DESC(COUNT(?exsCount))
+%\end{lstlisting}
+%
+%\subsection{UC4 Usability} From the Linked SQ Dataset, one can derive a list of queries that resulted in parse errors, runtime errors, or empty results. One can also look at which agents issued such queries, and how their queries evolved over time. Listing~\ref{lst:bio14query} gives a small example of a query looking for parse errors encountered by a given agent, ordered by time.
+%
+%\begin{lstlisting}[caption = {UC4: Which queries resulted in a parse error for a given agent?},label = {lst:bio14query},
+%basicstyle={\scriptsize},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0]
+%PREFIX lsq: <http://lsq.aksw.org/vocab#>
+%PREFIX lsqr: <http://lsq.aksw.org/res/>
+%PREFIX sp: <http://spinrdf.org/sp#>
+%PREFIX dct: <http://purl.org/dc/terms/>  
+%SELECT ?query ?time ?error
+% WHERE {
+%    ?id sp:text ?query ; lsq:parseError ?error ; lsq:execution ?ex . 
+%    ?ex dct:issued ?time ; 
+%        lsq:agent lsqr:A-WlFJE0QQRlhBVRNGRx1QGVdaRhNsN2YUW15R .
+% }
+%ORDER BY ?time
+%\end{lstlisting}
+%
+%\subsection{UC5 Optimisation} Given a particular workload of queries, an optimiser can decide how to configure indexes, etc., to improve the performance of typical queries. Administrators can use LSQ to derive some default statistics for what is most common across different databases. For example, Listing~\ref{lst:bio12query} provides a query to see how frequently queries containing paths return zero results, which may motivate optimisations to pre-filter empty paths; one could consider a similar example to find path queries that take the longest time, which may suggest to materialise indexes for specific paths.
+%
+%
+%\begin{lstlisting}[caption = {U5: The number of empty-result queries with path joins},label = {lst:bio12query},basicstyle={\scriptsize\ttfamily},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0]
+%PREFIX lsq: <http://lsq.aksw.org/vocab#>
+%SELECT COUNT(?id) AS ?starQueries
+%WHERE {
+%  ?id lsq:joinVertex  ?joinVertex ; lsq:resultSize 0 . 
+%  ?joinVertex lsq:joinVertexType lsq:Path . } 
+%\end{lstlisting}
+%
+%
+%\subsection{UC6 Meta-querying} The final example query in Listing~\ref{lst:bio17query} shows how one can find all the queries relating to a given resource, in this case Michael Jackson.
+%
+%
+%\begin{lstlisting}[caption = {UC6: Fetch all queries asking about Michael Jackson},label = {lst:bio17query},basicstyle={\scriptsize\ttfamily},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0]
+%PREFIX sp:<http://spinrdf.org/sp#>
+%SELECT  DISTINCT  ?query
+% WHERE {
+%    ?id sp:text ?query . 
+%    { ?id lsq:mentionsSubject <http://dbpedia.org/ontology/Michael_Jackson> }
+%    UNION
+%    { ?id lsq:mentionsObject <http://dbpedia.org/ontology/Michael_Jackson> } 
+% }
+%\end{lstlisting}
+
+
+
+%\begin{lstlisting}[caption = {UC5: Get average of the different SPARQL query features from DBpedia query log },label = {lst:benchmarking},basicstyle={\scriptsize\ttfamily},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0]
+%PREFIX lsq: <http://lsq.aksw.org/vocab#>
+%PREFIX sp: <http://spinrdf.org/sp#> 
+%SELECT AVG(?rs) AS ?rseAvg AVG(?bgps) AS ?bgpsAvg AVG(?tps) AS ?tpsAvg AVG(?jvs) AS ?jvsAvg AVG(?mjvd) AS ?mjvdAvg AVG(?mtps) AS ?mtpsAvg AVG(?rt) AS ?rtAvg 
+%FROM <http://dbpedia.org>
+%WHERE {
+%    ?id sp:text ?query ; lsq:resultSize ?rs ; lsq:bgps ?bgps ; lsq:triplePatterns ?tps; 
+%       lsq:joinVertices ?jvs ; lsq:meanJoinVerticesDegree   ?mjvd ; 
+%       lsq:meanTriplePatternSelectivity ?mtps ; lsq:runTimeMs ?runTime . }
+%\end{lstlisting}
+%
+%\subsubsection{Query Features Statistics Generation:} SPARQL queries support a variety of features and the number of supported features is at increase with the introduction of new version of SPARQL. LSQ gives a better view to find out most widely used features of the query language. Such information can facilitate the performance of query engines to tailor datasets (e.g. indexing) to optimise response time for most frequently used features. Listing \ref{lst:bio11query} can count the number of queries containing the UNION operator. This query can be modified to get the count of any other or combination of any supported feature of the SPARQL query language. Statistics about the complexity of the queries can also be generated from LSQ, for example, Listing \ref{lst:bio12query} provides information related to the complexity of the query and provides a count of the queries having a STAR type join.
+%
+%\subsubsection{Statistics to Facilitate Data Management and Query Optimisation:} LSQ can be used to generate statistics to help query engines data management techniques. Query engines can be fine tuned to increase the response time for certain queries by applying data caching or pre-calculation of the results. A sample query in Listing \ref{lst:bio13query} provides a list of queries that have a result set size lesser 100 triples. Query engine can be optimised for better response time by caching the results of such queries. 
+%
+%
+%
+%
+%
+%\subsubsection{Enhancing User Experience:} LSQ can be helpful to find out user experiences while using any SPARQL endpoint. An analysis over the query parse error or syntax error can reveal the most common mistakes committed by the user. Auto-complete functionality or recommendation for syntax error omission are potential components to benefit from the analysis of errors occurred during query execution. Listing \ref{lst:bio14query} can provided details regrading repeated efforts by an agent to execute a query after a parse error. 
+%
+%
+%
+%
+%
+%
+%
+%\subsubsection{Finding the top queries, agents and topics:} LSQ can also help dataset providers necessary information to get better knowledge about their top users and which kind of queries they are executing. Using these statistics dataset provider can get better understanding of the users needs. Queries shown in Listing \ref{lst:bio15query} and Listing \ref{lst:bio16query} provide a list of top queries and top agents respectively descending ordered by number of executions. Query listed in Listing \ref{lst:bio17query} informs about the on-going trends related to any topic e.g. Micheal Jackson.  
+%
+%\begin{lstlisting}[caption = {UC5: Top queries by number of executions},label = {lst:bio15query},basicstyle={\scriptsize},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0,language = sparql]
+%PREFIX lsq:<http://lsq.aksw.org/vocab#>
+%PREFIX sp:<http://spinrdf.org/sp#>
+%SELECT DISTINCT ?id COUNT (?executions) AS ?executionsCount
+% WHERE {
+%    ?id sp:text ?query .
+%    ?id lsq:execution ?executions.   }
+%  ORDER BY DESC(COUNT(?executions))
+%\end{lstlisting}
+%
+%\begin{lstlisting}[caption = {Top agents by number of executions},label = {lst:bio16query},basicstyle={\scriptsize},frame={single},stringstyle={\ttfamily},breaklines=true,stepnumber=0,language = sparql]
+%PREFIX lsq:<http://lsq.aksw.org/vocab#>
+%PREFIX sp:<http://spinrdf.org/sp#>
+%SELECT DISTINCT ?agent COUNT (?executions) AS ?executionsCount
+% WHERE {
+%    ?id sp:text ?query .
+%    ?id lsq:execution ?executions .
+%    ?executions lsq:agent  ?agent.   }
+%  ORDER BY DESC(COUNT(?executions))
+%\end{lstlisting}
+
+
+
+--------- SANSA RML
+
+
+%% The first command in your LaTeX source must be the \documentclass command.
+%%
+%% Options:
+%% twocolumn : Two column layout.
+%% hf: enable header and footer.
+\documentclass[
+%hf,
+]{ceurart}
+
+\usepackage{todonotes}
+%%
+%% One can fix some overfulls
+\sloppy
+
+%%
+%% Minted listings support 
+%% Need pygment <http://pygments.org/> <http://pypi.python.org/pypi/Pygments>
+\usepackage{listings}
+%\usepackage{pdfpages}
+\usepackage{graphicx}
+\usepackage{cleveref}
+\usepackage{enumitem}
+%\usepackage[demo]{graphicx}
+\usepackage{subfig}
+%\usepackage{paralist}
+
+\newcommand{\dollar}{\mbox{\textdollar}}
+
+
+%% auto break lines
+\lstset{breaklines=true, keepspaces}
+
+%\lstdefinestyle{General} {
+%    basicstyle=\small\ttfamily,
+%    breaklines=true,
+%    keepspaces,
+%}
+
+%\lstset{style=General}
+
+
+\input{preamble}
+\input{escmintinline}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+\input{head}
+
+\title{Scaling RML and SPARQL-based Knowledge Graph Construction with Apache Spark}
+
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+Approaches for the construction of knowledge graphs from heterogeneous
+data sources range from ad-hoc scripts to dedicated mapping languages.
+Two common foundations are thereby RML and SPARQL.
+So far, both approaches are treated as different: On the one hand there are tools specifically for
+processing RML whereas on the other hand there are tools that extend SPARQL in order to incorporate additional data sources.
+In this work, we first show how this gap can be bridged by translating RML to a sequence of SPARQL CONSTRUCT queries and introduce the necessary SPARQL extensions.
+In a subsequent step, we employ techniques to optimize SPARQL query workloads as well as individual query execution times in order to obtain an optimized sequence of queries with respect to the order and uniqueness of the generated triples.
+Finally, we present a corresponding SPARQL query execution engine based on the Apache Spark Big Data framework.
+In our evaluation on benchmarks we show that our approach is capable of achieving RML mapping execution performance that surpasses the current state of the art.
+\end{abstract}
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\begin{keywords}
+  RML \sep
+  SPARQL \sep
+  RDF \sep
+  Knowledge Graph \sep
+  Big data \sep
+  Semantic Query Optimization \sep
+  Apache Spark
+\end{keywords}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+
+\vspace{-1em}
+\begin{acknowledgments}
+The authors acknowledge the financial support by the German Federal Ministry for Economic Affairs and Energy in the project Coypu (project number 01MK21007A) and by the German Federal Ministry of Education and Research in the project StahlDigital (project number 13XP5116B).
+\end{acknowledgments}
+
+---------
+
+FACETED SEARCH
+
+
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.20 of 2017/10/04
+%
+\documentclass[runningheads]{llncs}
+%
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage[]{algorithm2e}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage[justification=centering]{caption}
+\usepackage{hyperref}
+\usepackage[textsize=scriptsize,colorinlistoftodos]{todonotes}
+
+\definecolor{lightblue}{rgb}{.95,.975,1}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstset{
+    language=sparql,
+%    language=JavaScript,
+    morekeywords={SELECT,OPTIONAL,FROM,DISTINCT,WHERE,FILTER,GROUP,ORDER,LIMIT,BY,IN,AS},
+    emphstyle={\color{blue}\bfseries},
+    backgroundcolor=\color{lightblue},
+    basicstyle=\ttfamily \scriptsize,
+    breaklines=true,
+    captionpos=b,
+    extendedchars=true,
+    frame=single,
+    framexleftmargin=2pt,
+    numbers=left,
+    numberbychapter=false,
+    numbersep=9pt,
+    numberstyle=\tiny,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+% \renewcommand\UrlFont{\color{blue}\rmfamily}
+
+\begin{document}
+%
+\title{Schema-agnostic SPARQL-based Faceted Browsing Benchmark Generation}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+
+\author{Claus~Stadler\inst{1}
+\and
+Simon~Bin\inst{1}
+\and
+Lisa~Wenige\inst{1}
+\and
+Jens Lehmann\inst{2,3}
+}
+%
+\authorrunning{Stadler et al.} % abbreviated author list (for running head)
+%
+%%%% list of authors for the TOC (use if author list has to be modified)
+%\tocauthor{René~Speck and Axel-Cyrille~Ngonga~Ngomo}
+%
+\institute{
+Leipzig University, AKSW Group, Hainstraße 11, Leipzig, Germany, D-04109\\
+\email{cstadler@informatik.uni-leipzig.de}
+\and
+Computer Science Institute III, University of Bonn, jens.lehmann@cs.uni-bonn.de
+\and 
+Fraunhofer IAIS, Dresden, Germany, jens.lehmann@iais.fraunhofer.de
+%Fraunhofer IAIS\\
+%\href{mailto:jens.lehmann@iais.fraunhofer.de}{jens.lehmann@iais.fraunhofer.de}
+}
+\maketitle              % typeset the header of the contribution
+%
+\begin{abstract}
+In this work, we present a schema-agnostic faceted browsing benchmark generation framework for RDF data and SPARQL engines. Faceted search is a technique that allows narrowing down sets of information items by applying constraints over their properties, whereas facets correspond to properties of these items.
+The RDF model exhibits several traits that seemingly make it a natural foundation for faceted search: all information items are uniformly represented as RDF resources, property values typically already correspond to meaningful semantic classifications, and with SPARQL there is a standard language for uniformly querying instance and schema information.
+
+However, although faceted search is ubiquitous today, it is typically not performed on the RDF model directly. Two major sources of concern target the complexity of query generation and the query performance. To overcome the former, our framework comes with domain-specific language. In regard to the latter, we investigate the possibilities and limits of real-time SPARQL-based faceted search on contemporary triple stores.
+%Based on this analysis, we derive data sets of suitable sizes for which we generate benchmarks using our proposed framework.
+We report on our findings by comparing systems by their performance and correctness characteristics.
+
+The benchmark generator is published freely available as open source, and can be used as standalone or with the HOBBIT benchmarking platform.
+
+%The evaluation is carried out on the Hobbit benchmarking platform which follows the FAIR principles (Findability, Accessibility, Interoperability, and Reusability).
+%\todo{Findability, Accessibility, Interoperability, and Reusability FAIR principles - https://www.nature.com/articles/sdata201618.}
+
+
+\keywords{Faceted Search \and Benchmark \and SPARQL \and RDF \and Benchmark Generator \and Triple Store}
+\end{abstract}
+%
+%
+%
+
+
+
+----------------------
+
+MAVEN BASED DATA MANAGEMENT
+
+
+
+\documentclass[runningheads]{llncs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{todonotes}[inline]
+\usepackage[newfloat]{minted}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{relsize}
+\usepackage{microtype}
+
+% caps for "Section" - better would be \cleverref
+\usepackage[english]{babel}
+\addto\extrasenglish{
+  \def\sectionautorefname{Section}
+}
+
+%\usepackage{caption}
+
+%\newenvironment{code}{\captionsetup{type=listing}}{}
+%\SetupFloatingEnvironment{listing}{name=Query}
+
+\definecolor{lightblue}{rgb}{.95,.975,1}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstset{
+    language=sparql,
+%    language=JavaScript,
+    morekeywords={SELECT,OPTIONAL,FROM,DISTINCT,WHERE,FILTER,GROUP,ORDER,LIMIT,BY,IN,AS},
+    emphstyle={\color{blue}\bfseries},
+    backgroundcolor=\color{lightblue},
+    basicstyle=\ttfamily \scriptsize,
+    breaklines=true,
+    captionpos=b,
+    extendedchars=true,
+    frame=single,
+    framexleftmargin=2pt,
+    numbers=left,
+    numberbychapter=false,
+    numbersep=9pt,
+    numberstyle=\tiny,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+% "normal" (i.e. non-raised) tilde (~) symbols in minted enviroment
+\setminted[]{fontfamily=lmtt}
+
+\begin{document}
+
+\title{FAIR Data Publishing with Apache Maven}
+
+\author{Claus~Stadler\inst{1,2}\orcidID{0000-0001-9948-6458}
+%\and
+%Kirill~Bulert\inst{1}
+\and
+Simon~Bin\inst{1}
+\and
+Lorenz~B{\"u}hmann\inst{1}\orcidID{0000-0002-1023-9993}
+}
+%	buehmann@infai.org
+%  bulert@infai.org
+% sbin@informatik.uni-leipzig.de
+\headlineindent=0pt
+\authorrunning{\hspace*{-2cm} Stadler et al. (2024) FAIR Data Publishing with Apache Maven \hspace*{2.9cm}}
+\titlerunning{\hspace*{-4cm} \textls[-20]{DaMaLOS@ESWC. PUBLISSO-Fachrepositorium. DOI:10.4126/FRL01-006474023} \hspace*{0.6cm} }
+%\authorrunning{Stadler et al.} % abbreviated author list (for running head)
+%
+%%%% list of authors for the TOC (use if author list has to be modified)
+%\tocauthor{René~Speck and Axel-Cyrille~Ngonga~Ngomo}
+%
+\institute{
+Institute for Applied Informatics, Gördelerring 9, Leipzig, Germany, D-04109 \and
+Leipzig University, Leipzig, Germany, D-04109
+\\\email{cstadler@informatik.uni-leipzig.de}
+}
+
+\maketitle              % typeset the header of the contribution
+
+\begin{abstract}
+Design and management of a large number of data processing pipelines is a challenging task. Analogous to DevOps, the term DataOps was coined to capture all the practices, processes and technologies related to the management of the life cycle of data artifacts, including
+the tracking of provenance.
+%and the involved tools.
+%retention of data lineage 
+The solution space has been constantly increasing with novel approaches and tools becoming available, however with -- for instance -- more than 100 workflow engines available it is by far no longer feasible to assess them all.
+%that promise to assist with DataOps.
+Semantic Web technology features many aspects relevant to DataOps, such as interlinkability of resources, DCAT for building decentral data catalogs,
+PROV-O for provenance descriptions, VoID for describing statistics about the used classes and properties.
+Yet, there are only few approaches that establish a coherent and holistic connection between these elements.
+In this work, we perform an in-depth analysis of the Apache Maven build system and its surrounding ecosystem for how they can be leveraged for automated data processing, publishing and RDF metadata generation with provenance tracking.
+We present three novel Maven plugins for SPARQL and RML execution, the creation of an RDF database file, and uploading artifacts to a CKAN instance.
+Finally, we present a prototype architecture where a Maven deployment of a geographic RDF dataset results in the automated generation of DCAT, PROV-O and VoID metadata such that datasets can be browsed on a map and filtered e.g. by the used classes and properties.
+All our resources are freely available as Open Source.
+%We present aBy attaching an event trigger to a Maven artifact repository system, we s
+%Maven's primary purpose is the generation of versioned artifacts, regardless of whether software or data. As such the scope is more narrow than a workflow engine, however, 
+
+%it can be adapted using plugins for automated data processing and publishing.
+
+%investigate whether and how Semantic Web compatible DataOps can be achieved by leveraging the open source Apache Maven build system and its ecosystem.
+
+
+%Prior research suggests that DataOps can be accomplished using DevOps, but so far.
+%Yet, connecting these components in a coherent way is 
+% (which can describe schema elements, instances or metadata).
+%Another recurrent challenge is how to establish links between metadata and data.
+% VoID
+% As a demo: Publish metadata about this paper as RDF?
+% Todo: What to say about planning? 
+%Non-goals: Outlier detection
+% Testing - can we do it with Java?
+%\todo{key aspects: Open Source, Semantic Web, Archiving, Versioning, Migration}
+%A typical life cycle for data artifacts includes retrieval, transformation, testing, versioning, structured archiving (in a data management system) and advertisment (in systems which may not support the metadata management).
+%Archiving the data should track the lineage so it traceable (informative), ideally even reproducible (executable).
+%Analogous to DevOps, the term DataOps was coined as a methodology for how to cover all aspects of data management.
+% There is a plethora of open source and commercial tools and platforms for that purpose.
+%However, the interplay with Semantic Web technology is typically very limited.
+
+%Contributions: Resource, Example, Comparison
+
+\keywords{FAIR \and DataOps \and Data Management \and Semantic Web \and Apache Maven \and Reproducible}
+\end{abstract}
+
+%\title{Maven-based Data Management}
+\author{Claus Stadler}
+\date{February 2024}
+
+
+
+
+
+
+%venue: <http://www.dexa.org/dawak2019>
+
+\documentclass[runningheads]{llncs}
+\usepackage[ruled,vlined, linesnumbered]{algorithm2e}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{fancybox}
+\usepackage{colortbl}
+\usepackage{comment}
+\usepackage{todonotes}
+
+\newcommand{\fixme}[2][Fixme]{\textcolor{red}{\textbf{[#1:}} {\color{blue} {#2}}\textcolor{red}{\textbf{]}}}
+\newcommand{\furl}[1]{\footnote{\scriptsize \url{#1}}}
+
+\newcommand{\emphb}[1]{\textbf{\textit{#1}}}
+\newcommand{\defn}[1]{\emphb{#1}\quad}
+
+\newcounter{metric}
+\makeatletter
+\newcommand\newitem[1][]{\item[#1)]\refstepcounter{metric}\def\@currentlabel{#1}}
+\makeatother
+
+\definecolor{cycle3}{RGB}{77, 175, 74}
+\newcommand{\win}{\cellcolor{cycle3!30}}
+
+\title{Sparklify: A Scalable Software Component for Efficient Evaluation of SPARQL Queries over Distributed RDF Datasets}
+\titlerunning{Sparklify: Scalable Software for SPARQL evaluation of large RDF data}
+%Sparklify: Making distributed triple stores great again
+%Gezim: Another proposal title : Sparklify: a scalable software component for efficient evaluation of SPARQL queries over distributed RDF datasets.
+\author{
+    Claus Stadler\inst{1} \and
+    Gezim Sejdiu\inst{2} \and
+    Damien Graux\inst{3,4} \and
+    Jens Lehmann\inst{2,3}
+}
+\institute{
+Institute for Applied Informatics (InfAI), University of Leipzig, Germany 
+\and
+Smart Data Analytics, University of Bonn, Germany
+\and
+Enterprise Information Systems, Fraunhofer IAIS, Germany
+\and
+ADAPT Centre, Trinity College of Dublin, Ireland
+\email{cstadler@informatik.uni-leipzig.de}\\
+\email{\{sejdiu,jens.lehmann\}@cs.uni-bonn.de}\\
+\email{\{damien.graux|jens.lehmann\}@iais.fraunhofer.de}
+}
+
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\textfloatsep}{9pt}
+\setlength{\floatsep}{5pt}
+
+\begin{document}
+\maketitle
+\setcounter{footnote}{0}
+\begin{tabular}{lcl}
+\textbf{Resource type} & & Software Framework \\
+\textbf{Website} & & \url{http://sansa-stack.net/sparklify/}\\
+\textbf{Permanent URL} & & \url{https://doi.org/10.6084/m9.figshare.7963193}
+\end{tabular}
+
+%\begin{abstract}
+%One of the key traits of Big Data is its complexity.
+%It can be defined in different ways.
+%That the data is coming from different sources, it could be the same data source representing different aspects of a resource or it could be different data sources representing the same property; this difference in representation, structure, or association makes it difficult to introduce common methodologies or algorithms to learn and predict from different types of data.
+%The more prominent technologies to handle this ambiguity and complexity of data is representing it using the Semantic Web (SW) standards.
+%SW is associated to a set of standards for the integration of the data and information in addition to searching and querying it.
+%These information represented in unstructured form or semi-structured is mapped to the RDF data model.
+%This model consist of so-called triples (subject, predicate, object) which allows to represent a large variety of highly to loosely structured datasets.
+%RDF is increasingly being adapted to model data in a variety of scenarios.
+%This semantically annotated data has grown steadily towards a massive scale.
+%Therefore, there is a need for a scalable and efficient query engine which is capable of retrieving such information.
+%In this paper, we propose \emph{Sparklify}: a scalable software component for efficient evaluation of SPARQL queries over distributed RDF datasets. 
+%It uses Sparqlify as a SPARQL to SQL rewriter for translating SPARQL queries into Spark executable code.
+%Our preliminary results demonstrate that our approach is more extensible, efficient, and scalable as compared to state-of-the-art approaches.
+%\end{abstract}
+
+\begin{abstract}
+One of the key traits of Big Data is its complexity in terms of representation, structure, or formats.
+One existing way to deal with it is offered by Semantic Web standards.
+Among them, RDF --which proposes to model data with triples representing edges in a graph-- has received a large success and the semantically annotated data has grown steadily towards a massive scale.
+Therefore, there is a need for scalable and efficient query engines capable of retrieving such information.
+In this paper, we propose \emph{Sparklify}: a scalable software component for efficient evaluation of SPARQL queries over distributed RDF datasets. 
+It uses Sparqlify as a SPARQL-to-SQL rewriter for translating SPARQL queries into Spark executable code.
+Our preliminary results demonstrate that our approach is more extensible, efficient, and scalable as compared to state-of-the-art approaches.
+Sparklify is integrated into a larger SANSA framework and it serves as a default query engine and has been used by at least three external use scenarios.
+%\fixme{Check the result discussion to align the last sentence!}
+\end{abstract}
+
+
+
+
+
+
+LINKEDGEODATA
+
+
+% PLEASE USE THIS FILE AS A TEMPLATE
+% Check file iosart2c.tex for more examples
+%
+% Journal:
+%   Journal of Ambient Intelligence and Smart Environments (jaise)
+%   Web Intelligence and Agent Systems: An International Journal (wias)
+%   Semantic Web: Interoperability, Usability, Applicability (SW)
+% IOS Press
+% Latex 2e
+
+% options: jaise|wias|sw
+% add. options: [seceqn,secfloat,secthm,crcready,onecolumn]
+
+
+\documentclass{iosart2c}
+
+%\documentclass[sw]{iosart2c}
+%\documentclass[wias]{iosart2c}
+%\documentclass[jaise]{iosart2c}
+
+\usepackage[T1]{fontenc}
+\usepackage{times}%
+\usepackage{natbib}% for bibliography sorting/compressing
+\usepackage{graphicx}
+%\usepackage{amsmath}
+%\usepackage{endnotes}
+%\usepackage{graphics}
+
+%%%%%%%%%%% Put your definitions here
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{moreverb}        % Improved verbatim-environments
+\usepackage{threeparttable}
+% \usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+% listing styles
+% RDF/XML 
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.5}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={xmlns,version,type,owl,rdf,rdfs, xsd}
+}
+% Turtle box
+\definecolor{olivegreen}{rgb}{0.2,0.8,0.5}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+\definecolor{darkgrey}{rgb}{0.3,0.3,0.3}
+\lstdefinelanguage{ttl}{
+sensitive=true,
+morecomment=[l][\color{grey}]{@},
+morecomment=[l][\color{olivegreen}]{\#},
+morestring=[b][\color{darkblue}]\",
+keywordstyle=\color{darkgrey},
+morekeywords={xmlns,version,owl,rdf,rdfs,xml,xsd,lgdo,georss,lgd,virtrdf,}
+}
+\lstset{showstringspaces=false, showspaces=false, numbers=none, numberstyle=\tiny,basicstyle=\ttfamily\scriptsize, tabsize=2, stringstyle=\small, framexleftmargin=1pt}
+\lstdefinestyle{rdf}{numberblanklines=true, morekeywords={}}
+
+
+\usepackage{array}
+%\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+%\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+%\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+%\usepackage{booktabs}
+
+\usepackage{tabularx}
+\usepackage{url}%
+
+% Konrad imports %%
+\usepackage{tabulary}%can use align in tables with line breaks
+\usepackage{sepnum}
+\usepackage[pdfborder={0 0 0}]{hyperref} %hyperref funktioniert leider nicht mit dvips, mit pdflatex aber schon
+%\usepackage{breakurl}%allow line breaks in urls
+%\usepackage{hyperref} %hyperref funktioniert leider nicht mit dvips, mit pdflatex aber schon
+\newcommand{\val}[1]{\sepnum{.}{\,}{}{#1}}
+\newcommand{\valunit}[2]{\val{#1}\,#2}
+\newcommand{\valrange}[2]{\val{#1} -- \val{#2}}
+\newcommand{\valunitrange}[3]{\val{#1} -- \valunit{#2}{#3}}
+\usepackage{booktabs} %adds new commands toprule midrule and bottomrule for professionally looking tables
+\usepackage{amsmath}
+\usepackage{longtable}
+% \usepackage[benglish]{babel} % use german Umlaute in examples
+%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\todo}[1]{\textbf{[ToDo: #1]}}
+\newcommand{\torev}[1]{\textbf{[Review: #1]}}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+%%%%%%%%%%% End of definitions
+
+
+
+\pubyear{0000}
+\volume{0}
+\firstpage{1}
+\lastpage{1}
+
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+%\pretitle{}
+% Ideen für Titel:
+% LinkedGeoData: A Nucleus for a Web of Spatial Open Data
+% LinkedGeoData - Mapping and Interlinking OpenStreetMap Data
+\title{LinkedGeoData:\\A Core for a Web of Spatial Open Data}
+% \subtitle{or ``How to find all pubs in your city?''}
+%\subtitle{or ``How to easily query for pubs in your vicinity?''}
+%\todo{find a subtitle which shows one good query which can easily be done in LinkedGeoData, but not in OpenStreetMap, Google Maps, DBpedia etc.}
+\runningtitle{LinkedGeoData}
+%\subtitle{}
+
+%\review{}{}{}
+
+
+% For one author:
+%\author{\fnms{TODO} \snm{TODO}\thanks{TODO}}
+%\address{TODO}
+%\runningauthor{TODO}
+
+% Two or more authors:
+\author[A]{\fnms{Claus} \snm{Stadler}\thanks{This work was supported by a grant from the European Union's 7th Framework Programme provided for the projects LOD2 (GA no. 257943) and LATC (GA no. 256975).}}, 
+\author[A]{\fnms{Jens} \snm{Lehmann}}, 
+\author[A]{\fnms{Konrad} \snm{H{\"o}ffner}}, 
+\author[A]{\fnms{S{\"o}ren} \snm{Auer}} 
+\runningauthor{Stadler et. al}
+\address[A]{Department of Computer Science, University of Leipzig\\Johannisgasse 26, 04103 Leipzig, Germany\\\{cstadler, lehmann, auer\}@informatik.uni-leipzig.de, konrad.hoeffner@uni-leipzig.de}
+
+\begin{abstract}
+The Semantic Web eases data and information integration tasks by providing an infrastructure based on RDF and ontologies.
+In this paper, we contribute to the development of a spatial Data Web by elaborating on how
+the collaboratively collected OpenStreetMap data can be interactively
+transformed and represented adhering to the RDF data model.
+This transformation will simplify information integration and aggregation tasks
+that require comprehensive background knowledge related to spatial features
+such as ways, structures, and landscapes.
+We describe how this data is interlinked with other spatial data sets, how it
+can be made accessible for machines according to the Linked Data paradigm and for humans by
+means of several applications, including a faceted geo-browser. The spatial
+data, vocabularies, interlinks and some of the applications are openly
+available in the LinkedGeoData project.
+
+%Many information integration and aggregation tasks
+%require comprehensive background knowledge related to spatial
+%features, such as ways, structures and landscapes.
+%In order to employ the Web as a medium for such tasks,
+%comprehensive datasets and vocabularies are required as they enable the
+%disambiguation and alignment of other data and information.
+%Two core elements of this infrastructure are RDF and ontologies.
+%Some of these tasks require
+%comprehensive background knowledge related to spatial features of the ways,
+%structures and landscapes surrounding us.
+
+%Data integration on and off the web requires comprehensive datasets and
+%vocabularies to enable the disambiguation and alignment of information.
+
+%Many information integration and aggregation tasks
+%require comprehensive background knowledge related to spatial
+%features, such as ways, structures and landscapes.
+
+%impossible without comprehensive background knowledge related to spatial
+%features of the ways, structures and landscapes surrounding us.
+%Many of such real-life information integration and aggregation tasks are
+%impossible without comprehensive background knowledge related to spatial
+%features of the ways, structures and landscapes surrounding us.
+
+%Original:
+%Data integration on and off the web requires comprehensive datasets and
+%vocabularies to enable the disambiguation and alignment of information. Many of
+%such real-life information integration and aggregation tasks are impossible
+%without comprehensive background knowledge related to spatial features of the
+%ways, structures and landscapes surrounding us.
+\end{abstract}
+
+\begin{keyword}
+ Linked Data \sep Spatial Data \sep Open Data \sep Interlinking \sep RDF \sep RDB2RDF \sep OpenStreetMap \sep LinkedGeoData
+\end{keyword}
+
+\end{frontmatter}
+
+%%%%%%%%%%% The article body starts:
+
+
+
+
+
+
+
+
+
+
+
+FACETE
+
+\documentclass{acm_proc_article-sp}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+%\usepackage[textsize=scriptsize,colorinlistoftodos]{todonotes}
+
+
+\lstset{%
+    numberbychapter=false,
+    numbers=left,
+    numberstyle=\tiny,
+    basicstyle=\footnotesize\ttfamily,
+    tabsize=2,
+    framexleftmargin=2pt,
+    captionpos=b,
+    frame=single,
+    breaklines=true
+}
+\lstdefinestyle{rdf}{numberblanklines=true, morekeywords={}}
+\lstdefinestyle{sparql}{basicstyle=\ttfamily\scriptsize,numberblanklines=true,
+    morekeywords={SELECT,OPTIONAL,FROM,DISTINCT,a,WHERE,FILTER,GROUP,ORDER,LIMIT,BY,IN,AS},
+    emph={r,pub,aairObject,verb,person,bday,s,p,o},emphstyle=\textit
+}
+\lstdefinestyle{turtle}{basicstyle=\ttfamily\tiny ,numberblanklines=true,
+    morekeywords={a, @prefix},
+    morecomment=[s][\textrm]{<}{>},
+    morecomment=[s][\textit]{"}{"},
+}
+\usepackage{hyperref}
+
+\newcommand{\todo}[1]{\emph{\textcolor{red}{[ToDo: #1]}}}
+
+\usepackage{enumitem}
+\setitemize{noitemsep,topsep=-10pt,parsep=0pt,partopsep=0pt,itemindent=0pt,listparindent=0pt}
+\setlist{noitemsep,topsep=-10pt,parsep=0pt,partopsep=0pt,itemindent=0pt,listparindent=0pt}
+
+
+% ********************************************************************
+% Setup autoreferences
+% ********************************************************************
+% There are some issues regarding autorefnames
+% http://www.ureader.de/msg/136221647.aspx
+% http://www.tex.ac.uk/cgi-bin/texfaq2html?label=latexwords
+% you have to redefine the makros for the 
+% language you use, e.g., american, ngerman
+% (as chosen when loading babel/AtBeginDocument)
+% ********************************************************************
+\makeatletter
+\@ifpackageloaded{babel}%
+    {%
+       \addto\extrasamerican{%
+					\renewcommand*{\figureautorefname}{Figure}%
+					\renewcommand*{\tableautorefname}{Table}%
+					\renewcommand*{\partautorefname}{Part}%
+					\renewcommand*{\chapterautorefname}{Chapter}%
+					\renewcommand*{\sectionautorefname}{Section}%
+					\renewcommand*{\subsectionautorefname}{Section}%
+					\renewcommand*{\subsubsectionautorefname}{Section}% 	
+				}%
+       \addto\extrasngerman{% 
+			        \renewcommand*{\subsectionautorefname}{\sectionautorefname}%
+					\renewcommand*{\subsubsectionautorefname}{\sectionautorefname}%
+					\renewcommand*{\paragraphautorefname}{Absatz}%
+					\renewcommand*{\subparagraphautorefname}{Absatz}%
+					\renewcommand*{\footnoteautorefname}{Fu\"snote}%
+					\renewcommand*{\FancyVerbLineautorefname}{Zeile}%
+					\renewcommand*{\theoremautorefname}{Theorem}%
+					\renewcommand*{\appendixautorefname}{Anhang}%
+					\renewcommand*{\equationautorefname}{Gleichung}%        
+					\renewcommand*{\itemautorefname}{Punkt}%
+				}%	
+			% Fix to getting autorefs for subfigures right (thanks to Belinda Vogt for changing the definition)
+			\providecommand{\subfigureautorefname}{\figureautorefname}%  			
+    }{\relax}
+\makeatother
+
+
+\begin{document}
+
+\title{Exploring the Web of Spatial Data with Facete}
+
+\numberofauthors{3} %  in this sample file, there are a *total*
+\author{
+ \alignauthor
+Claus Stadler\titlenote{Corresponding Author}\\
+       \affaddr{University of Leipzig}\\
+       \affaddr{Augustusplatz 10}\\
+       \affaddr{04109 Leipzig, Germany}\\
+       \email{cstadler@informatik.uni-leipzig.de}
+% 2nd. author
+\alignauthor
+Michael Martin\\
+       \affaddr{University of Leipzig}\\
+       \affaddr{Augustusplatz 10}\\
+       \affaddr{04109 Leipzig, Germany}\\
+       \email{martin@informatik.uni-leipzig.de}
+\and  % use '\and' if you need 'another row' of author names
+% 3rd. author
+\alignauthor S\"oren Auer\\
+       \affaddr{Universit\"at Bonn \& Fraunhofer IAIS}\\
+       \affaddr{R\"omerstra{\ss}e 164}\\
+       \affaddr{53117 Bonn, Germany}\\
+       \email{auer@cs.uni-bonn.de}
+% 4th. author
+%nuescht iss
+}
+
+% There's nothing stopping you putting the seventh, eighth, etc.
+% author on the opening page (as the 'third row') but we ask,
+% for aesthetic reasons that you place these 'additional authors'
+% in the \additional authors block, viz.
+%\additionalauthors{Additional authors: John Smith (The Th{\o}rv{\"a}ld Group,
+%email: {\texttt{jsmith@affiliation.org}}) and Julius P.~Kumquat
+%(The Kumquat Consortium, email: {\texttt{jpkumquat@consortium.net}}).}
+%\date{30 July 1999}
+% Just remember to make sure that the TOTAL number of authors
+% is the number that will appear on the first page PLUS the
+% number that will appear in the \additionalauthors section.
+
+\maketitle
+\begin{abstract}
+The majority of data (including data published on the Web as Linked Open Data) has a spatial dimension.
+However, the efficient, user friendly exploration of spatial data remains a major challenge.
+We present \emph{Facete}, a web-based exploration and visualization application enabling the spatial-faceted browsing of data with a spatial dimension.
+Facete implements a novel spatial data exploration paradigm based on the following three key components:
+First, a domain independent faceted filtering module, which operates directly on SPARQL and supports nested facets.
+Second, an algorithm that efficiently detects spatial information related to those resources that satisfy the facet selection.
+The detected relations are used for automatically presenting data on a map.
+And third, a workflow for making the map display scale in the face of data sources that contain large amounts of geometric information.
+We demonstrate Facete in three large-scale, real world application scenarios.
+\end{abstract}
+
+% A category with the (minimum) three required fields
+%\category{}{Information Systems Applications}{Miscellaneous}
+%A category including the fourth, optional field follows...
+%\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+
+%\terms{}
+
+\keywords{SPARQL, RDF, faceted search, geospatial data, property path retrieval}
+
+
+
+SIMPLIFIED RML MAPPING
+
+
+
+% GDoc: https://docs.google.com/document/d/1EVEtiPpctJ0sAF0Q3HwVdz_brcRAxFfbsILlSXeBx7c/edit#heading=h.vaxgq2vfugwa
+
+\documentclass{sig-alternate}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\addto\extrasenglish{%
+  \def\sectionautorefname{Section}%
+  \def\subsectionautorefname{Section}%
+  \def\subsubsectionautorefname{Section}%
+}
+
+\usepackage{moreverb}
+\usepackage{amssymb} %amsmath,'msthm
+\usepackage{array}
+\usepackage{url}
+\usepackage{lscape}
+\usepackage{rotating,makecell}
+\usepackage{pdfpages}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+
+\usepackage{amsmath}
+
+\usepackage{pifont}
+\newcommand{\tick}{\ding{52}}
+\usepackage{tabularx}
+\usepackage{threeparttable}
+
+\usepackage{tablefootnote}
+\usepackage{longtable}
+
+%\usepackage[table]{xcolor}
+%\usepackage{amsthm}
+\usepackage[font=small,labelfont=bf,tableposition=top]{caption}
+\usepackage[font=footnotesize]{subcaption}
+\usepackage{algorithmic}
+\usepackage{paralist}
+\usepackage{multicol}
+\usepackage{qtree}
+%\usepackage{xyling} % Tree package - does not work for me ~ Claus
+\usepackage{tabularx}
+
+\usepackage{todonotes}
+\usepackage{flushend}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\newcolumntype{B}{>{\hsize=1.5\hsize}X}
+\newcolumntype{C}{>{\hsize=1.2\hsize}X}
+
+\lstset{ %
+  language=Octave,                % the language of the code
+  basicstyle=\ttfamily \scriptsize,           % the size of the fonts that are used for the code
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\ttfamily \color{mauve},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+  morekeywords={*,...}               % if you want to add more keywords to the set
+}
+
+\lstdefinestyle{rdf}{numberblanklines=true, morekeywords={}}
+\lstdefinestyle{sparql}{numberblanklines=true, morekeywords={SELECT, WHERE, FILTER, GROUP, BY, IN, AS, SERVICE, GRAPH}}
+
+\graphicspath{{.}{./images/}{./plots/}}
+
+%\renewcommand{\topfraction}{0.85}
+%\renewcommand{\textfraction}{0.1}
+%\renewcommand{\floatpagefraction}{0.85}
+
+\newcommand{\urlfn}[1]{\footnote{\scriptsize\url{#1}}}
+
+
+% \renewcommand{\todo}{}
+
+\begin{document}
+
+\title{Simplified RDB2RDF Mapping}
+% \title{A Proposal for a Simplified RDB2RDF Mapping Language}
+% \subtitle{SML - Sparqlification Mapping Language}
+
+%\author{Claus Stadler, J\"org Unbehauen, Patrick Westphal,\\Mohamed Sherif, Jens Lehmann}
+\numberofauthors{5} %  in this sample file, there are a *total*
+\author{
+    \alignauthor
+    Claus Stadler\titlenote{Corresponding Author} \\
+    \affaddr{Department of Computer Science, University of Leipzig, Germany} \\
+    \email{cstadler@informatik.uni-leipzig.de}
+%
+    \alignauthor
+    J\"org Unbehauen\\
+    \affaddr{Department of Computer Science, University of Leipzig, Germany} \\
+    \email{unbehauen@informatik.uni-leipzig.de}
+\and  % use '\and' if you need 'another row' of author names
+%
+    \alignauthor Patrick Westphal\\
+    \affaddr{Department of Computer Science, University of Leipzig, Germany} \\
+    \email{pwestphal@informatik.uni-leipzig.de}
+%
+%
+    \alignauthor Mohamed Sherif\\
+    \affaddr{Department of Computer Science, University of Leipzig, Germany} \\
+    \email{sherif@informatik.uni-leipzig.de}
+%
+    \alignauthor Jens Lehmann\\
+    \affaddr{Department of Computer Science, University of Leipzig, Germany} \\
+    \email{lehmann@informatik.uni-leipzig.de}
+}
+
+\maketitle
+
+\begin{abstract}
+The combination of the advantages of widely used relational databases and semantic technologies has attracted significant research over the past decade.
+In particular, mapping languages for the conversion of databases to RDF knowledge bases have been developed and standardized in the form of R2RML.
+In this article, we first review those mapping languages and then devise work towards a unified formal model for them.
+Based on this, we present the Sparqlification Mapping Language (SML), which provides an intuitive way to declare mappings based on SQL VIEWS and SPARQL construct queries.
+We show that SML has the same expressivity as R2RML
+by enumerating the language features and show the correspondences, and we
+outline how one syntax can be converted into the other.
+%and can be converted to it,
+A conducted user study for this paper juxtaposing SML and R2RML provides evidence
+that SML is a more compact syntax which is easier to understand and read
+and thus lowers the barrier to offer SPARQL access to relational databases.
+
+%\todo{R3: would need to be supported with a usability study}
+% study ist noch nicht fertig
+%present a usability study of SML and R2RML.
+%The study indicates that SML is more intuitive and easier to write than the current W3C standard.
+%and may facilitate a more rapid deployment of semantic technologies in existing
+\end{abstract}
+
+
+
+
+
+
+
+
+

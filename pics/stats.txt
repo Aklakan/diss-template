@@ -1,0 +1,12 @@
+Ass_Relevance :  4.15217391304348
+Ass_TTL :  4.10869565217391
+Ass_SPARQL:  4.30434782608696
+Ass_SQL :  4.32608695652174
+Ass_R2RML :  3
+Ass_SML :  1.73913043478261
+Average understand R2RML :  3.95652173913043
+Average understand SML :  3.93478260869565
+Average readability R2RML :  3.26086956521739
+Average readability SML :  3.71739130434783
+Average consider SML  :  3.58695652173913
+Average pref R2RML (1) <(3)>  (5) SML:  3.26470588235294

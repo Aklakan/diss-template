@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+
+\newcommand{\biotrdf}{\textsc{Bio2RDF}}
+\newcommand{\dbpedia}{\textsc{DBpedia}}
+\newcommand{\linkedgeodata}{\textsc{LinkedGeoData}}
+\newcommand{\swdf}{\textsc{SWDF}}
+\newcommand{\wikidata}{\textsc{Wikidata}}
+
+\begin{document}
+\newcommand{\figyscale}{0.8}
+\begin{tikzpicture}
+\begin{axis}[
+ ylabel=ratio of query executions,
+ xlabel=ratio of queries,
+% legend pos=outer north east,
+ legend style={at={(0.5,1.02)},anchor=south},
+ legend columns=2,
+ xmin=0,xmax=1,
+ ymin=0,ymax=1,
+ mark size=0.4pt,
+ ytick={0,0.1,...,1,1},
+ xtick={0,0.1,...,1,1},
+% y post scale=1
+]
+
+\pgfplotstableread{equality.tsv}\eqTable
+\pgfplotstableread{query-lorenz-b2r/bio2rdf-l.tsv}\btrTable
+\pgfplotstableread{query-lorenz-b2r/dbpedia-l.tsv}\dbpTable
+\pgfplotstableread{query-lorenz-b2r/lgd-l.tsv}\lgdTable
+\pgfplotstableread{query-lorenz-b2r/swdf-l.tsv}\swdTable
+\pgfplotstableread{query-lorenz-b2r/wikidata-l.tsv}\wikTable
+
+\addplot[thick] table[header=false]{\eqTable};
+\addlegendentry{Equality}
+
+\addplot[thick,blue] table[header=false]{\btrTable};
+\addlegendentry{\biotrdf}
+
+\addplot[thick,red,dotted] table[header=false]{\dbpTable};
+\addlegendentry{\dbpedia}
+
+\addplot[thick,green!80!black,dashed] table[header=false]{\lgdTable};
+\addlegendentry{\linkedgeodata}
+
+\addplot[thick,orange,dashdotted] table[header=false]{\swdTable};
+\addlegendentry{\swdf}
+
+\addplot[thick,cyan,densely dotted] table[header=false]{\wikTable};
+\addlegendentry{\wikidata}
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
