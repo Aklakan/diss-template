@@ -16,3 +16,12 @@
 *.run.xml
 *.xdv
 
+/tmp/
+/document.pdf
+/main.pdf
+
+.project
+.texlipse
+_minted-main
+
+todo-papers

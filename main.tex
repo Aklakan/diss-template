@@ -6,6 +6,9 @@
 
 \savegeometry{defaultpage}
 
+%\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
 \usepackage{polyglossia}
 \usepackage{csquotes}
 \setmainlanguage{english}
@@ -15,7 +18,6 @@
 \usepackage[hang]{footmisc}                     % hanging footnote, possible ragged but this introduces new breaks and consequently new pages
 \usepackage{url}
 \usepackage{hyperref}                           % references in PDF
-\usepackage{cleveref}                           % provides \cref command
 \usepackage{fnpct}                              % footnotes and punctuation make 1. -> .1
 \usepackage{graphicx}                           % Include images
 \usepackage{caption}
@@ -28,6 +30,138 @@
 \usepackage[strict]{changepage}                 % for wider then the typearea
 \usepackage{shorttoc}
 \usepackage{calc}                               % for geometry calculations
+
+
+
+\usepackage{listings}
+\usepackage{booktabs,subcaption,amsfonts,dcolumn}
+\newcolumntype{d}[1]{D..{#1}}
+\newcommand\mc[1]{\multicolumn{1}{c}{#1}}
+%\usepackage{booktabs}
+\setlength{\heavyrulewidth}{1.5pt}
+\setlength{\abovetopsep}{4pt}
+\usepackage{ amssymb }
+%%%%%%%%%%%%%%%
+\usepackage{comment}
+%\pgfplotsset{width=10cm,compat=1.9}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{pgf-pie}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{cleveref}                           % provides \cref command
+\usepackage{todonotes}
+\usepackage{lststyles}
+\usepackage{paralist}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,fit,backgrounds}
+\newcommand{\hsp}{\vphantom{Ag}}
+\usepackage{xspace}
+\usepackage{multirow}
+
+
+\setuptodonotes{inline}
+
+
+% <lsq2-commands>
+\newcommand{\dbpedia}{\textsc{DBpedia}\xspace}
+\newcommand{\linkedgeodata}{\textsc{LinkedGeoData}\xspace}
+\newcommand{\swdf}{\textsc{SWDF}\xspace}
+\newcommand{\wikidata}{\textsc{Wikidata}\xspace}
+
+\newcommand{\biotrdf}{\textsc{Bio2RDF}\xspace}
+\newcommand{\affymetrix}{\textsc{Affymetrix}\xspace}
+\newcommand{\biomodels}{\textsc{BioModels}\xspace} % aka biomedels
+\newcommand{\ctd}{\textsc{CTD}\xspace}
+\newcommand{\dbsnp}{\textsc{dbSNP}\xspace}
+\newcommand{\drugbank}{\textsc{DrugBank}\xspace}
+\newcommand{\genage}{\textsc{GenAge}\xspace}
+\newcommand{\gendr}{\textsc{GenDR}\xspace}
+\newcommand{\go}{\textsc{GO}\xspace} % aka gene
+\newcommand{\goa}{\textsc{GOA}\xspace}
+\newcommand{\hgnc}{\textsc{HGNC}\xspace}
+\newcommand{\irefindex}{\textsc{iRefIndex}\xspace}
+\newcommand{\kegg}{\textsc{KEGG}\xspace}
+\newcommand{\linkedspl}{\textsc{LinkedSQP}\xspace}
+\newcommand{\mgi}{\textsc{MGI}\xspace}
+\newcommand{\ncbigene}{\textsc{NCBIGene}\xspace}
+\newcommand{\omim}{\textsc{OMIM}\xspace}
+\newcommand{\pharmgkb}{\textsc{PharmGKB}\xspace}
+\newcommand{\sabiork}{\textsc{SABIORK}\xspace}
+\newcommand{\sgd}{\textsc{SGD}\xspace}
+\newcommand{\sider}{\textsc{SIDER}\xspace}
+\newcommand{\taxonomy}{\textsc{Taxonomy}\xspace}
+\newcommand{\wormbase}{\textsc{Wormbase}\xspace}
+% </lsq2-commands>
+
+% <sparklify>
+\usepackage[ruled,vlined, linesnumbered]{algorithm2e}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{fancybox}
+\usepackage{colortbl}
+
+\newcommand{\fixme}[2][Fixme]{\textcolor{red}{\textbf{[#1:}} {\color{blue} {#2}}\textcolor{red}{\textbf{]}}}
+\newcommand{\furl}[1]{\footnote{\scriptsize \url{#1}}}
+
+\newcounter{metric}
+\newcommand{\emphb}[1]{\textbf{\textit{#1}}}
+\newcommand{\defn}[1]{\emphb{#1}\quad}
+\newcommand\newitem[1][]{\item[#1)]\refstepcounter{metric}\def\@currentlabel{#1}}
+
+\definecolor{cycle3}{RGB}{77, 175, 74}
+\newcommand{\win}{\cellcolor{cycle3!30}}
+
+% </sparklify>
+
+
+% <maven-based-data-mgmt>
+\usepackage{microtype}
+\usepackage[newfloat]{minted}
+
+%\newcommand{\textls}[1]{#1}% Note additional group!
+\renewcommand{\textls}[1]{#1}
+% "normal" (i.e. non-raised) tilde (~) symbols in minted enviroment
+\setminted[]{fontfamily=lmtt}
+
+% </maven-based-data-mgmt>
+
+
+% <linkedgeodata>
+%\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{threeparttable}
+\usepackage{tabulary} %can use align in tables with line breaks
+\usepackage{sepnum}
+\usepackage{longtable}
+\usepackage{algpseudocode}
+%\usepackage{underscore}
+%\usepackage[english]{babel} % use german Umlaute in examples
+
+%\DeclareCaptionType{algorithmic}
+
+\newcommand{\val}[1]{\sepnum{.}{\,}{}{#1}}
+\newcommand{\valunit}[2]{\val{#1}\,#2}
+\newcommand{\valrange}[2]{\val{#1} -- \val{#2}}
+\newcommand{\valunitrange}[3]{\val{#1} -- \valunit{#2}{#3}}
+
+%\newcommand{\todo}[1]{\textbf{[ToDo: #1]}}
+\newcommand{\torev}[1]{\textbf{[Review: #1]}}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+%\newcommand{\algorithmicrequire}{\textbf{Input:}}
+%\newcommand{\algorithmicensure}{\textbf{Output:}}
+
+% </linkedgeodata>
+
+
+% <simplified-r2rml>
+\lstdefinestyle{rdf}{numberblanklines=true, morekeywords={}}
+\lstdefinestyle{sparql}{numberblanklines=true, morekeywords={SELECT, WHERE, FILTER, GROUP, BY, IN, AS, SERVICE, GRAPH}}
+\newcommand{\urlfn}[1]{\footnote{\scriptsize\url{#1}}}
+% <simplified-r2rml>
 
 \setlength{\footnotemargin}{\parindent}
 
@@ -216,10 +350,10 @@ BoldFont = {* Condensed Bold},
 
 %%% START OF CONTENT
 
-\title{The Dissertation Title}
+\title{Knowledge Graphs over Large Data Sources: Construction, Exploration and Analytics}
 
-\author{Your Name}
-\date{2024-06-07}
+\author{Claus Stadler}
+\date{2024-06-07 TODO}
 
 
 \makeatletter
@@ -262,8 +396,26 @@ marginparwidth=\marginparsep,
 %\tableofcontents
 
 \include{sections/Introduction}
-\include{sections/Methodology}
+%\include{sections/Methodology}
 
+% Construction
+\include{sections/sparklify}
+\include{sections/sml}
+\include{sections/sansa-rml}
+
+% Exploration
+\include{sections/faceted-search}
+\include{sections/facete}
+\include{sections/linkedgeodata}
+
+% Analytics
+
+\include{sections/lsq-framework}
+\include{sections/lsq2}
+
+% Management
+
+%\include{sections/maven-based-datamanagement}
 
 
 \end{document}

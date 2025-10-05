@@ -1,6 +1,80 @@
 \chapter*{Preface}
 
+% Knowledge Graphs over Large Data Sources: Construction, Exploration and Analytics
+\section{Introduction}
+
+Data integration, the process to provide a uniform view over data from multiple sources in various formats, is among the top challenges in modern information societies and gave rise to a vast amount of research over the past decades. The Semantic Web proposes a uniform and extensible Web-scale model for data with well defined semantics. This not only enables human and software agents to access data in a machine readable way, but it also allows them to reason about the data. In the Semantic Web, datasets are modeled as graphs.
+Datasets can be easily combined into a larger one which results in a larger graph.
+The term \textit{Knowledge Graph} (KG) has been established because such graphs can capture and connect (meta-)information
+from virtually arbitrary domains\footnote{The work focuses on Semantic Web Knowledge Graphs in constrast to Property Graphs.}.
+The essential technologies are the Resource Description Framework (RDF) which specifies the graph based data model.
+Databases that can store RDF data are referred to as RDF stores\footnote{Other common names are \textit{triple store} and \textit{quad store} referring to more in-depth aspects of RDF stores.}.
+The standard language to query and update RDF stores is called \textit{SPARQL}\footnote{SPARQL is a recursive acronym for \textit{SPARQL Protocol and RDF Query Language}. Sometimes the acronym SPARUL is used to specifically refer to the Update Language. Note, that the situation is similar to the \textit{Structured Query Language} (SQL) which subsumes the sub-languages for querying, updating and data definition.}.
+
+\subsection{Motivation}
+
+The motivation for this thesis touches three related fields: The construction of KGs, the exploration of KGs and the benchmarking KG setups.
+
+The promise of a Knowledge Graph is that operations on the uniform data layer become sufficiently simple such that it offsets the resource investment into that graph's construction. An important feat of knowledge graphs is that they enable human and machine agents to explore the data of \textit{virtually any domain} via defined interfaces and protocols, i.e. SPARQL. Over the years, the conceptual approach to building knowledge graphs has to large parts transitioned from art to engineering: Best practices for common design challenges (e.g. IRI, vocabulary, ontology) have been devised and mapping languages were developed to transform non-RDF data to RDF. Yet, in practice one encounters many difficulties: Knowledge Graph Construction (KGC) tools differ greatly w.r.t. performance, scalability, supported mapping languages, extensibility (e.g. user defined functions), and supported optimizations. The combination of KGC tooling with Big Data technologies is thus an interesting field to explore.
+
+Once a constructed KG is accessible via SPARQL, the next challenge is how to make it explorable, such that an agent can access and identify relevant subsets of the data. Faceted search is an exploratory search technique that allows narrowing down sets of information items by applying constraints over their properties, whereas facets correspond to properties of these items. Faceted search can be used directly to explore the (partial) output of a KC process and thus has direct application for rapid-prototyping. Furthermore, complementary approaches, such as data summarizations, may be computed ad-hoc for only the narrowed down set of items. The RDF model exhibits several traits that seemingly make it a natural foundation for faceted search: all information items are represented as RDF resources, property values typically already correspond to meaningful semantic classifications, and with SPARQL there is a standard language for uniformly querying instance and schema information. However, although faceted search is ubiquitous today, it is typically not performed on the RDF model directly. Two major sources of concern are the complexity of query generation and the query performance.
+
+And finally, while RDF stores provide standard SPARQL endpoints, there are substantial differences between the different systems. The basic effect is that SPARQL queries that run well on one system may run poorly on another and vice versa. While there are standard benchmarks for RDF databases, there is a lack of systematic analysis of how triple stores perform for different categories of *real-world* SPARQL queries.
+
+\subsection{Goals}
+
+The overall goal of this thesis is to ease both the construction Knowledge Graphs from heterogeneous data sources, facilitate their exploration and provide the means to evaluate KG setups.
+
+For the KG construction, the goal is to leverage Big Data approaches for parallelization and integrating (SPARQL) extensions that simplify tackling certain integration problems in order to produce high quality data fast.
+
+Exploration of knowledge graphs is essential for spotting mistakes introduced by the construction process as well as assessing its fitness for use. In general, faceted search, as a type of exploratory search, is a proven approach to explore collections of information items. However, there are many challenges in adopting this paradigm to KGs. The first goal is to devise a model for faceted search that supports traversal along the properties of information items in a KG. The subsequent goal is to devise how to generate appropriate SPARQL queries from that model.
+
+In order to evaluate KG setups on real wold queries (rather than synthetic ones), a framework needs to be devised that allows for categorization of SPARQL queries based on their features and supports detailed query execution reports, such as intermediate result set sizes and execution times.
+
+In general, for the sake of reproducibility, all relevant code should be published as Open Source software.
+
+\subsection{Research Questions}
+
+This thesis contributes to the following fundamental challenges in the Semantic Web that build on one another are:
+(1) The efficient construction of large-scale knowledge graphs, both by means of data materialization and virtualization.
+(2) The exploration of information contained in a knowledge graph as a prerequisite to assess fitness for use.
+Thereby approaches for modeling and indexing the metadata need to be considered.
+(3) The analysis of SPARQL query performance against RDF stores in order to detect limitations, feature- or performance-wise, on contemporary triple stores as a basis for improvement.
+
+The research question for each part-challenge are as follows:
+
+\begin{itemize}
+\item Large-Scale KG Construction
+  \begin{itemize}
+    \item How well does visualization of (spatial) relational databases perform and what are strengths and limitations?
+    \item To what extent can we leverage (map-reduced-based) Big Data technology, such as Apache Spark?
+    \item How can we leverage either approach to create summarization meta data from large RDF datasets, such as VoID descriptions?
+  \end{itemize}
+\item KG Exploration:
+  \begin{itemize}
+  \item As Faceted Search is an established means for exploring catalogs, such as products and images, by means of restricting a result set to those items that match a set of constraints. The question is to what extent can the Faceted Search paradigm be adapted to operate on KGs via SPARQL.  Also, operations known from Business Intelligence systems and Data Cubes (e.g. drill down) are very relevant topics that need to be investigated.
+  \item What are feature and/or performance limitations of the SPARQL queries that correspond to Faceted Search information needs on real-world RDF stores?
+  \end{itemize}
+\item RDF Store Analysis: The aim of this part is to generalize assessment of query performance to arbitrary real-world queries (not limited to faceted search ones).
+  \begin{itemize}
+  \item How to devise a model that captures detailed aspects of the execution of arbitrary SPARQL query queries?
+  \item A goal is to collect SPARQL query logs from real-world SPARQL endpoints. How to process such logs efficiently?
+  \end{itemize}
+\end{itemize}
+
+\subsection{Methodological Approach}
+
+In regard to knowledge graph construction, the approach is to systematically review existing approaches and to devise a novel solution based on the map-reduce paradigm using a Big Data framework such as Apache Spark. A scientific evaluation will compare this novel approach with existing ones w.r.t. performance, scalability and feature set.
+
+For faceted search there exist models for varying level of complexity to capture information needs. An review will be done with the goal to devise a model that takes the characteristics of KGs into account and which can operate on standard SPARQL endpoints. Hence, requirements for faceted search on knowledge graphs need to be devised, most likely based on (hypothetical) UI interactions. The focus is here on the query model and query generation rather than a concrete UI design. On this basis, aspects such as the representation of constraints and the query generation need to be derived. A foreseeable challenge in this regard will be to find a trade off between complexity and expressiveness.
+
+For the KG setup evaluation, the approach is to collect real world query log files from popular SPARQL endpoint hosts, such as DBpedia. A system will be designed and implemented that first extracts static information from SPARQL queries. Then the queries will be decomposed into relevant "fragments", such as basic graph patterns, and the query and its fragments will be benchmarked individually against a configurable RDF store. On this basis, it is expected that scientific insights can be obtained, such as related to the frequency of sparse joins and the use of standard SPARQL features and custom query extensions.
+
+An RDF model needs to be devised that supports the representation of information from static query analysis and connecting it with the obtained runtime information (such as intermediate result set sizes, execution times, counts of distinct values). It is expected that the implementation of this analysis framework can benefit from the experience gathered by the efforts that combine knowledge graph construction with Big Data. The faceted search approach should make it possible to browse and explore reasonably sized subsets of the produced benchmark data.
+
+
 \chapter*{Acknowledgements}
 
+\todo{Reference all the projects across the papers}
 
 

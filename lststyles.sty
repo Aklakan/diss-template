@@ -1,0 +1,252 @@
+\RequirePackage{listings}
+\RequirePackage{xcolor}
+\RequirePackage{environ}
+\RequirePackage{xparse}
+\RequirePackage{expl3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%Listings %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% left aligned fixed width
+%\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% centre aligned fixed width
+%\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% right aligned fixed width
+%\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}	
+
+% left listing indent
+\newlength{\llin}
+\setlength{\llin}{0.8em}
+\newlength{\lrin}
+\setlength{\lrin}{0.8em}
+
+% colours
+\colorlet{cpun}{black!50} % punctuation
+\colorlet{cnum}{magenta!60!black} % numbers
+\colorlet{cdel}{black!60} % delimiters
+\colorlet{cvar}{blue!50!black} % variables
+\colorlet{ckey}{magenta!50!black} % keywords
+\colorlet{ckeyb}{blue!40!black} % keywords (second colour)
+\colorlet{ccom}{gray} % comments
+\colorlet{cstr}{green!40!black} % strings
+\colorlet{ctxt}{black!80} % text (xml)
+\colorlet{cide}{red!40!black} % identifiers (iris)
+\colorlet{cloc}{red!40!black} % local name
+\colorlet{cpre}{red!20!black}  % prefix name
+
+% regexes for namespaces
+%\def\noprint#1{}
+%\ExplSyntaxOn
+%\NewDocumentCommand \namespaces { }
+%{
+%    \tl_set:No \l_demo_tl {\the\use:c{lst@token}}
+%    \regex_replace_all:nnN { ([a-zA-Z0-9]*):([a-zA-Z0-9_\-]*) } { \c{textcolor}\cB{ cpre \cE}\cB{ \1 \cE}:\c{textcolor}\cB\{ cloc \cE\}\cB{ \2 \cE} } \l_demo_tl
+%    \tl_use:N \l_demo_tl
+%    \noprint
+%}
+%\ExplSyntaxOff
+
+% avoid colouring delimiters
+%\def\beginlstdelim#1#2#3%
+%{%
+%    \def\endlstdelim{#2\egroup}%
+%    \ttfamily#1\bgroup\color{#3}\aftergroup\endlstdelim%
+%}
+
+\lstdefinestyle{lst}{
+	backgroundcolor=\color{white},
+	frame={single},
+	basewidth=0.5em, 	
+    basicstyle={\ttfamily\footnotesize},   
+    identifierstyle=\color{cide},
+    keywordstyle=\color{ckey},
+    ndkeywordstyle=\color{ckeyb},
+    stringstyle=\color{cstr}\ttfamily,
+    commentstyle=\color{ccom}\ttfamily,
+    tabsize=2,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    extendedchars=true,
+    breaklines=true,
+	columns=fixed, % added late to make spaces fixed width
+	basewidth=0.5em, % added late to make spaces fixed width
+%	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+%	xleftmargin=\llin,
+%	xrightmargin=\lrin,
+	moredelim=[is][\bfseries]{~}{~},
+	escapechar=`
+}
+
+
+\lstdefinelanguage{xml}{ 
+	keywords={rdf,xml,rdfs,ex1},
+	% literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'{\i}}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?``}}1 {¡}{{!``}}1 {<}{{{\color{cdel}<}}}{1} {>}{{{\color{cdel}>}}}{1} {:}{{{\color{cdel}:}}}{1} {/}{{{\color{cdel}/}}}{1} {?}{{{\color{cdel}?}}}{1} {=}{{{\color{cdel}=}}}{1},
+	moredelim=[s][\color{ckey}]{<}{>},
+	% moredelim=*[s][\color{cide}]{<}{>},
+    morestring=[b]",
+    morecomment=[s]{!}{>},
+	morecomment=[s]{?}{?}
+}
+
+\lstdefinelanguage{json}{ 
+    morestring=[b]"
+} 
+
+\lstdefinelanguage{nt}{ 
+	%keywords={version},
+    morestring=[b]",	
+	literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'{\i}}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+	alsoletter={\#/:-}
+}
+
+\lstdefinelanguage{ttl}{ 
+	keywords={a,@prefix,@base,@en,@es,@sv,@fr,@en-US},
+	keywords=[2]{rdf,rdfs,lsqv,lsqr,xsd,spin,swc,prov},
+	keywordstyle=[2]\color{ckeyb},
+	comment=[l]{\#},
+    morestring=[b]",	
+	alsoletter={\#/-.},
+	literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'{\i}}}1 {ó}{{\'o}}1 {ö}{{\"o}}1 {ú}{{\'u}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1,
+    %identifierstyle=\namespaces,
+	moredelim=[s][\color{cide}]{<}{>},
+	extendedchars=true,
+	inputencoding=utf8
+}
+
+\lstdefinelanguage{java}{
+    identifierstyle=\color{black},
+}
+
+\lstdefinelanguage{bash}{
+    identifierstyle=\color{black},
+}
+
+\lstdefinelanguage{http}{
+    keywords={OPTIONS,HEAD,GET,POST,PUT,PATCH,DELETE,Location,No,If,Match,Host,Accept,Content,Link,Allow,Post,Patch,Type,Length,ETag,HTTP,OK,Created},
+	keywordstyle=\color{blue!30!black},
+	comment=[l]{:},
+	commentstyle=\color{cide}\ttfamily
+}
+
+
+\newcommand{\rbtext}[1]{\raisebox{0.5ex}{\fbox{\tiny #1}}}
+\newcommand{\elip}{\raisebox{0.5ex}{\fbox{\tiny ...}}}
+
+\newcommand{\dt}[1]{\textsuperscript{[#1]}}
+\newcommand{\dtint}{\dt{int}}
+
+
+
+\lstdefinelanguage{sparql}{
+    sensitive=false,
+    extendedchars=true,
+	comment=[l]{\#},
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'{\i}}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ø}{\o}1
+		{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 
+		{ü}{{\"u}}1 {Ü}{{\"U}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?``}}1 {¡}{{!``}}1,
+		%{<}{{{\color{cdel}<}}}{1} {>}{{{\color{cdel}>}}}{1}  
+    literate=*{*}{{{\color{cdel}*}}}{1}
+	    %{?}{{{\color{cdel}?}}}{1}
+		{+}{{{\color{cpun}+}}}{1}
+		{/}{{{\color{cpun}/}}}{1}
+		{:}{{{\color{cpun}:}}}{1}
+		{,}{{{\color{cpun}{,}}}}{1} {;}{{{\color{cpun}{;}}}}{1} {.}{{{\color{cpun}{.}}}}{1}
+		{(}{{{\color{cpun}(}}}{1} {)}{{{\color{cpun})}}}{1}
+		{[}{{{\color{cpun}[}}}{1} {]}{{{\color{cpun}]}}}{1}
+		{\{}{{{\color{cpun}{\{}}}}{1} {\}}{{{\color{cpun}{\}}}}}{1},
+	keywords=[1]{select,ask,construct,describe,from,named,where,in,graph,order,by,distinct,limit,offset,service,optional,union,filter,prefix,bound,desc,regex,str,group,having,bind,as,lang,minus,not,exists,langmatches,str,iri,now,coalesce,values,count,undef,concat,isLiteral,datatype,substr,min,max,group\_concat,sample,avg,insert,data,with,using,delete,load,into,graph,add,default,drop,to,silent},
+	keywords=[2]{wd,wdt,ps,pq,rdf,rdfs,xsd}
+}
+
+% no funciona: 		{(}{{{\color{delim}(}}}{1} {)}{{{\color{delim})}}}{1}
+
+\lstdefinestyle{sparqld}{
+	basicstyle=\footnotesize\ttfamily,
+    identifierstyle=\color{cide},
+    keywordstyle=\color{ckey}\bfseries,
+	keywordstyle=[2]\color{ckeyb},
+    stringstyle=\color{cstr}\ttfamily,
+    commentstyle=\color{ccom}\ttfamily,
+	backgroundcolor=\color{white},
+    language={sparql},
+    tabsize=2,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    extendedchars=true,
+	escapechar=`,
+	frame={single},
+	morestring=[b]",
+	moredelim=[s][\color{cide}]{<}{>},
+	moredelim=**[s][\color{cvar}]{?}{\ },
+    %breaklines=true,
+	basewidth=0.5em, 
+	%morecomment=[l]{\ }{:},
+	%moredelim=[l][\color{brown}]{\ }{:},
+	%moredelim=[is][\color{magenta}]{~}{~},
+	%moredelim=**[is][\color{gray}]{£}{£},
+	%moredelim=**[is][\color{blue!50!black}]{$}{$},
+	%moredelim=[is][\color{orange!80!black}]{!}{!},
+	%moredelim=**[is][\color{green!50!black}]{¬}{¬},
+	xleftmargin=5pt,
+    xrightmargin=5pt,
+	aboveskip=13pt,
+	belowskip=8pt
+}
+
+\lstnewenvironment{sparql}{\noindent\minipage{\linewidth}\renewcommand\lstlistingname{Sparql}\lstset{style=sparqld}}{\endminipage}
+
+\newcommand{\lstuppercase}{\uppercase\expandafter{\expandafter\lst@token
+                           \expandafter{\the\lst@token}}}
+\newcommand{\lstlowercase}{\lowercase\expandafter{\expandafter\lst@token
+                           \expandafter{\the\lst@token}}}
+\makeatother
+
+\newcommand{\ckw}{\color{purple}}
+\lstdefinestyle{sqlq}{
+	basicstyle=\footnotesize\ttfamily,
+    identifierstyle=\color{cide},
+    keywordstyle=\color{ckey}\bfseries,
+	keywordstyle=[2]\color{ckeyb},
+    stringstyle=\color{cstr}\ttfamily,
+    commentstyle=\color{ccom}\ttfamily,
+	backgroundcolor=\color{white},
+    language={sqll},	
+	emphstyle=\itshape,
+    tabsize=2,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    extendedchars=true,
+	escapechar=`,
+	frame={single},
+	morestring=[b]",
+	moredelim=[s][\color{cide}]{'}{'},
+	moredelim=**[s][\color{cvar}]{?}{\ }
+}
+						
+\lstdefinelanguage{sqll}{
+    sensitive=false,
+    extendedchars=true,
+	comment=[l]{\#},
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'{\i}}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ø}{\o}1
+		{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 
+		{ü}{{\"u}}1 {Ü}{{\"U}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?``}}1 {¡}{{!``}}1,
+		%{<}{{{\color{cdel}<}}}{1} {>}{{{\color{cdel}>}}}{1}  
+    literate=*{*}{{{\color{cdel}*}}}{1}
+	    %{?}{{{\color{cdel}?}}}{1}
+		{+}{{{\color{cpun}+}}}{1}
+		{=}{{{\color{cpun}=}}}{1}
+		{/}{{{\color{cpun}/}}}{1}
+		{:}{{{\color{cpun}:}}}{1}
+		{,}{{{\color{cpun}{,}}}}{1} {;}{{{\color{cpun}{;}}}}{1} {.}{{{\color{cpun}{.}}}}{1}
+		{(}{{{\color{cpun}(}}}{1} {)}{{{\color{cpun})}}}{1}
+		{[}{{{\color{cpun}[}}}{1} {]}{{{\color{cpun}]}}}{1}
+		{\{}{{{\color{cpun}{\{}}}}{1} {\}}{{{\color{cpun}{\}}}}}{1},
+	keywords=[1]{select,ask,construct,describe,and,from,named,where,in,graph,order,by,distinct,limit,offset,service,optional,union,filter,prefix,bound,desc,regex,str,group,having,bind,as,lang,minus,not,exists,langmatches,str,iri,coalesce,values,count,undef,concat,substr,min,max,group\_concat,sample,avg,insert,data,with,using,delete,load,datetime,date,into,graph,add,default,drop,to,silent,join,on},
+	keywords=[2]{wd,wdt,ps,pq,rdf,rdfs,xsd}
+}						
+						
+\newcommand{\sq}[1]{\lstset{language=SQL,style=sqlq}\begin{lstlisting}#1\end{lstlisting}}	
