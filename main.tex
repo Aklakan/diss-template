@@ -59,6 +59,7 @@
 \usepackage{xspace}
 \usepackage{multirow}
 
+\usepackage{import} % For /subimport{./}{sibling-file.tex}
 
 \setuptodonotes{inline}
 
@@ -395,23 +396,12 @@ marginparwidth=\marginparsep,
 
 %\tableofcontents
 
-\include{sections/Introduction}
+%\include{sections/Introduction}
 %\include{sections/Methodology}
 
-% Construction
-\include{sections/sparklify}
-\include{sections/sml}
-\include{sections/sansa-rml}
-
-% Exploration
-\include{sections/faceted-search}
-\include{sections/facete}
-\include{sections/linkedgeodata}
-
-% Analytics
-
-\include{sections/lsq-framework}
-\include{sections/lsq2}
+\import{chapters/01-construction/}{construction}
+\import{chapters/02-exploration/}{exploration}
+\import{chapters/03-analytics/}{analytics}
 
 % Management
 
