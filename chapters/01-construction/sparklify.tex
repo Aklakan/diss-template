@@ -1,5 +1,5 @@
 
-\section{Introduction}
+\section{Virtual RDF Data Integration with Sparqlify}
 \label{sec:intro}
 In the recent years, our information society has reached the stage where it produces billions of data records, amounting to multiple quintillion of bytes\furl{https://www.domo.com/learn/data-never-sleeps-5}, on a daily basis.
 Extraction, cleansing, enrichment and refinement of information are key to fuel value-adding processes, such as analytics as a premise for decision making.
@@ -10,12 +10,12 @@ The most prominent and promising effort is the W3C consortium with encouraging R
 These data and meta-data can be further processed and analyzed using the de-facto query language for RDF data, SPARQL\furl{https://www.w3.org/TR/sparql11-overview/}.
 
 SPARQL serves as a standard query language for manipulating and retrieving RDF data.
-Querying RDF data becomes challenging when the size of the data increases. 
+Querying RDF data becomes challenging when the size of the data increases.
 Recently, many distributed RDF systems capable of evaluating SPARQL queries have been proposed and developed (\cite{Schatzle:2016:SRQ:2977797.2977806}, \cite{sparqlgx-iswc-2016}).
 Nevertheless, these engines lack one important information derived from the knowledge, \emph{RDF terms}.
 RDF terms includes information about a statement such as \emph{language}, \emph{typed literals} and \emph{blank nodes} which are omitted from most of the engines.
 
-To cover this spectrum requires a specialized system which is capable of constructing an efficient SPARQL query engine. 
+To cover this spectrum requires a specialized system which is capable of constructing an efficient SPARQL query engine.
 Doing so comes with several challenges.
 First and foremost, recently the RDF data is increasing drastically.
 Just as a record, today we count more than 10,0000 datasets\furl{http://lodstats.aksw.org/} available online represented using the Semantic Web standards.
@@ -44,7 +44,7 @@ In this section, we first introduce the basic notions used in throughout the pap
 
 %\begin{definition}[RDF Graph]
 %\label{def:rdf_graph}
-%Let $\mathcal{U}$, be a set of URIs, $\mathcal{B}$ set of blank nodes and $\mathcal{L}$ set of literals, an RDF Graph ($\mathcal{G}$) is defined as a set of triples in the form of ${(s, p, o) \in (\mathcal{U} \cup \mathcal{B}) \times \mathcal{U} \times (U \cup B \cup L)}$, where the subject $s \in (U \cup B)$ is a resource, the predicate $p \in U$ is a property, and the object $o \in (\mathcal{U} \cup \mathcal{B} \cup \mathcal{L})$ is either another resource ($\mathcal{U} \cup \mathcal{B}$) or a literal ($\mathcal{L}$). 
+%Let $\mathcal{U}$, be a set of URIs, $\mathcal{B}$ set of blank nodes and $\mathcal{L}$ set of literals, an RDF Graph ($\mathcal{G}$) is defined as a set of triples in the form of ${(s, p, o) \in (\mathcal{U} \cup \mathcal{B}) \times \mathcal{U} \times (U \cup B \cup L)}$, where the subject $s \in (U \cup B)$ is a resource, the predicate $p \in U$ is a property, and the object $o \in (\mathcal{U} \cup \mathcal{B} \cup \mathcal{L})$ is either another resource ($\mathcal{U} \cup \mathcal{B}$) or a literal ($\mathcal{L}$).
 %\end{definition}
 
 %\begin{definition}[SPARQL]
@@ -74,9 +74,9 @@ In this work, we make use of the above libraries from the Apache Spark stack.
 \centering
 \includegraphics[width=1.0\textwidth]{images/sparklify-architecture.pdf}
 \caption{Sparklify Architecture Overview.}
-% source : https://docs.google.com/presentation/d/16XlT4u3bFn8XdP_eoLJOAu5WPl_q_9zIjAZbllfEEic/edit?usp=sharing 
+% source : https://docs.google.com/presentation/d/16XlT4u3bFn8XdP_eoLJOAu5WPl_q_9zIjAZbllfEEic/edit?usp=sharing
 \label{fig:architecture}
-% source : 
+% source :
 \end{figure*}
 
 \section{Sparklify}
@@ -97,7 +97,7 @@ Sparklify makes use of SANSA bottom layer which corresponds with the extended ve
 This partition model is the most convenient storage model for fast processing of RDF datasets on top of HDFS.
 \paragraph{Data Ingestion (step 1)} RDF data first needs to be loaded into a large-scale storage that Spark can efficiently read from.
 We use Hadoop Distributed File-System (HDFS)\furl{https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html}.
-Spark employ different data locality scheme in order to accomplish computations nearest to the desired data in HDFS, as a result avoiding i/o overhead. 
+Spark employ different data locality scheme in order to accomplish computations nearest to the desired data in HDFS, as a result avoiding i/o overhead.
 \paragraph{Data Partition (step 2)}
 VP approach in SANSA is designed to support extensible partitioning of RDF data.
 Instead of dealing with a single three-column table $(s, p, o)$, data is partitioned into multiple tables based on the used RDF predicates, RDF term types and literal datatypes.
@@ -105,7 +105,7 @@ The first column of these tables is always a string representing the subject.
 The second column always represents the literal value as a Scala/Java datatype.
 Tables for storing literals with language tags have an additional third string column for the language tag.
 \subsubsection{Mappings/Views}
-After the RDF data has been partitioned using the extensible VP (as it has been described on \textit{step 2}) the relational-to-RDF mapping is performed. 
+After the RDF data has been partitioned using the extensible VP (as it has been described on \textit{step 2}) the relational-to-RDF mapping is performed.
 Sparqlify supports both the W3C standard R2RML
 sparqlification~\cite{sml}.
 
@@ -130,7 +130,7 @@ The result set can further used for analysis and visualization using the SANSA-N
 
 \subsection{Algorithm Description}
 \label{subsection:algorithm}
-The algorithm described in this paper has been implemented using the Apache Spark framework (see \autoref{alg:sparklify}). 
+The algorithm described in this paper has been implemented using the Apache Spark framework (see \autoref{alg:sparklify}).
 It constructs the graph (\autoref{line:sparklify_rdf2rdd}) while reading RDF data and converts it into RDD of triples.
 After, it partitions the data (\autoref{line:sparklify_partitiongraph}, for more details see \autoref{alg:partitionGraph}) using the vertical partitioning (VP) strategy.
 Finally, the query evaluator is constructed (\autoref{line:sparklify_sparql}) which is described into more details in \autoref{alg:sparql} for consistency.
@@ -208,7 +208,7 @@ The final step is to create a Spark data frame (\autoref{line:sparql_df}) from t
 $sqlQueryStr \leftarrow rewrite.sqlQueryString$ \label{line:sparql_sql}\\
  %  $sqlQueryStr \leftarrow rewriter.getSqlQueryString$\\  $sqlQueryStr \leftarrow rewriter.getSqlQueryString$ \label{line:sparql_sql}\\
   $df \leftarrow spark.sql(sqlQueryStr)$ \label{line:sparql_df}\\
-         
+
 \Return{$df$}
 \end{algorithm}
 
@@ -225,11 +225,11 @@ Especially, we want to verify and answer the following questions:
     \newitem[Q2]\label{item:Q2}: Does it scale to a larger dataset?
     \newitem[Q3]\label{item:Q3}: How does it scale when adding a larger number of datasets?
 \end{itemize}
-In the following, we present our experiments setting including the benchmarks used and server configurations. 
+In the following, we present our experiments setting including the benchmarks used and server configurations.
 Afterword, we elaborate on our findings.
 
 \subsection{Experimental Setup}
-We used two well-known SPARQL benchmarks for our evaluation. 
+We used two well-known SPARQL benchmarks for our evaluation.
 The \textit{Lehight University Benchmak (LUBM)} v3.1~\cite{Guo2005LUBMAB} and \textit{Waterloo SPARQL Diversity Test Suite (WatDiv)} v0.6~\cite{Alu2014DiversifiedST}.
 Characteristics of the considered datasets are given in \autoref{tab:dataset_info}.
 
@@ -238,7 +238,7 @@ Our \textit{LUBM} datasets consist of 1000, 5000, and 10000 universities.
 The number of triples varies from 138M for 1000 universities, to 1.4B triples for 10000 universities.
 \textit{LUBM}'s test suite is comprised of 14 queries. %provides a Test Queries, more specifically 14 test queries.
 
-We have used \textit{WatDiv} datasets with approximate 10K to 1B triples with scale factors 10, 100 and 1000, respectively. 
+We have used \textit{WatDiv} datasets with approximate 10K to 1B triples with scale factors 10, 100 and 1000, respectively.
 \textit{WatDiv} provides a test suite with different query shapes, therefore, it allows us to compare the performance of Sparklify and the other approach we compare with in a more compact way.
 We have generated these queries using the \textit{WatDiv Query Generator} and report the average mean runtime in the overall results presented below.
 It comes with a set of 20 predefined query templates so-called \textit{Basic Testing Use Case} which is grouped into four categories, based on the query shape : \textit{star (QS)}, \textit{linear (QL)}, \textit{snowflake (QF)}, and \textit{complex (QC)}.
@@ -248,7 +248,7 @@ It comes with a set of 20 predefined query templates so-called \textit{Basic Tes
 
 \begin{table*}
 \centering
-\begin{tabularx}{\textwidth}{Xccccccc}	
+\begin{tabularx}{\textwidth}{Xccccccc}
 \toprule
 \multirow{2}{*}{$\longrightarrow$} & \multicolumn{3}{c|}{LUBM} & \multicolumn{4}{c}{Watdiv} \\
 \cline{2-8}  \rule{0pt}{10pt}
@@ -285,7 +285,7 @@ We run the experiments on three datasets, \emph{Watdiv-10M}, \emph{Watdiv-1B} an
 
 \begin{table*}[t]
 \centering
-\begin{tabularx}{\textwidth}{*{6}{X}}	
+\begin{tabularx}{\textwidth}{*{6}{X}}
 \toprule
 \multicolumn{1}{l}{}& \multicolumn{4}{c}{\scriptsize{Runtime (s)} (\scriptsize{mean})} \\
 \cline{2-5}
@@ -349,10 +349,10 @@ Column SPARQLGX-SDE$^{a}$ reports on the performance of SPARQLGX-SDE considering
 Column Sparklify$^{b}$ lists the times required for Sparklify to perform the VP and then the query execution time is reported on the Sparklify$^{c}$.
 Total runtime for Sparklify is shown in the last column, Sparklify$^{d}$.
 
-We observe that the execution of both approaches fails for the \textit{Q2} in the \textit{LUBM-10K} dataset while evaluating the query. 
-We believe that it is due to the reason that \textit{LUBM Q2} involves a triangular pattern which is often resource consuming. 
+We observe that the execution of both approaches fails for the \textit{Q2} in the \textit{LUBM-10K} dataset while evaluating the query.
+We believe that it is due to the reason that \textit{LUBM Q2} involves a triangular pattern which is often resource consuming.
 As a consequence, in both cases, Spark performs the shuffling (e.g. data scanning) while reducing the result set.
-It is interesting to note that for the \textit{Watdiv-1B} dataset, SPARQLGX-SDE fails for the query \textit{C3} when data scanning is performed. 
+It is interesting to note that for the \textit{Watdiv-1B} dataset, SPARQLGX-SDE fails for the query \textit{C3} when data scanning is performed.
 Sparklify is capable of evaluating it successfully.
 Due to the Spark SQL optimizer in conjunction with Sparqlify's approach of rewriting a SPARQL query typically into only a single SQL query -- effectively offloading all query planning to Spark -- Sparklify performs better than SPARQLGX-SDE when the size of the dataset increases (see \textit{Watdiv-1B results} in the \autoref{tbl:performance-analysis}) and when there are more joins involved (see \textit{Watdiv-1B} and \textit{LUBM-10K} results in the \autoref{tbl:performance-analysis}).
 SPARQLGX-SDE evaluates the queries faster when the size of the datasets is smaller, but it degrades when the size of the dataset increases.
@@ -368,7 +368,7 @@ The likely reason for Sparklify's worse performance on smaller datasets is its h
 \defn{Size-up scalability analysis}
 To measure the performance of the data scalability (e.g. size-up) of both approaches, we run experiments on three different sizes of \textit{Watdiv} (see \autoref{fig:sizeup-scalability}).
 We keep the number of nodes constant i.e 6 worker nodes and grow the size of the datasets to measure whether both approaches can deal with larger datasets.
-We see that the execution time for Sparklify grows linearly compared with SPARQLGX-SDE, which keeps staying as near-linear when the size of the datasets increases. 
+We see that the execution time for Sparklify grows linearly compared with SPARQLGX-SDE, which keeps staying as near-linear when the size of the datasets increases.
 The results presented show scalability of Sparklify in context of the sizeup, which addresses the question \ref{item:Q2}.
 
 \defn{Node scalability analysis}
@@ -414,17 +414,17 @@ Here we analyze Watdiv queries run on \textit{Watdiv-100M} dataset in a cluster 
 %    \end{itemize}
 %}
 
-According to \autoref{fig:overall-analysis}, SPARQLGX-SDE performance decreases as the number of triple patterns involved in the query increase. %As it is depicted in the \autoref{fig:overall-analysis}, SPARQLGX-SDE seems to be less performance as the number of triple patterns involved in the query increase. 
+According to \autoref{fig:overall-analysis}, SPARQLGX-SDE performance decreases as the number of triple patterns involved in the query increase. %As it is depicted in the \autoref{fig:overall-analysis}, SPARQLGX-SDE seems to be less performance as the number of triple patterns involved in the query increase.
 This might be due to the fact that SPARQLGX-SDE has to read the whole triple file each time.
-In contrast to SPARQLGX-SDE, Sparklify seems to perform well when there are more triple pattern involved (see queries \textit{QC}, \textit{QF} and \textit{QS} in the \autoref{fig:overall-analysis}) but slightly worst when there are linear queries (see \textit{QL}) evaluated. 
+In contrast to SPARQLGX-SDE, Sparklify seems to perform well when there are more triple pattern involved (see queries \textit{QC}, \textit{QF} and \textit{QS} in the \autoref{fig:overall-analysis}) but slightly worst when there are linear queries (see \textit{QL}) evaluated.
 This may be due to the reason that Sparqlify typically rewrites a SPARQL query into a single SQL query, thus maximizing the opportunities given to the Spark SQL optimizer. Conversely, SPARQLGX-SDE constructs the workflow by chaining Scala API calls, which may restrict the possibilities e.g. in regard to join ordering.
 Based on our findings and the evaluation study carried out in this paper, we show that Sparklify is scalable and the execution time ends in a reasonable time given the size of the dataset.
 
-\section{Use Cases} 
+\section{Use Cases}
 \label{sec:use_cases}
 %\fixme{Gezim: Complete this section.}
 
-Sparklify, as a default query engine for SANSA has been used in different major use cases. 
+Sparklify, as a default query engine for SANSA has been used in different major use cases.
 Below, we list some of them that we are aware of using Sparklify:
 
 \defn{Blockchain -- Alethio Use Case} Alethio\furl{https://aleth.io/} try to present the big picture of the whole Ethereum ecosystem.
@@ -443,9 +443,9 @@ In particular, the project focuses on designing efficient pipelines dealing with
 In this project, Sparklify is used through the SANSA query layer to refine, filter and select the relevant POIs which are needed by the pipelines.
 
 %\defn{QROWD -- Something}
-%QROWD\furl{http://qrowd-project.eu/} is a cross-sectorial project which offers local government and transportation businesses innovative solutions to improve mobility, reduce traffic congestion and make navigation safer and more efficient. 
+%QROWD\furl{http://qrowd-project.eu/} is a cross-sectorial project which offers local government and transportation businesses innovative solutions to improve mobility, reduce traffic congestion and make navigation safer and more efficient.
 %In order to achieve this, QROWD integrate different sources of data by leveraging the value of Big Data processing engine and semantic web technologies.
-%One of the challenges to be tackled in QROWD is the disambiguation while crawling the data. 
+%One of the challenges to be tackled in QROWD is the disambiguation while crawling the data.
 %\fixme{Gezim-to-Claus: I think you know it better to explain it.}
 
 
@@ -459,10 +459,10 @@ In this project, Sparklify is used through the SANSA query layer to refine, filt
 As our main focus is on the area of distributed computing, we omit the centralized systems e.g. RDF-3X~\cite{Neumann2008RRE} or Virtuoso~\cite{Erling2010} (see~\cite{faye2012survey} for a survey) and we review the distributed ones only (see~\cite{kaoudi2015rdf} for a recent survey).
 Further, this set of tools is divided into: \textit{MapReduce-based} systems and \textit{In-Memory} systems e.g. on top of Apache Spark.
 
-\textit{MapReduce systems} -- SHARD~\cite{Rohloff2010} is one approach which groups RDF data into a dedicated partition so-called semantic-based partition. 
+\textit{MapReduce systems} -- SHARD~\cite{Rohloff2010} is one approach which groups RDF data into a dedicated partition so-called semantic-based partition.
 It groups these RDF data by subject and implements a query engine which iterates through each of the clauses used on the query and performs a query processing.
 A MapReduce job is created while scanning each of the triple patterns and generates a single plan for each of the triple pattern which leads to a larger query plan, therefore, it contains too many Map and Reduces jobs.
-PigSPARQL~\cite{Schatzle2011PMS} is yet another approach which uses Hadoop based implementation of vertical partitioning for data representation. 
+PigSPARQL~\cite{Schatzle2011PMS} is yet another approach which uses Hadoop based implementation of vertical partitioning for data representation.
 It translated the SPARQL queries into Pig\furl{https://pig.apache.org/} LATIN queries and uses Pig as an intermediate engine.
 Another approach which is based on the MapReduce is Sempala~\cite{Schatzle2014Sempala} -- as SPARQL-to-SQL approach on top of Hadoop.
 It uses Impala\furl{https://impala.apache.org/} as a distributed SQL processing engine.
@@ -473,15 +473,15 @@ RYA indexes triples into three tables and replicate them across the cluster for 
 It has the mechanism of performing join reorder, but it lacks of the in-memory computation, which makes it not comparable with other systems.
 While the MapReduce paradigm has been realized for disk-based as well as in-memory processing, the concept is not concerned with controlling aspects of general distributed workflows, such as which intermediate results to cache. As a consequence, high level frameworks were devised which may use MapReduce as a building block.%The drawback of using the MapReduce paradigm is the usage of the disk-based processing, therefore, the new solution came out.
 Apache Spark is one of them~\cite{zaharia2012resilient}.
-Below, we will list some of the approaches which make use of the Apache Spark (in-memory computation) framework. 
+Below, we will list some of the approaches which make use of the Apache Spark (in-memory computation) framework.
 
 \textit{In-Memory systems} --
 SPARQLGX~\cite{sparqlgx-iswc-2016} and S2RDF~\cite{Schatzle:2016:SRQ:2977797.2977806} approaches are considered the most recent distributed SPARQL evaluators over large-scale RDF datasets.
 SPARQLGX is a scalable query engine which is capable of evaluating efficiently the SPARQL queries over distributed RDF datasets~\cite{graux2018multi}.
 It provides a mechanism for translating SPARQL queries into Spark executable code for better leveraging the advantage of the Spark framework.
-It uses a simplified VP approach, where each predicate is assigned with a specific parquet file. 
+It uses a simplified VP approach, where each predicate is assigned with a specific parquet file.
 As an addition, it is able to assign RDF statistics for further query optimization while also providing the possibility of directly query files on the HDFS using SDE.
-S2RDF is similar to SPARQLGX, but instead of dealing with direct Spark code (aka RDDs), it translates SPARQL queries into SQL ones run by Spark-SQL. 
+S2RDF is similar to SPARQLGX, but instead of dealing with direct Spark code (aka RDDs), it translates SPARQL queries into SQL ones run by Spark-SQL.
 It introduces a data partitioning strategy that extends VP with additional statistics, containing pre-computed semi-joins for query optimization.
 
 
@@ -494,16 +494,16 @@ Existing Spark-based SPARQL systems mostly
 do not retain all RDF term information consistently while transforming them to a dedicated storage model such as using vertical partitioning.
 Often, this process is both data and computing intensive and raises the need for a scalable, efficient and comprehensive query engine which can handle large scale RDF datasets.
 
-In this paper, we propose \emph{Sparklify}: a scalable software component for efficient evaluation of SPARQL queries over distributed RDF datasets. 
+In this paper, we propose \emph{Sparklify}: a scalable software component for efficient evaluation of SPARQL queries over distributed RDF datasets.
 It uses Sparqify as a SPARQL-to-SQL rewriter for translating SPARQL queries into Spark executable code.
 By doing so, it leverages the advantages of the Spark framework.
 SANSA features methods to execute SPARQL queries directly as part of Spark workflows instead of writing the code corresponding to those queries (sorting, filtering, etc.).
 It also provides a command-line interface and a W3C standard compliant SPARQL endpoint for externally querying data that has been loaded using the SANSA framework.
 We have shown empirically that our approach can scale horizontally and perform well w.r.t to the state-of-the-art approaches.
 
-With this work, we showed that the application of OBDA tooling to Big Data frameworks achieves promising results in terms of scalability. 
-We present a working prototype implementation that can serve as a baseline for further research. 
-Our next steps include evaluating other tools, such as Ontop~\cite{Calvanese2017OntopAS}, and analyze how their performance in the Big Data setting can be improved further. 
+With this work, we showed that the application of OBDA tooling to Big Data frameworks achieves promising results in terms of scalability.
+We present a working prototype implementation that can serve as a baseline for further research.
+Our next steps include evaluating other tools, such as Ontop~\cite{Calvanese2017OntopAS}, and analyze how their performance in the Big Data setting can be improved further.
 For example, we intend to investigate how OBDA tools can be combined with dictionary encoding of RDF terms as integers and evaluate the effects.
 
 %Although we have achieved %reasonable results in %terms of scalability, we %further plan to cover more %SPARQL fragments.
@@ -514,7 +514,7 @@ For example, we intend to investigate how OBDA tools can be combined with dictio
 %\bibliographystyle{abbrv}
 %\bibliography{references}
 
-%\clearpage 
+%\clearpage
 
 %{\huge Pages: \the\numexpr\value{page}-1\relax{} (Limit: 16)}
 

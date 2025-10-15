@@ -1,12 +1,12 @@
 
 
-\section{Introduction}
+\section{Leveraging Big Data for RML Execution}
 RML (RDF Mapping Language) and SPARQL (SPARQL Protocol and RDF Query Language) are two important tools in the construction of knowledge graphs and the Semantic Web.
 RML is an RDF-based language used for mapping data from different sources to RDF. It allows developers to transform and integrate data from various formats such as CSV, JSON, and XML into RDF triples.
 SPARQL is an expressive query language used to retrieve data from RDF triple stores. Its federated query feature allows developers to write complex queries that can retrieve data from multiple sources.
 %Together, RML and SPARQL play a crucial role in the construction of knowledge graphs, which are used to represent and interlink data from multiple sources, creating a more comprehensive view of a particular domain.
 %As the amount of data on the web continues to grow, the use of RML and SPARQL is becoming increasingly important for
-%enabling 
+%enabling
 %the creation of large knowledge graphs.
 %powerful applications.
 So far, both approaches are treated as different: On the one hand there are tools specifically for
@@ -42,13 +42,13 @@ The implementation of our approach is part of our RDF Processing Toolkit (RPT)\f
 
 \section{Related Work}
 \label{sec:related-work}
-In this section we provide an overview of contemporary SPARQL and RML based knowledge graph construction approaches 
-%mapping languages, RML processors, %benchmarks 
+In this section we provide an overview of contemporary SPARQL and RML based knowledge graph construction approaches
+%mapping languages, RML processors, %benchmarks
 as well as a brief summary of Apache Spark.
 As there exist many mapping languages\cite{Meester2019, ChavesFraga2021, IglesiasMolina2022a, Assche2023}, a discussion of general concepts and translations between them can be found in \cite{Corcho2020, IglesiasMolina2022}.
 
 %\citet{Corcho2020} and \citet{IglesiasMolina2022}.
-%Mapping of data to RDF graphs is usually either done with custom implementations, direct mappings, or using dedicated mapping languages\citep{Dimou2020}. 
+%Mapping of data to RDF graphs is usually either done with custom implementations, direct mappings, or using dedicated mapping languages\citep{Dimou2020}.
 
 %and the parallelization framework Apache Spark.
 
@@ -61,7 +61,7 @@ As there exist many mapping languages\cite{Meester2019, ChavesFraga2021, Iglesia
 %\subsection{R2RML and RML}
 %\todo{cite our ldow 2015 paper}.
 %R2RML and RML are categorized by  \citet{IglesiasMolina2022a} as "RDF-based".
-%Beside the "RDF-based"\cite{IglesiasMolina2022a} R2RML and RML we want to outline SPARQL. 
+%Beside the "RDF-based"\cite{IglesiasMolina2022a} R2RML and RML we want to outline SPARQL.
 %\subsection{SPARQL}
 %is a recursive acronym for \emph{SPARQL Protocol and RDF Query Language} and
 \emph{SPARQL} is a W3C standard for processing (loading, retrieving, transforming and updating) RDF data\footnote{\url{https://www.w3.org/TR/sparql11-query/}}.
@@ -74,7 +74,7 @@ SPARQL Anything extends SERVICE evaluation such that references to remote non-RD
 SPARQL-Generate features a SPARQL-based template language which can produce output beyond what is possible with conventional SPARQL.
 
 Our JenaX project compares to these approaches as follows: JenaX provides (among other things) SPARQL plugins for the Apache Jena ecosystem that allow for processing heterogeneous data within the SPARQL syntax already supported by the framework.
-As part of this effort we contributed a plugin system to facilitate interoperability of custom SERVICE execution implementations\footnote{\url{https://github.com/apache/jena/pull/1388}}. 
+As part of this effort we contributed a plugin system to facilitate interoperability of custom SERVICE execution implementations\footnote{\url{https://github.com/apache/jena/pull/1388}}.
 The SPARQL extensions for processing RML sources, as described in this paper, are built on this system.
 While some of JenaX's SPARQL extension functions for XML, JSON and CSV processing conceptually overlap with those provided by SPARQL-Generate, there are yet differences in the implementations. For example, JenaX provides dedicated RDF datatype implementations that internally retain JSON and XML data in an object model, whereas SPARQL-Generate (as of version 2.0.12) falls back to string representations.
 In order to avoid clashes we use IRIs in the \emph{norse} namespace for our implementations.
@@ -84,7 +84,7 @@ In order to avoid clashes we use IRIs in the \emph{norse} namespace for our impl
 %For example, JenaX supports dedicated RDF datatype implementations that internally retain JSON and XML data in an object model.  SPARQL-Generate (2.0.12) functions
 %For example, JenaX supports dedicated RDF datatype implementations for JSON and XML that internally store the data in an object model which can be leveraged and the performance characteristics.
 %For example, JenaX provides RDF datatype implementations that internally store JSON and XML in an object model in order to allow for fast operations whereas SPARQL-generate functions so far currently parse and produce strings.
-%For example, JenaX features specialized RDF datatype implementations that internally represent JSON and XML in an object model rather than strings. 
+%For example, JenaX features specialized RDF datatype implementations that internally represent JSON and XML in an object model rather than strings.
 
 %\todo{finish}
 %The \emph{Not Only RDF SPARQL Extensions} (NORSE) SPARQL extensions introduced in \Cref{sec:NORSE} add support for CSV and JSON input.
@@ -99,7 +99,7 @@ On the one hand these mappings can be used in ETL processes to dump databases as
 \emph{RML}\footnote{\url{https://rml.io/specs/rml/}} is an extension of R2RML which adds additional vocabulary for mapping non-relational data\citep{Dimou2014, Dimou2020}. In essence these additional declarations allow for expressing a mapping of non-relational data (such as XML and JSON) into a relational model where from each row RDF tuples are generated. Like R2RML it suffers from verbosity, for which reason simplified models were derived such as YARRRML\cite{heyvaert2018declarativeyarrrml}.
 A mapping translation between ShExML\cite{GarciaGonzalez2021} and RML is presented by \cite{GarciaGonzalez2022}.
 
-There exist several RML processors \cite{ArenasGuerrero2021, Iglesias2023}\footnote{\url{https://github.com/kg-construct/awesome-kgc-tools}} for the well known extension RML of the W3C standard R2RML. 
+There exist several RML processors \cite{ArenasGuerrero2021, Iglesias2023}\footnote{\url{https://github.com/kg-construct/awesome-kgc-tools}} for the well known extension RML of the W3C standard R2RML.
 %\citet{ArenasGuerrero2021} gives an overview on the state of the art and compares them using the Madrid GTFS benchmark.
 %\citet{Iglesias2023} introduces some optimization and compares the RML processors RMLMapper, RocketRML, Morph-KGC and SDM-RDFizer using the Madrid GTFS benchmark and the SDM-Genomic-Datasets.
 In this paper we are comparing benchmarks with the following: %Morph-KGC and SDM-RDFizer.
@@ -125,7 +125,7 @@ A survey on RML tools\cite{ArenasGuerrero2021} conducted in 2021 evaluated 3 vir
 % Madrid GTFS benchmark\footnote{\url{https://github.com/oeg-upm/gtfs-bench}}\cite{chaves2020gtfs} and the SDM-Genomic-Datasets benchmark\footnote{\url{https://figshare.com/articles/dataset/SDM-Genomic-Datasets/14838342/1}}.
 The \emph{SDM-Genomic-Datasets benchmark}\footnote{\url{https://figshare.com/articles/dataset/SDM-Genomic-Datasets/14838342/1}} was introduced by \cite{Iglesias2020}.
 This benchmark is motivated from the biomedical domain and based on the Catalogue Of Somatic Mutations In Cancer\footnote{\url{https://cancer.sanger.ac.uk/cosmic}}.
-    
+
 %\begin{itemize} \label{sec:benchmarks}
     %\label{sec:bench-madrid}
 
@@ -207,13 +207,13 @@ Consequently, every TriplesMap's term map can be represented using a freshly all
   \item \lstinline{[ rr:reference "ref" ; rr:termType rr:IRI ]} $\rightarrow$ \lstinline{BIND(IRI(access(?source, "ref")) AS ?v0)}
   %\hspace{1cm}
   \item \lstinline{[ rr:reference "ref" ; rr:termType rr:BlankNode ]} $\rightarrow$
-  
+
   \hspace{1cm}\lstinline{BIND(BNODE(access(?source, "ref")) AS ?v0)}
   \item \lstinline{[ rr:reference "ref" ; rr:datatype xsd:float ]} $\rightarrow$
-  
+
   \hspace{1cm}\lstinline{BIND(STRDT(access(?source, "ref"), xsd:float) AS ?v0)}
   \item \lstinline{[ rr:reference "ref" ; rr:language "en" ]} $\rightarrow$
-    
+
   \hspace{1cm}\lstinline{BIND(STRLANG(access(?source, "ref"), "en") AS ?v0)}
 \end{itemize}
 \end{footnotesize}
@@ -223,12 +223,12 @@ Consequently, every TriplesMap's term map can be represented using a freshly all
 \end{figure*}
 
 %  \hspace{1cm}\lstinline{BIND(STRLANG(access(?source, "ref"), "en") AS ?v0)}
-%  \item \lstinline{[ rr:reference "ref" ; rml:languageMap [ rml:reference "lang" ] ]} $\rightarrow$ 
+%  \item \lstinline{[ rr:reference "ref" ; rml:languageMap [ rml:reference "lang" ] ]} $\rightarrow$
 
 
 \subsection{Translating RML References}
 \label{sec:rml-ref-to-sparql}
-The concrete expression of the \texttt{access} function depends on the logical sources' format. Because the format is specified, we can rewrite \texttt{access} with the following concrete functions, where \texttt{REF} is substituted with reference expression string.%the argument to \texttt{access}: 
+The concrete expression of the \texttt{access} function depends on the logical sources' format. Because the format is specified, we can rewrite \texttt{access} with the following concrete functions, where \texttt{REF} is substituted with reference expression string.%the argument to \texttt{access}:
 %RML references are translated to the following SPARQL functions:
 \begin{itemize}
 % NOTE!!! Overleaf incorrectly marks an error here, please do not correct!!!
@@ -248,7 +248,7 @@ Every \texttt{rr:RefObjectMap} results in an independent CONSTRUCT query with on
 
 \subsubsection{Duplicate-Reducing Self Join Elimination}
 %\todo{Can we describe it better here?}
-%Without loss of generality, a TriplesMap 
+%Without loss of generality, a TriplesMap
 %RefObjectMap represents a JOIN of two relations which are specified by the child and parent TriplesMaps.
 % If either side's projected columns are a subset of the join key then we can remove the join.
 %\[
@@ -256,7 +256,7 @@ Every \texttt{rr:RefObjectMap} results in an independent CONSTRUCT query with on
 %\]
 For time-efficient execution of RML mappings, such as the ones used in the GTFS-Madrid-Benchmark, it is known that a form of self-join elimination must be performed\cite{Iglesias2020, arenas2022morphkgc}.
 %Given an arbitrary relation, such as a CSV file, it is not generally possible to assert the uniqueness of columns because of the lack of metadata.
-%(either from an external source or obtained using pre-processing), 
+%(either from an external source or obtained using pre-processing),
 %is not directly possible to determine whether columns have unique values.
 %As a consequence, schematic self-join elimination based on uniqueness constraints is typically not possible without prior computation of metadata.
 %However,
@@ -292,7 +292,7 @@ Sorted RDF data eases inspection of the available information and assessment of 
 
 %produce a uniqueness and ordering of the produced tuples.
 %A problem with SPARQL 1.1 is that it does not directly provide DISTINCT and ORDER BY operators for CONSTRUCT queries. Fortunately, a recent advancement towards the next version of SPARQL is the introduction of \texttt{LATERAL}. This feature makes it possible to convert CONSTRUCT queries into equivalent SELECT ones that project three or four variables (for triples or quads, respectively) as shown in the remainder.
-% as well as leveraging early adopting implementations 
+% as well as leveraging early adopting implementations
 
 \subsection{Merging CONSTRUCT Queries using LATERAL}
 There are two main issues with SPARQL 1.1 CONSTRUCT queries for the purpose of producing sorted and unique knowledge graph output:
@@ -322,7 +322,7 @@ Given a set of CONSTRUCT queries, a generic \emph{merge} can be accomplished bas
 
 %, and \texttt{CONSTRUCT} with graph patterns .
 
-%Evaluation of a CONSTRUCT query evaluates its involved graph pattern as a SELECT query and using each obtained binding to instantiate the tuple patterns of the template. 
+%Evaluation of a CONSTRUCT query evaluates its involved graph pattern as a SELECT query and using each obtained binding to instantiate the tuple patterns of the template.
 %However, with SPARQL 1.1 it is not easily and/or efficiently possible to generally express uniqueness of the produced tuples.
 % However, some engines already support features that will likely make it into the SPARQL 1.2 specification
 %Even though SPARQL 1.2 is
@@ -331,7 +331,7 @@ Given a set of CONSTRUCT queries, a generic \emph{merge} can be accomplished bas
 \begin{figure*}[!h]
  \begin{minipage}[t]{0.29\textwidth}
   \centering
-  \begin{lstlisting}[language=SPARQL]      
+  \begin{lstlisting}[language=SPARQL]
 CONSTRUCT {
   s1 p1 o1
   ...
@@ -356,7 +356,7 @@ WHERE {
         ...
       UNION
         { BIND(gn AS ?g)
-          BIND(sn AS ?s) BIND(pn AS ?p) BIND(on AS ?o) }      
+          BIND(sn AS ?s) BIND(pn AS ?p) BIND(on AS ?o) }
     }
   } ORDER BY ?s ?p ?o ?g
 }
@@ -418,7 +418,7 @@ WHERE {
   } ORDER BY ?s ?p ?o
 }
   \end{lstlisting}
-  %| i \in \{ 1, \ldots, n \}$ 
+  %| i \in \{ 1, \ldots, n \}$
 %  \caption{listing}{Another sub caption}
  \end{minipage}
  \vspace*{-5mm}
@@ -426,7 +426,7 @@ WHERE {
 \label{fig:combine-lateral}
 \end{figure*}
 
-%Intutively, it extends SPARQL with support for mapping a single binding to a set of bindings by parameterizing a graph pattern with it. ''flat-Map`` operations 
+%Intutively, it extends SPARQL with support for mapping a single binding to a set of bindings by parameterizing a graph pattern with it. ''flat-Map`` operations
 
 \subsection{Partitioning Mappings}
 In~\Cref{sec:rml-to-sparql} we showed how to translate RML TriplesMaps into a set of SPARQL CONSTRUCT queries. Furthermore, we described how a set of CONSTRUCT queries can be combined into a single one using the novel \texttt{LATERAL} keyword.
@@ -467,10 +467,10 @@ Note, that more sophisticated rules can be devised to split expressions such as 
 %    \item Pulling constant assignments up over distinct \texttt{DISTINCT}:
     \item \lstinline{DISTINCT(EXTEND(var, constant, subOp))} $\rightarrow$ \lstinline{EXTEND(var, constant, DISTINCT(subOp))}
     \item \lstinline{UNION(EXTEND(var, constant, left), EXTEND(var, constant, right))} $\rightarrow$
-    
+
     \hspace{1cm}\lstinline{EXTEND(var, constant, UNION(left, right))}
     \item \lstinline{EXTEND(var, non-constant-expr, EXTEND(var, constant, subOp))} $\rightarrow$
-    
+
     \hspace{1cm}\lstinline{EXTEND(var, constant, EXTEND(var, non-constant-expr, subOp))}
 \end{itemize}
 \vspace*{-5mm}
@@ -485,7 +485,7 @@ In this section we provide a brief overview of our related implementations: The 
 \paragraph{NORSE SPARQL Extensions and RPT}
 JenaX is our project of unofficial extensions for the Apache Jena project. Among its features are the \emph{NORSE} SPARQL extensions. Adding the plugin module as a Maven dependency enhances a Jena-based project with the datatypes and functions for processing CSV, XML and JSON\footnote{\url{https://mvnrepository.com/artifact/org.aksw.jenax/jenax-arq-plugins-bundle}}.
 
-%Committede to upstreaming stable features to Jena or conversely, upstreaming enhancements in order 
+%Committede to upstreaming stable features to Jena or conversely, upstreaming enhancements in order
 \paragraph{Evaluating SPARQL with SANSA and Apache Spark}
 Our approach to evaluating SPARQL in Spark is a direct one: A SPARQL result set is represented as an \lstinline{RDD<Binding>}.
 %Furthermore, let $\mathrm{Op}$ be the set of SPARQL algebra expressions.
@@ -508,7 +508,7 @@ $[[$JOIN(left, right)$]]$ := $[[$left$]]$.mapToPair($\mu_1 \rightarrow \langle \
 \end{lstlisting}
 where $J$ is the set of join variables $\mathrm{vars}(\mathrm{left}) \cap \mathrm{vars}(\mathrm{right})$ and $\Pi_J(\mu)$ is the projection of a binding to these variables.
 %.filter($(\mu_1, \mu_2) \rightarrow \mathrm{isCompatible}(\mu_1, \mu_2)$)
-%and $\mathrm{joinKey}$ is a function that maps each binding to a 
+%and $\mathrm{joinKey}$ is a function that maps each binding to a
 %$\mathrm{vars}(\mathrm{left}) \cap \mathrm{vars}(\mathrm{right})$
 
 \item \begin{lstlisting}[mathescape=true]
@@ -531,7 +531,7 @@ $[[$EXTEND(var, expr, subOp)$]]$ := $[[$subOp$]]$.map($\mu \rightarrow \mu \cup 
 \end{itemize}
 \vspace*{-5mm}
 \caption{Evaluation of selected SPARQL operations with Apache Spark}
-\label{lst:sparql-to-spark} 
+\label{lst:sparql-to-spark}
 \end{figure*}
 
 % Issue: The RML sources  actually require this additional project https://github.com/Scaseco/r2rml-api-jena
@@ -574,7 +574,7 @@ In addition, we evaluated the tools on the SDM-Genomic-Dataset as this includes 
 As can be seen from~\Cref{fig:eval-chart-execution-time} the execution times for both tools on both workloads converge to scaling linearly.
 On smaller sizes Morph\_KGC outperforms RPT/SANSA. With increasing data scale the Apache Spark-based approach gains an advantage. However, on the workload that is mainly about duplicate removal the performance benefit is quite small considering CPU usage:
 Morph's average CPU usage in both scenarios is roughly around 400\% whereas RPT/SANSA's is around 4000\%. This means that the latter requires almost 10 times the CPU resources of the former in order to accomplish the same task.
-There are many aspects that can cause this significant difference: As a primary source we suspect Apache Spark's processing model for DISTINCT which relies on hash partitioning and shuffling of data which involves (de-)serialization. This introduces a significant overhead when compared to e.g. simply keeping records in an in-memory hash set. Also, Jena introduces additional overhead by having to parse all RDF literals for expression evaluation. 
+There are many aspects that can cause this significant difference: As a primary source we suspect Apache Spark's processing model for DISTINCT which relies on hash partitioning and shuffling of data which involves (de-)serialization. This introduces a significant overhead when compared to e.g. simply keeping records in an in-memory hash set. Also, Jena introduces additional overhead by having to parse all RDF literals for expression evaluation.
 The benefit is, that invalid literals are reported whenever they are produced during knowledge graph construction.
 A performance issue which we detected and fixed during profiling was that Jena would needlessly materialize literals during SPARQL evaluation\footnote{\url{https://github.com/apache/jena/pull/1802}}. Overall, further investigations are necessary to assess the impact of all relevant aspects on the performance in detail.
 %the differences in performance in detail.

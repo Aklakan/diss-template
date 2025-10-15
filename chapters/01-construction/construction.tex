@@ -1,6 +1,8 @@
 
 % Construction
 \chapter{Knowledge Graph Construction}
+\todo{Keypoint: We adapted a virtual RDB2RDF system for evaluation with Apache Spark. Sparqlify ported to the spark API. With Ontop we also did all the work but it was much harder to implement (Lorenz did it) and it was never evaluated.}
+
 \todo{TODO FINISH}
 Knowledge Graphs can be constructed mainly virtualization and ETL.
 In this chapter, we discuss data virtualization and the subsequent materialization based on it.
@@ -10,7 +12,151 @@ Contributions: Virtualization and Materialization of OpenStreetMap, a large spat
 %    \item To what extent can we leverage (map-reduced-based) Big Data technology, such as Apache Spark?
 %    \item How can we leverage either approach to create summarization meta data from large RDF datasets, such as VoID descriptions?
 
-\subimport{./}{sparklify}
-\subimport{./}{sml}
-\subimport{/.}{sansa-rml}
 
+\section{Preliminaries}
+\subsection{Virtual vs Materialized Data Integration}
+
+\todo{TODO}
+\subsection{Big Data for Scaling ETL}
+\todo{TODO}
+
+\subsection{Sparklify - SPARQL-to-SQL on Big Data}
+%\label{sec:intro}
+In the recent years, our information society has reached the stage where it produces billions of data records, amounting to multiple quintillion of bytes\furl{https://www.domo.com/learn/data-never-sleeps-5}, on a daily basis.
+Extraction, cleansing, enrichment and refinement of information are key to fuel value-adding processes, such as analytics as a premise for decision making.
+% add value or something
+Devising appropriate (ideally uniform) representations and facilitating efficient querying of data, metadata and provenance arising from such phases constantly poses challenges, especially when data volumes are vast. %For a better representation and capable of extracting desired information there is an effort of better representing such a large amount of data (e.g. metadata).
+%The efforts have been made constantly.
+The most prominent and promising effort is the W3C consortium with encouraging Resource Description Framework (RDF)\furl{https://www.w3.org/TR/rdf11-primer/} as a common data representation and vocabularies (e.g. RDFS, OWL) as a way to include meta-information about the data.
+These data and meta-data can be further processed and analyzed using the de-facto query language for RDF data, SPARQL\furl{https://www.w3.org/TR/sparql11-overview/}.
+
+SPARQL serves as a standard query language for manipulating and retrieving RDF data.
+Querying RDF data becomes challenging when the size of the data increases.
+Recently, many distributed RDF systems capable of evaluating SPARQL queries have been proposed and developed (\cite{Schatzle:2016:SRQ:2977797.2977806}, \cite{sparqlgx-iswc-2016}).
+Nevertheless, these engines lack one important information derived from the knowledge, \emph{RDF terms}.
+RDF terms includes information about a statement such as \emph{language}, \emph{typed literals} and \emph{blank nodes} which are omitted from most of the engines.
+
+To cover this spectrum requires a specialized system which is capable of constructing an efficient SPARQL query engine.
+Doing so comes with several challenges.
+First and foremost, recently the RDF data is increasing drastically.
+Just as a record, today we count more than 10,0000 datasets\furl{http://lodstats.aksw.org/} available online represented using the Semantic Web standards.
+This number is increasing daily including many other (e.g Ethereum\furl{https://goo.gl/mJTkPp} dataset) datasets available at the organization premises.
+In addition, being able to query this large amount of data in an efficient and faster way is a requirement from most of the SPARQL evaluators.
+
+To overcome these challenges, in this paper, we propose \emph{Sparklify}\furl{https://github.com/SANSA-Stack/SANSA-Query/tree/develop/sansa-query-spark/src/main/scala/net/sansa_stack/query/spark/sparqlify}: a scalable software component for efficient evaluation of SPARQL queries over distributed RDF datasets. The conceptual foundation is the application of \emph{ontology-based data access} (OBDA) tooling, specifically SPARQL-to-SQL rewriting, for translating SPARQL queries into Spark executable code. We demonstrate our approach using Sparqlify, which has been used in the LinkedGeoData\furl{http://linkedgeodata.org} community project to serve more than 30 billion triples on-the-fly from a relational OpenStreetMap database.
+Our contributions are:
+\begin{itemize}
+ \item We present a novel approach for vertical partitioning including RDF terms using the distributed computing framework, Apache Spark.
+ \item We developed a scalable query engine using Sparqlify -- a SPARQL-to-SQL rewriter on top of Apache Spark (under the \textit{Apache Licence 2.0}).
+ \item We evaluate our approach with state-of-the-art engines and demonstrate it empirically.
+ \item We integrated the approach into the SANSA~\cite{lehmann-2017-sansa-iswc}\furl{http://sansa-stack.net/} larger framework.
+ Sparklify serves as a default query engine in SANSA.
+ SANSA is an active project and maintained, including issue tracker, mailing list, changelogs, website, etc.
+\end{itemize}
+
+The paper is structured as follows:
+Our approach for data modeling and query translation using a distributed framework is detailed in \autoref{sec:approach} and evaluated in \autoref{sec:evaluation}.
+Related work on the SPARQL query engines is discussed in \autoref{sec:related_work}.
+Finally, we conclude and suggest planned extensions of our approach in \autoref{sec:conclusion}.
+
+
+%%% SML
+
+Despite the success of semantic technologies, a large share of structured knowledge still resides in relational databases.
+For this reason, significant research effort has been invested by the Semantic Web community into making relational databases available as RDF.
+
+% why: mapping languages drawbacks and advantages
+Due to the strong interest in this area, several approaches and languages for mapping relational data to triples have been devised, in particular the W3C standard R2RML\footnote{\url{http://www.w3.org/TR/r2rml/}}.
+While having a standard itself is of high importance, we argue that R2RML has some drawbacks on the syntactical level:
+Writing RDF views in R2RML is very verbose and arguably not as intuitive as it could be.
+%\todo{R4: Where is the foundation for this?
+%Has a user study been created, concluding that there hasn't been an uptake of
+% R2RML because of the syntax? Are the features of R2RML comparable to other languages that in the past have failed?
+%Who claims this? Just the authors? (We should be able to answer this after the
+% user study)}
+The choice of using RDF as base syntax for R2RML has the advantage that people writing mappings can be expected to know RDF.
+However, there is a significant gap between the relational database structure and the structure of the R2RML mapping specifications.
+While graphical editors, such as \cite{sengupta2013editing}\cite{pinkel2014partner}, partially mitigate the problem of having to write those mapping definitions, these also have their limitations.
+%First, there is a number of productive deployments where an additional component is considered a potential security risk.
+%In such an environment it is also likely, that access to the host system is only provided via a text console\todo{Jens: I am not sure that this is a strong argument as you will most likely write the mapping specifications locally and then only tets and slightly refine them on the server.}, effectively hindering the utilization of a graphical frontend.
+In particular, they would have to support both, the full feature set of the mapping language while still be efficient to work with and producing human readable output.
+%, to cater for the scenarios previously described.
+Moreover, in some environments, Web based editors in the spirit of phpmyadmin\footnote{\url{http://www.phpmyadmin.net}} may pose security risks or are not convenient, since many database and RDF experts are simply used to work on text files and textual representations of data and queries.
+While they appreciate unobtrusive help, like syntax checking or code completion, a graphical user interface might impose an unfitting work flow, for example when an administrator is used to be able to perform small database related tasks via a command line interface.
+In this work, we introduce the Sparqlification Mapping Language (SML) as a human friendly alternative to R2RML.
+%To overcome the syntactical issues of R2RML, we introduce the SML mapping language. % in this article.
+%To clarify, our intention is not to make R2RML obsolete, instead we propose an alternative syntax.
+It is noteworthy, that non-RDF syntaxes for which RDF-based versions exist are commonly used the Semantic Web.
+For example, while e.g. OWL ontologies can be written directly in RDF, Manchester OWL Syntax\footnote{\url{http://www.w3.org/TR/owl2-manchester-syntax/}} is a popular and concise alternative used in the primer of the OWL 2 specification itself.
+As another example, while SPARQL queries in principle can be written in RDF using the SPIN SPARQL Syntax\footnote{\url{http://spinrdf.org/sp.html}}, it is uncommon to do so unless special use cases demand this.
+
+SML is based on work towards a unified formal model for RDB2RDF mappings.
+While it has equal expressiveness to R2RML, it uses a different syntactical approach:
+It blends the traditional SQL \texttt{CREATE VIEW} statements with SPARQL \texttt{CONSTRUCT} queries.
+Both features can be expected to be familiar to persons working on RDB2RDF data integration and combined provide a more concise syntax than R2RML.
+In fact, we believe that for RDF itself, history has shown that the seemingly obvious choice of syntactically building on XML has had several drawbacks and the special purpose language Turtle meanwhile enjoys high popularity for manually crafting and editing RDF documents and Turtle 1.1 became a W3C Proposed Recommendation in 2014.
+%\todo{Jörg: If not, R2RML chose ttl over xml for that very reason. Jens: I know. The point is more that RDF initially built on XML as it was popular at the same and later moved to Turtle (special purpose syntax). R2RML initially built on RDF (any serialization format) and later some people may move to SML (special purpose syntax). I think the phrasing is correct, but feel free to improve/clarify if not.}
+Similarly, we believe a more intuitive special purpose RDB2RDF mapping language can provide similar benefits.
+
+% how: briefly summarise SML
+The research on the syntax of SML builds on a comparison of RDB2RDF mapping languages and a subsequently defined formal model of those languages.
+Languages like R2RML and SML are syntactic instances of this formal model.
+We use this model to highlight the equivalence between the languages and derive approaches for converting between them.
+In particular, this implies that any processor, which can work on the W3C R2RML standard, can also use SML as input and no further implementation effort is required to use SML in combination with a number of RDB2RDF engines.
+Our main argument is that SML despite its simplicity provides equal expressiveness and is, therefore, a viable alternative to R2RML.
+%\todo{R4: There is no experiments or evidence that supports the claim that SML
+% is a viable alternative. This one of the most important claims in the paper, but it is not supported with any evidence at all. }
+% contributions
+The contributions of the article are as follows:
+%\vspace{-5mm}
+\begin{itemize}
+ \item Definition of the compact SML mapping language with equal expressiveness to R2RML
+ \item Comparison of RDB2RDF mapping languages.
+ \item A unified formal model of RDB2RDF mapping languages.
+ \item Converters from R2RML to SML and vice versa.
+ \item Syntax highlighting definition for the editor \emph{vim} and an online
+ SML editor with syntax and error highlighting as a demonstrator.
+ %\todo{R4: Additionally, the syntax highlighting and SML editor are clearly engineering tasks and not scientific contributions. }
+ Although this component is an engineering effort, it contributed to
+ the fairness of the user study in terms of providing comparable tool support
+ for both R2RML and SML.
+\end{itemize}
+%\vspace{-5mm}
+
+All tools, demos and the specification of the SML syntax, are available at \url{http://sml.aksw.org}.
+%\todo{Jens: currently returns a 404 error}
+
+The remainder of the article is structured as follows:
+In~\autoref{sec:mapping-language-review} we review existing RDB2RDF mapping
+languages. Subsequently, in~\autoref{sec:model} we present a corresponding
+formal model. The SML syntax is introduced in~\autoref{sec:syntax},
+whereas \autoref{sec:sml-vs-r2rml} compares it to R2RML.
+In \autoref{sec:sml2r2rml} the conversion approach from SML to R2RML is described.
+In \autoref{sec:eval}, we describe a user study via a public survey with 46 participants amounting to almost 16 hours of survey completion time.
+Finally, we conclude this paper in~\autoref{sec:conclusion}.
+
+\section{Related Work}
+\todo{consolidate from the papers}
+
+\section{Simplied RDB to RDF Mappings}
+{
+\let\section\subsection
+\let\subsection\subsubsection
+\subimport{./}{sml}
+}
+
+\section{Sparklify}
+{
+\let\section\subsection
+\let\subsection\subsubsection
+\subimport{./}{sparklify}
+}
+
+\section{Data Materialization}
+{
+\let\section\subsection
+\let\subsection\subsubsection
+\subimport{/.}{sansa-rml}
+}
+
+\section{Discussion}
