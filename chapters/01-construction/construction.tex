@@ -20,7 +20,7 @@ Contributions: Virtualization and Materialization of OpenStreetMap, a large spat
 \subsection{Big Data for Scaling ETL}
 \todo{TODO}
 
-\subsection{Sparklify - SPARQL-to-SQL on Big Data}
+\subsection{OBDA / SPARQL-to-SQL on Big Data}
 %\label{sec:intro}
 In the recent years, our information society has reached the stage where it produces billions of data records, amounting to multiple quintillion of bytes\furl{https://www.domo.com/learn/data-never-sleeps-5}, on a daily basis.
 Extraction, cleansing, enrichment and refinement of information are key to fuel value-adding processes, such as analytics as a premise for decision making.
@@ -138,21 +138,22 @@ Finally, we conclude this paper in~\autoref{sec:conclusion}.
 \section{Related Work}
 \todo{consolidate from the papers}
 
-\section{Simplied RDB to RDF Mappings}
+\section{A Language for Simplied RDB to RDF Mappings}
 {
 \let\section\subsection
 \let\subsection\subsubsection
 \subimport{./}{sml}
 }
 
-\section{Sparklify}
+\section{Sparklify - SPARL to SQL Rewriting on Apache Spark}
 {
 \let\section\subsection
 \let\subsection\subsubsection
 \subimport{./}{sparklify}
 }
 
-\section{Data Materialization}
+\section{Sansa RML Toolkit - SPARQL-based ETL on Apache Spark}
+\todo{Essentially: Sparklify query rewriting on Big Data Frameworks possible but the execution model does not (generally) fit the Map-Reduce paradigm - so performance sucks. But we can leverage Apache Spark for ETL based on RML and this works very well.}
 {
 \let\section\subsection
 \let\subsection\subsubsection
