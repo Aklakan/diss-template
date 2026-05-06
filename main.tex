@@ -1,4 +1,4 @@
-\documentclass[9pt,toc=listof,paper=portrait,paper=24cm:17cm,mpinclude=true,captions=outerbeside,usegeometry=true,\jobname]{scrbook}
+\documentclass[oneside,9pt,toc=listof,paper=portrait,paper=24cm:17cm,mpinclude=true,captions=outerbeside,usegeometry=true,\jobname]{scrbook}
 \usepackage{geometry} %[showframe]
 
 \areaset{10cm}{18.8cm}
@@ -30,8 +30,6 @@
 \usepackage[strict]{changepage}                 % for wider then the typearea
 \usepackage{shorttoc}
 \usepackage{calc}                               % for geometry calculations
-
-
 
 \usepackage{listings}
 \usepackage{booktabs,subcaption,amsfonts,dcolumn}
@@ -98,7 +96,7 @@
 % <sparklify>
 \usepackage[ruled,vlined, linesnumbered]{algorithm2e}
 \usepackage{tabularx}
-\usepackage{booktabs}
+%\usepackage{booktabs}
 \usepackage{fancybox}
 \usepackage{colortbl}
 
@@ -400,11 +398,12 @@ marginparwidth=\marginparsep,
 %\include{sections/Introduction}
 %\include{sections/Methodology}
 
-%\import{chapters/introduction.tex}
+\input{chapters/introduction}
+%\import{chapters/}{introduction}
 \import{chapters/01-construction/}{construction}
 \import{chapters/02-exploration/}{exploration}
 \import{chapters/03-analytics/}{analytics}
-\import{chapters/}{conclusions.tex}
+\import{chapters/}{conclusions}
 
 % Management
 %\include{sections/maven-based-datamanagement}
