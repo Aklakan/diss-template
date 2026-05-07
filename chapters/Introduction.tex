@@ -3,7 +3,10 @@
 % Knowledge Graphs over Large Data Sources: Construction, Exploration and Analytics
 %\chapter*{Introduction}
 %\addcontentsline{toc}{chapter}{Introduction}
-\section{Introduction}
+\chapter{Introduction}
+%\addcontentsline{toc}{chapter}{Introduction}
+%\markboth{Introduction}{Introduction} % Updates the page header
+
 %\addcontentsline{toc}{chapter}{Introduction by B}
 %\vspace{1cm}
 %\noindent
@@ -21,7 +24,7 @@ The essential technologies are the Resource Description Framework (RDF) which sp
 Databases that can store RDF data are referred to as RDF stores\footnote{Other common names are \textit{triple store} and \textit{quad store} referring to more in-depth aspects of RDF stores.}.
 The standard language to query and update RDF stores is called \textit{SPARQL}\footnote{SPARQL is a recursive acronym for \textit{SPARQL Protocol and RDF Query Language}. Sometimes the acronym SPARUL is used to specifically refer to the Update Language. Note, that the situation is similar to the \textit{Structured Query Language} (SQL) which subsumes the sub-languages for querying, updating and data definition.}.
 
-\subsection{Motivation}
+\section{Motivation}
 
 The motivation for this thesis touches three interrelated fields: The construction of KGs, the exploration of KGs and the benchmarking KG setups.
 The promise of a Knowledge Graph is that operations on the uniform data layer become sufficiently simple such that it offsets the resource investment into that graph's construction.
@@ -44,7 +47,7 @@ However, although faceted search is ubiquitous today, it is typically not perfor
 And finally, while RDF stores provide standard SPARQL endpoints, there are substantial differences between the different systems.
 The basic effect is that SPARQL queries that run well on one system may run poorly on another and vice versa. While there are standard benchmarks for RDF databases, there is a lack of systematic analysis of how triple stores perform for different categories of *real-world* SPARQL queries.
 
-\subsection{Goals}
+\section{Goals}
 
 The overall goal of this thesis is to contribute to ease both the construction Knowledge Graphs from heterogeneous data sources, facilitate their exploration and provide the means to evaluate KG setups.
 
@@ -57,7 +60,7 @@ The subsequent goal is to devise how to generate appropriate SPARQL queries from
 In order to evaluate KG setups on real wold queries (rather than synthetic ones), a framework needs to be devised that allows for categorization of SPARQL queries based on their features and supports detailed query execution reports, such as intermediate result set sizes and execution times.
 In general, for the sake of reproducibility, all relevant code should be published as Open Source software.
 
-\subsection{Research Questions}
+\section{Research Questions}
 
 This thesis contributes to the following fundamental challenges in the Semantic Web that build on one another are:
 \begin{enumerate}
@@ -88,7 +91,7 @@ The research question for each part-challenge are as follows:
   \end{enumerate}
 \end{enumerate}
 
-\subsection{Methodological Approach}
+\section{Methodological Approach}
 
 In regard to knowledge graph construction, the approach is to systematically review existing approaches and to devise a novel solution based on the map-reduce paradigm using a Big Data framework such as Apache Spark.
 A scientific evaluation will compare this novel approach with existing ones w.r.t. performance, scalability and feature set.

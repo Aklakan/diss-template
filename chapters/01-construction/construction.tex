@@ -1,7 +1,30 @@
-
-% Construction
 \chapter{Knowledge Graph Construction}
+Knowledge Graph Construction (KGC) is the discipline of transforming raw, heterogeneous data into a structured,
+machine-interpretable representation of domain knowledge, organised as a graph of entities and their relationships.
+While knowledge graphs can be implemented on various data models—including property graphs,
+relational schemas, or document stores—the RDF-based instantiation stands apart:
+it grounds the graph in formal logic, enabling reasoning, unambiguous interpretation, and semantic interoperability across systems.
+Consequently, RDF knowledge graph construction is not merely a data engineering task — it is a semantic artefact design process,
+requiring explicit attention to ontology alignment, identifier stability, and logical consistency.
+\todo{pragmatically its often data engineering, but for complex use cases it is more}
+%This section focuses on this logically grounded instantiation of KGC.
+
+%Knowledge Graph Construction (KGC) is the process of designing and populating a semantically well-founded RDF graph,
+%aimed at enabling precise domain representation, interoperability, and reuse.
+
+Its essential facets are:
+
+\begin{itemize}
+\item \textbf{URI design and stable identification} — establishing globally unique, dereferenceable, and persistent IRIs to ensure referential stability and avoid ambiguity across datasets.
+\item \textbf{Ontology and schema design} — selecting, adapting, or extending lightweight or heavy-weight ontologies (e.g., schema.org, Wikidata, DBpedia, or domain-specific ones like SNOMED CT or QUDT) to define Classes, Properties, and axioms—prioritising reuse and alignment over ad-hoc modeling.
+\item \textbf{Data transformation and mapping} — converting source data into RDF using declarative mapping languages (e.g., RML, D2RQ, or SHACL-based pipelines), while preserving semantics and handling missing/ambiguous values.
+\item \textbf{Schema alignment} — harmonising heterogeneous data models through explicit vocabulary mappings (e.g., via \texttt{owl:equivalentClass}, \texttt{skos:exactMatch}), enabling integration without requiring full ontology reconciliation.
+\item \textbf{Knowledge base integration (selective interlinking)} — optional but high-impact linking to external authoritative KGs (e.g., Wikidata, DBpedia) where it supports validation, enrichment, or cross-system reasoning— undertaken deliberately and at scale only when justified by use-case needs.
+\end{itemize}
+
+This process typically involves formtransfo heterogeneous
 \todo{Keypoint: We adapted a virtual RDB2RDF system for evaluation with Apache Spark. Sparqlify ported to the spark API. With Ontop we also did all the work but it was much harder to implement (Lorenz did it) and it was never evaluated.}
+
 
 \todo{TODO FINISH}
 Knowledge Graphs can be constructed mainly virtualization and ETL.
@@ -12,15 +35,26 @@ Contributions: Virtualization and Materialization of OpenStreetMap, a large spat
 %    \item To what extent can we leverage (map-reduced-based) Big Data technology, such as Apache Spark?
 %    \item How can we leverage either approach to create summarization meta data from large RDF datasets, such as VoID descriptions?
 
+The remainder of this chapter is structured as follows:
+In~\cref{sec:preliminaries}, the foundations of RDF knowledge graph constructions are introduced. This section also
+explains the virtualization and materialization approaches to data integration.
+In~\cref{sec:sml}, the \emph{Sparqlification Mapping Language} (SML) is presented.
+\Cref{sec:sparklify} present our approach that leverages Apache Spark for generic SPARQL query evaluation using SPARQL-to-SQL rewriting.
+However, the map-reduce paradigmn does not work well for generic SPARQL query workloads.
+\Cref{sec:sansa-rml} presents a revised approach for KGC that extends SPARQL with features that make the language suitable for ETL such
+that Apache Spark's map-reduce execution model can be properly leveraged.
+In~\cref{sec:related-work} we present relevant approaches.
+In~\cref{sec:conclusions} we conclude this chapter.
+\todo{revise some formulations}
 
-\section{Preliminaries}
-\subsection{Virtual vs Materialized Data Integration}
+\section{Mapping Languages for Knowledge Graph Construction}
+%\subsection{Virtual vs Materialized Data Integration}
 
 \todo{TODO}
-\subsection{Big Data for Scaling ETL}
+\section{Big Data for Scaling ETL}
 \todo{TODO}
 
-\subsection{OBDA / SPARQL-to-SQL on Big Data}
+\section{OBDA / SPARQL-to-SQL on Big Data}
 %\label{sec:intro}
 In the recent years, our information society has reached the stage where it produces billions of data records, amounting to multiple quintillion of bytes\furl{https://www.domo.com/learn/data-never-sleeps-5}, on a daily basis.
 Extraction, cleansing, enrichment and refinement of information are key to fuel value-adding processes, such as analytics as a premise for decision making.

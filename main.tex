@@ -1,4 +1,6 @@
 \documentclass[oneside,9pt,toc=listof,paper=portrait,paper=24cm:17cm,mpinclude=true,captions=outerbeside,usegeometry=true,\jobname]{scrbook}
+% FIXME Upgrade '9pt' to 'fontsize=9pt' currently fails for some reason
+
 \usepackage{geometry} %[showframe]
 
 \areaset{10cm}{18.8cm}
@@ -398,8 +400,9 @@ marginparwidth=\marginparsep,
 %\include{sections/Introduction}
 %\include{sections/Methodology}
 
-\input{chapters/introduction}
-%\import{chapters/}{introduction}
+%\input{chapters/introduction}
+\import{chapters/}{introduction}
+\import{chapters/}{preliminaries}
 \import{chapters/01-construction/}{construction}
 \import{chapters/02-exploration/}{exploration}
 \import{chapters/03-analytics/}{analytics}

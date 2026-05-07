@@ -29,3 +29,6 @@ todo-papers
 # What's this file? Probably just accident output when trying to exit latex compilation by typing 'x'.
 x.tex
 
+# Ignore all pdfs for now
+*.pdf
+
