@@ -1,0 +1,308 @@
+@inproceedings{lehmann-2017-sansa-iswc,
+  abstract = {Over the past decade, vast amounts of machine-readable structured information have become available through the automation of research processes as well as the increasing popularity of knowledge graphs and semantic technologies. A major research challenge today is to perform scalable analysis of large-scale knowledge graphs to facilitate applications like link prediction, knowledge base completion and question answering. Most analytics approaches, which scale horizontally (i.e., can be executed in a distributed environment) work on simple feature-vector-based input rather than more expressive knowledge structures. On the other hand, analytics methods which exploit expressive structures usually do not scale well to very large knowledge bases. This software framework paper describes the ongoing project Semantic Analytics Stack (SANSA) which supports expressive and scalable semantic analytics by providing functionality for distributed in-memory computing for RDF data. The library provides APIs for RDF storage, querying using SPARQL and forward chaining inference. It includes several machine learning algorithms for RDF knowledge graphs. The article describes the vision, architecture and use cases of SANSA.},
+  added-at = {2017-11-17T14:26:54.000+0100},
+  author = {Lehmann, Jens and Sejdiu, Gezim and B\"uhmann, Lorenz and Westphal, Patrick and Stadler, Claus and Ermilov, Ivan and Bin, Simon and Chakraborty, Nilesh and Saleem, Muhammad and Ngonga, Axel-Cyrille Ngomo and Jabeen, Hajira},
+  biburl = {https://www.bibsonomy.org/bibtex/21ae18ac13750f9cf74227fe0a7c50104/aksw},
+  booktitle = {Proceedings of 16th International Semantic Web Conference - Resources Track (ISWC'2017)},
+  interhash = {eb99dff0ce6a9cdbce2c4cbea115fbee},
+  intrahash = {1ae18ac13750f9cf74227fe0a7c50104},
+  keywords = {2017 bde buehmann chakraborty group_aksw iermilov lehmann mole ngonga saleem sbin sejdiu stadler westphal},
+  owner = {iermilov},
+  timestamp = {2017-11-17T14:26:54.000+0100},
+  title = {Distributed Semantic Analytics using the SANSA Stack},
+  url = {http://svn.aksw.org/papers/2017/ISWC_SANSA_SoftwareFramework/public.pdf},
+  year = 2017
+}
+
+@Article{dbpedia-swj,
+  Title                    = {{DBpedia} - A Large-scale, Multilingual Knowledge Base Extracted from Wikipedia},
+  Author                   = {Jens Lehmann and Robert Isele and Max Jakob and Anja Jentzsch and Dimitris Kontokostas and Pablo N. Mendes and Sebastian Hellmann and Mohamed Morsey and Patrick van Kleef and S{\"o}ren Auer and Christian Bizer},
+  Journal                  = {Semantic Web Journal},
+  Year                     = {2015},
+  Number                   = {2},
+  Pages                    = {167--195},
+  Volume                   = {6},
+
+  Bdsk-url-1               = {http://jens-lehmann.org/files/2014/swj_dbpedia.pdf},
+  Keywords                 = {2014 group_aksw dllearner MOLE sys:relevantFor:infai sys:relevantFor:bis sys:relevantFor:lod2 sys:relevantFor:geoknow topic_Classification lod2page lehmann kontokostas geoknow},
+  Url                      = {http://jens-lehmann.org/files/2014/swj_dbpedia.pdf}
+}
+
+
+@InProceedings{sparqlgx-iswc-2016,
+  Title                    = {SPARQLGX: Efficient Distributed Evaluation of SPARQL with Apache Spark},
+  Author                   = {Graux, Damien
+and Jachiet, Louis
+and Genev{\`e}s, Pierre
+and Laya{\"i}da, Nabil},
+  Booktitle                = {The Semantic Web -- ISWC 2016},
+  Year                     = {2016},
+
+  Address                  = {Cham},
+  Editor                   = {Groth, Paul
+and Simperl, Elena
+and Gray, Alasdair
+and Sabou, Marta
+and Kr{\"o}tzsch, Markus
+and Lecue, Freddy
+and Fl{\"o}ck, Fabian
+and Gil, Yolanda},
+  Pages                    = {80--87},
+  Publisher                = {Springer International Publishing},
+
+  Abstract                 = {sparql is the w3c standard query language for querying data expressed in the Resource Description Framework (rdf). The increasing amounts of rdf data available raise a major need and research interest in building efficient and scalable distributed sparql query evaluators. In this context, we propose sparqlgx: our implementation of a distributed rdf datastore based on Apache Spark. sparqlgx is designed to leverage existing Hadoop infrastructures for evaluating sparql queries. sparqlgx relies on a translation of sparql queries into executable Spark code that adopts evaluation strategies according to (1) the storage method used and (2) statistics on data. We show that sparqlgx makes it possible to evaluate sparql queries on billions of triples distributed across multiple nodes, while providing attractive performance figures. We report on experiments which show how sparqlgx compares to related state-of-the-art implementations and we show that our approach scales better than these systems in terms of supported dataset size. With its simple design, sparqlgx represents an interesting alternative in several scenarios.},
+  ISBN                     = {978-3-319-46547-0}
+}
+
+@article{Schatzle:2016:SRQ:2977797.2977806,
+ author = {Sch\"{a}tzle, Alexander and Przyjaciel-Zablocki, Martin and Skilevic, Simon and Lausen, Georg},
+ title = {S2RDF: RDF Querying with SPARQL on Spark},
+ journal = {Proc. VLDB Endow.},
+ issue_date = {June 2016},
+ volume = {9},
+ number = {10},
+ month = jun,
+ year = {2016},
+ issn = {2150-8097},
+ pages = {804--815},
+ numpages = {12},
+ url = {http://dx.doi.org/10.14778/2977797.2977806},
+ doi = {10.14778/2977797.2977806},
+ acmid = {2977806},
+ publisher = {VLDB Endowment},
+}
+
+@article{Bizer2009TheBS,
+  title={The Berlin SPARQL Benchmark},
+  author={Christian Bizer and Andreas Schultz},
+  journal={Int. J. Semantic Web Inf. Syst.},
+  year={2009},
+  volume={5},
+  pages={1-24}
+}
+
+@inproceedings{Alu2014DiversifiedST,
+  title={Diversified Stress Testing of RDF Data Management Systems},
+  author={G{\"u}nes Aluç and Olaf Hartig and M. Tamer {\"O}zsu and Khuzaima Daudjee},
+  booktitle={International Semantic Web Conference},
+  year={2014}
+}
+
+@article{Neumann2008RRE,
+ author = {Neumann, Thomas and Weikum, Gerhard},
+ title = {RDF-3X: A RISC-style Engine for RDF},
+ journal = {Proc. VLDB Endow.},
+ issue_date = {August 2008},
+ volume = {1},
+ number = {1},
+ month = aug,
+ year = {2008},
+ issn = {2150-8097},
+ pages = {647--659},
+ numpages = {13},
+ url = {http://dx.doi.org/10.14778/1453856.1453927},
+ doi = {10.14778/1453856.1453927},
+ acmid = {1453927},
+ publisher = {VLDB Endowment},
+} 
+
+@InBook{Erling2010,
+  Title                    = {Virtuoso: RDF Support in a Native RDBMS},
+  Author                   = {Erling, Orri
+and Mikhailov, Ivan},
+  Pages                    = {501--519},
+  Publisher                = {Springer Berlin Heidelberg},
+  Year                     = {2010},
+
+  Address                  = {Berlin, Heidelberg},
+
+  Abstract                 = {RDF (Resource Description Framework) is seeing rapidly increasing adoption, for example, in the context of the Linked Open Data (LOD) movement and diverse life sciences data publishing and integration projects. This paper discusses how we have adapted OpenLink Virtuoso, a general purpose RDBMS, for this new type of workload. We discuss adapting Virtuoso's relational engine for native RDF support with dedicated data types, bitmap indexing and SQL optimizer techniques. We further discuss scaling out by running on a cluster of commodity servers, each with local memory and disk. We look at how this impacts query planning and execution and how we achieve high parallel utilization of multiple CPU cores on multiple servers. We present comparisons with other RDF storage models as well as other approaches to scaling out on server clusters. We present conclusions and metrics as well as a number of use cases, from DBpedia to bio informatics and collaborative web applications.},
+  Booktitle                = {Semantic Web Information Management: A Model-Based Perspective},
+  Doi                      = {10.1007/978-3-642-04329-1_21},
+  ISBN                     = {978-3-642-04329-1},
+  Url                      = {https://doi.org/10.1007/978-3-642-04329-1_21}
+}
+
+@inproceedings{zaharia2012resilient,
+  title={Resilient distributed datasets: A fault-tolerant abstraction for in-memory cluster computing},
+  author={Zaharia, Matei and Chowdhury, Mosharaf and Das, Tathagata and Dave, Ankur and Ma, Justin and McCauley, Murphy and Franklin, Michael J and Shenker, Scott and Stoica, Ion},
+  booktitle={Proceedings of the 9th USENIX conference on Networked Systems Design and Implementation},
+  year={2012},
+  publisher = {{USENIX}},
+}
+
+@inproceedings{Armbrust2015SSR,
+ author = {Armbrust, Michael and Xin, Reynold S. and Lian, Cheng and Huai, Yin and Liu, Davies and Bradley, Joseph K. and Meng, Xiangrui and Kaftan, Tomer and Franklin, Michael J. and Ghodsi, Ali and Zaharia, Matei},
+ title = {Spark SQL: Relational Data Processing in Spark},
+ booktitle = {Proceedings of the 2015 ACM SIGMOD International Conference on Management of Data},
+ series = {SIGMOD '15},
+ year = {2015},
+ isbn = {978-1-4503-2758-9},
+ location = {Melbourne, Victoria, Australia},
+ pages = {1383--1394},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2723372.2742797},
+ doi = {10.1145/2723372.2742797},
+ acmid = {2742797},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {data warehouse, databases, hadoop, machine learning, spark},
+}
+
+@InProceedings{iermilov-2017-sansa-iswc-demo,
+    Title = {The {T}ale of {S}ansa {S}park},
+    Author = {Ermilov, Ivan and Lehmann, Jens and Sejdiu, Gezim and B\"uhmann, Lorenz and Westphal, Patrick and Stadler, Claus and Bin, Simon and Chakraborty, Nilesh and Petzka, Henning and Saleem, Muhammad and Ngonga, Axel-Cyrille Ngomo and Jabeen, Hajira},
+    Booktitle = {16th International Semantic Web Conference, Poster \& Demos},
+    Year = {2017}
+}
+
+@article{Guo2005LUBMAB,
+  title={LUBM: A benchmark for OWL knowledge base systems},
+  author={Yuanbo Guo and Zhengxiang Pan and Jeff Heflin},
+  journal={J. Web Semant.},
+  year={2005},
+  volume={3},
+  pages={158-182}
+}
+
+
+@inproceedings{sml,
+  abstract = {The combination of the advantages of widely used relational databases and semantic technologies has attracted significant research over the past decade. In particular, mapping languages for the conversion of databases to RDF knowledge bases have been developed and standardized in the form of R2RML. In this article, we first review those mapping languages and then devise work towards a unified formal model for them. Based on this, we present the Sparqlification Mapping Language (SML), which provides an intuitive way to declare mappings based on SQL VIEWS and SPARQL construct queries. We show that SML has the same expressivity as R2RML by enumerating the language features and show the correspondences, and we outline how one syntax can be converted into the other. A conducted user study for this paper juxtaposing SML and R2RML provides evidence that SML is a more compact syntax which is easier to understand and read and thus lowers the barrier to offer SPARQL access to relational databases.},
+  added-at = {2019-03-15T09:25:32.000+0100},
+  author = {Stadler, Claus and Unbehauen, Joerg and Westphal, Patrick and Sherif, Mohamed Ahmed and Lehmann, Jens},
+  bdsk-url-1 = {svn.aksw.org/papers/2015/LDOW_SML/paper-camery-ready_public.pdf},
+  biburl = {https://www.bibsonomy.org/bibtex/2ad1d4c68bdbb2c689505e5028f53c1b8/aksw},
+  booktitle = {Proceedings of the 8th Workshop on Linked Data on the Web (LDOW2015), Florence, Italy},
+  interhash = {c3136b2835a6d0dc5723565590571bd6},
+  intrahash = {ad1d4c68bdbb2c689505e5028f53c1b8},
+  keywords = {2015 MOLE geoknow group_aksw group_mole lehmann mole peer-reviewed sherif stadler westphal},
+  timestamp = {2019-03-15T09:25:32.000+0100},
+  title = {Simplified {RDB2RDF} Mapping},
+  url = {http://svn.aksw.org/papers/2015/LDOW_SML/paper-camery-ready_public.pdf},
+  year = 2015
+}
+
+
+@inproceedings{Rohloff2010,
+ author = {Rohloff, Kurt and Schantz, Richard E.},
+ title = {High-performance, Massively Scalable Distributed Systems Using the MapReduce Software Framework: The SHARD Triple-store},
+ booktitle = {Programming Support Innovations for Emerging Distributed Applications},
+ series = {PSI EtA '10},
+ year = {2010},
+ isbn = {978-1-4503-0544-0},
+ location = {Reno, Nevada},
+ pages = {4:1--4:5},
+ articleno = {4},
+ numpages = {5},
+ url = {http://doi.acm.org/10.1145/1940747.1940751},
+ doi = {10.1145/1940747.1940751},
+ acmid = {1940751},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {MapReduce, SPARQL, Semantic Web, distributed computing, graph data, performance evaluation, programming, software engineering, systems},
+} 
+
+@inproceedings{Schatzle2011PMS,
+ author = {Sch\"{a}tzle, Alexander and Przyjaciel-Zablocki, Martin and Lausen, Georg},
+ title = {PigSPARQL: Mapping SPARQL to Pig Latin},
+ booktitle = {Proceedings of the International Workshop on Semantic Web Information Management},
+ series = {SWIM '11},
+ year = {2011},
+ isbn = {978-1-4503-0651-5},
+ location = {Athens, Greece},
+ pages = {4:1--4:8},
+ articleno = {4},
+ numpages = {8},
+ url = {http://doi.acm.org/10.1145/1999299.1999303},
+ doi = {10.1145/1999299.1999303},
+ acmid = {1999303},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+} 
+
+@InProceedings{Schatzle2014Sempala,
+  Title                    = {Sempala: Interactive SPARQL Query Processing on Hadoop},
+  Author                   = {Sch{\"a}tzle, Alexander
+and Przyjaciel-Zablocki, Martin
+and Neu, Antony
+and Lausen, Georg},
+  Booktitle                = {The Semantic Web -- ISWC 2014},
+  Year                     = {2014},
+
+  Address                  = {Cham},
+  Editor                   = {Mika, Peter
+and Tudorache, Tania
+and Bernstein, Abraham
+and Welty, Chris
+and Knoblock, Craig
+and Vrande{\v{c}}i{\'{c}}, Denny
+and Groth, Paul
+and Noy, Natasha
+and Janowicz, Krzysztof
+and Goble, Carole},
+  Pages                    = {164--179},
+  Publisher                = {Springer International Publishing},
+
+  Abstract                 = {Driven by initiatives like Schema.org, the amount of semantically annotated data is expected to grow steadily towards massive scale, requiring cluster-based solutions to query it. At the same time, Hadoop has become dominant in the area of Big Data processing with large infrastructures being already deployed and used in manifold application fields. For Hadoop-based applications, a common data pool (HDFS) provides many synergy benefits, making it very attractive to use these infrastructures for semantic data processing as well. Indeed, existing SPARQL-on- Hadoop (MapReduce) approaches have already demonstrated very good scalability, however, query runtimes are rather slow due to the underlying batch processing framework. While this is acceptable for data-intensive queries, it is not satisfactory for the majority of SPARQL queries that are typically much more selective requiring only small subsets of the data. In this paper, we present Sempala, a SPARQL-over-SQL-on-Hadoop approach designed with selective queries in mind. Our evaluation shows performance improvements by an order of magnitude compared to existing approaches, paving the way for interactive-time SPARQL query processing on Hadoop.},
+  ISBN                     = {978-3-319-11964-9}
+}
+
+@article{faye2012survey,
+  title={A survey of RDF storage approaches},
+  author={Faye, David C and Cur{\'e}, Olivier and Blin, Guillaume},
+  journal={Revue Africaine de la Recherche en Informatique et Math{\'e}matiques Appliqu{\'e}es},
+  volume={15},
+  pages={11--35},
+  year={2012}
+}
+
+@article{kaoudi2015rdf,
+  title={RDF in the clouds: a survey},
+  author={Kaoudi, Zoi and Manolescu, Ioana},
+  journal={The VLDB Journal—The International Journal on Very Large Data Bases},
+  volume={24},
+  number={1},
+  pages={67--91},
+  year={2015},
+  publisher={Springer-Verlag New York, Inc.}
+}
+
+@inproceedings{graux2018multi,
+  title={A Multi-Criteria Experimental Ranking of Distributed SPARQL Evaluators},
+  author={Graux, Damien and Jachiet, Louis and Geneves, Pierre and Laya{\"\i}da, Nabil},
+  booktitle={2018 IEEE International Conference on Big Data (Big Data)},
+  pages={693--702},
+  year={2018},
+  organization={IEEE}
+}
+
+
+@inproceedings{Punnoose2012Rya,
+ author = {Punnoose, Roshan and Crainiceanu, Adina and Rapp, David},
+ title = {Rya: A Scalable RDF Triple Store for the Clouds},
+ booktitle = {Proceedings of the 1st International Workshop on Cloud Intelligence},
+ series = {Cloud-I '12},
+ year = {2012},
+ isbn = {978-1-4503-1596-8},
+ location = {Istanbul, Turkey},
+ pages = {4:1--4:8},
+ articleno = {4},
+ numpages = {8},
+ url = {http://doi.acm.org/10.1145/2347673.2347677},
+ doi = {10.1145/2347673.2347677},
+ acmid = {2347677},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {RDF triple store, distributed, scalable},
+} 
+
+@article{Calvanese2017OntopAS,
+  title={Ontop: Answering SPARQL queries over relational databases},
+  author={Diego Calvanese and Benjamin Cogrel and Sarah Komla-Ebri and Roman Kontchakov and Davide Lanti and Mart{\'i}n Rezk and Mariano Rodriguez-Muro and Guohui Xiao},
+  journal={Semantic Web},
+  year={2017},
+  volume={8},
+  pages={471-487}
+}
+
+

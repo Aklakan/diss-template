@@ -135,7 +135,23 @@ The domain ontology describes the actual RDF data exposed and consists of standa
 %@prefix ex: <http://example.com/ns#>.
 
 %\vspace{-5mm}
-\begin{lstlisting}[label=lst:lst1, style=rdf,numbers=left, numberstyle=\tiny, caption=Example of an R2RML mapping.]
+%\begin{lstlisting}[label=lst:lst1, style=rdf,numbers=left, numberstyle=\tiny, caption=Example of an R2RML mapping.]
+%<#TriplesMap1>
+%    rr:logicalTable [ rr:tableName "EMP" ];
+%    rr:subjectMap [
+%        rr:template "http://data.example.com/employee/{EMPNO}";
+%        rr:class ex:Employee;
+%    ];
+%    rr:predicateObjectMap [
+%        rr:predicate ex:name;
+%        rr:objectMap [ rr:column "ENAME" ];
+%    ].
+%\end{lstlisting}
+
+\begin{figure}[!h]
+\centering
+%[numbersep=5pt,numberstyle=\tiny]
+\begin{minted}{turtle}
 <#TriplesMap1>
     rr:logicalTable [ rr:tableName "EMP" ];
     rr:subjectMap [
@@ -146,7 +162,10 @@ The domain ontology describes the actual RDF data exposed and consists of standa
         rr:predicate ex:name;
         rr:objectMap [ rr:column "ENAME" ];
     ].
-\end{lstlisting}
+\end{minted}
+\caption{Example of an R2RML mapping.}
+\label{lst:lst1}
+\end{figure}
 
 %  \todo{R4: Have the same mapping example for all the mapping languages.}
 
@@ -161,31 +180,59 @@ The \emph{D2RQ Platform} provides SPARQL access, a Linked Data server, an RDF du
 \autoref{lst:lst2} shows an example of a D2RQ mapping from a conferences table in a database to the conference class in an ontology.
 %\todo{Jens: If we need more space, we could remove the location property bridge part.}
 
-\begin{lstlisting}[label=lst:lst2, style=rdf,numbers=left, numberstyle=\tiny, caption = D2RQ map for conferences.]
-map:Database1 a d2rq:Database;
-    d2rq:jdbcDSN "jdbc:mysql://localhost/iswc";
-    d2rq:jdbcDriver "com.mysql.jdbc.Driver";
-    d2rq:username "user";
-    d2rq:password "password";
-    .
-map:Conference a d2rq:ClassMap;
-    d2rq:dataStorage map:Database1.
-    d2rq:class :Conference;
-    d2rq:uriPattern "http://conferences.org/comp/confno@@Conferences.ConfID@@";
-    .
-map:eventTitle a d2rq:PropertyBridge;
-    d2rq:belongsToClassMap map:Conference;
-    d2rq:property :eventTitle;
-    d2rq:column "Conferences.Name";
-    d2rq:datatype xsd:string;
-        .
-\end{lstlisting}
+%\begin{lstlisting}[label=lst:lst2, style=rdf,numbers=left, numberstyle=\tiny, caption = D2RQ map for conferences.]
+%map:Database1 a d2rq:Database;
+%    d2rq:jdbcDSN "jdbc:mysql://localhost/iswc";
+%    d2rq:jdbcDriver "com.mysql.jdbc.Driver";
+%    d2rq:username "user";
+%    d2rq:password "password";
+%    .
+%map:Conference a d2rq:ClassMap;
+%    d2rq:dataStorage map:Database1.
+%    d2rq:class :Conference;
+%    d2rq:uriPattern "http://conferences.org/comp/confno@@Conferences.ConfID@@";
+%    .
+%map:eventTitle a d2rq:PropertyBridge;
+%    d2rq:belongsToClassMap map:Conference;
+%    d2rq:property :eventTitle;
+%    d2rq:column "Conferences.Name";
+%    d2rq:datatype xsd:string;
+%        .
+%\end{lstlisting}
+
 %	map:location a d2rq:PropertyBridge;
 %	    d2rq:belongsToClassMap map:Conference;
 %	    d2rq:property :location;
 %	    d2rq:column "Conferences.Location";
 %	    d2rq:datatype xsd:string;
 %	    .
+
+\begin{figure}[!h]
+\centering
+%[numbersep=5pt,numberstyle=\tiny]
+\begin{minted}{turtle}
+map:Database1 a d2rq:Database ;
+    d2rq:jdbcDSN "jdbc:mysql://localhost/iswc" ;
+    d2rq:jdbcDriver "com.mysql.jdbc.Driver" ;
+    d2rq:username "user" ;
+    d2rq:password "password" ;
+    .
+map:Conference a d2rq:ClassMap ;
+    d2rq:dataStorage map:Database1 ;
+    d2rq:class :Conference ;
+    d2rq:uriPattern "http://conferences.org/comp/confno@@Conferences.ConfID@@" ;
+    .
+map:eventTitle a d2rq:PropertyBridge ;
+    d2rq:belongsToClassMap map:Conference ;
+    d2rq:property :eventTitle ;
+    d2rq:column "Conferences.Name" ;
+    d2rq:datatype xsd:string ;
+    .
+\end{minted}
+\caption{D2RQ map for conferences.}
+\label{lst:lst2}
+\end{figure}
+
 
   Generally speaking, D2RQ-ML is close to R2RML with some notable distinctions.
 D2RQ-ML includes the database connection information in the mapping file and uses different constructs to express joins between tables.
@@ -202,13 +249,27 @@ documentation\footnote{\url{https://github.com/ontop/ontop/wiki/ontopOBDAModel}}
 %a table from \emph{IMDB\footnote{\url{http://www.imdb.com/}}} to RDF using
 % \emph{Music Ontology}(MO)\footnote{\url{http://musicontology.com/}}.
 
-\begin{lstlisting}[label=lst:lst3, style=sparql,numbers=left, numberstyle=\tiny, caption = Example of the Ontop mapping language]
+%\begin{lstlisting}[label=lst:lst3, style=sparql,numbers=left, numberstyle=\tiny, caption = Example of the Ontop mapping language]
+%[MappingDeclaration] @collection [[
+%  mappingId     Book collection
+%  target        :BID_{id} a :Book .
+%  source        SELECT id FROM books
+%]]
+%\end{lstlisting}
+
+\begin{figure}[!h]
+\centering
+\begin{minted}{text}
 [MappingDeclaration] @collection [[
   mappingId     Book collection
   target        :BID_{id} a :Book .
   source        SELECT id FROM books
 ]]
-\end{lstlisting}
+\end{minted}
+\caption{Example of the Ontop mapping language}
+\label{lst:lst3}
+\end{figure}
+
 
 %  \begin{lstlisting}[label=lst:lst2, style=sparql,numbers=left,
   % numberstyle=\tiny, caption = Example of the Ontop mapping language] Source (SQL Query):
@@ -228,12 +289,24 @@ An example of a Virtuoso RDF View definition is given in \autoref{lst:lst4}.
 %prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 %prefix prd: <http://localhost:8890/rdfv_demo/schemas/product#>
 
-\begin{lstlisting}[label=lst:lst4, style=rdf,numbers=left, numberstyle=\tiny, caption = Virtuoso RDF views example]
+%\begin{lstlisting}[label=lst:lst4, style=rdf,numbers=left, numberstyle=\tiny, caption = Virtuoso RDF views example]
+%graph <http://localhost/testdata/products#>
+%subject prd:product_iri(PRODUCT.PRODUCT_ID)
+%predicate rdf:type
+%object prd:Product
+%\end{lstlisting}
+
+\begin{figure}[!h]
+\centering
+\begin{minted}{text}
 graph <http://localhost/testdata/products#>
 subject prd:product_iri(PRODUCT.PRODUCT_ID)
 predicate rdf:type
 object prd:Product
-  \end{lstlisting}
+\end{minted}
+\caption{Virtuoso RDF views example}
+\label{lst:lst4}
+\end{figure}
 
 %Graphical based ML
 
@@ -281,7 +354,7 @@ An overview of the introduced RDB2RDF solutions is given in \autoref{tbl:toolcom
 
 \begin{table*}[ht]
     \centering
-    \small
+    \scriptsize
 % {\textwidth}
 %     \begin{tabular}{@{}p{90pt}p{60pt}p{50pt}p{80pt}p{50pt}@{}}
 % \begin{tabularx}{\textwidth}{@{}XXXXXXXXXXXX@{}}
@@ -527,7 +600,7 @@ SQL.
 \begin{listing}[H]
 \caption{EBNF for variable definition expressions}
 \label{lst:vardef}
-\begin{minted}{ebnf}
+\begin{minted}[fontsize=\scriptsize]{ebnf}
 varDefinition = (var '=' rdf-term-ctor-expr)* ;
 
 rdf-term-ctor-expr
@@ -766,15 +839,87 @@ may have, and compare them to SML.
 comparison of the mapping languages for a specific example.
 Both syntactic formats can be converted to each other.
 
+%\begin{figure*}[t]
+%\centering
+%\begin{tabular}{@{}ll@{}}
+%\toprule
+%\emph{SML} & \emph{R2RML}  \\
+%\midrule
+%  \begin{minipage}{0.38\linewidth}
+%    \begin{scriptsize}
+%\begin{verbatim}
+%Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+%Prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+%Prefix ex: <http://ex.org/>
+%
+%Create View hotels As
+%  Construct {
+%    ?s a ex:Hotel ;
+%      rdfs:label ?l ;
+%      ex:vacancy ?v
+%  }
+%  With
+%    ?s = uri(?website)
+%    ?l = plainLiteral(?name,'en')
+%    ?v = typedLiteral(?vacancy,
+%              xsd:boolean)
+%  Constrain
+%    ?s prefix "http://ex.org/"
+%  From
+%    """SELECT website, name,
+%      vacancy FROM hotels"""
+%\end{verbatim}
+%    \end{scriptsize}
+%  \end{minipage}
+%  &
+%  \begin{minipage}{0.60\linewidth}
+%\begin{scriptsize}
+%\begin{verbatim}
+%@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+%@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+%@prefix ex: <http://ex.org/> .
+%
+%<HotelTriplesMap>
+%  rr:logicalTable [ rr:sqlQuery
+%  """SELECT website, name,
+%  vacancy  FROM hotels""" ];
+%
+%  rr:subjectMap [
+%    rr:column "website";
+%    rr:class ex:Hotel
+%  ];
+%  rr:predicateObjectMap [
+%    rr:predicate rdfs:label;
+%    rr:objectMap
+%      [ rr:column "name";
+%        rr:language "en"];
+%  ];
+%  rr:predicateObjectMap [
+%    rr:predicate ex:vacancy;
+%    rr:objectMap
+%      [ rr:column "vacancy";
+%        rr:datatype
+%          xsd:boolean ];
+%  ].
+%  \end{verbatim}
+%\end{scriptsize}
+%
+%\end{minipage}
+%\\\bottomrule
+%\end{tabular}
+%%\vspace{-5pt}
+%\caption{A simple view in SML and R2RML.}
+%\label{fig:sparqlify-ml-r2rml}
+%\end{figure*}
+
 \begin{figure*}[t]
 \centering
-\begin{tabular}{@{}ll@{}}
-\toprule
-\emph{SML} & \emph{R2RML}  \\
-\midrule
-  \begin{minipage}{0.38\linewidth}
-    \begin{scriptsize}
-\begin{verbatim}
+%\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{@{}c@{\hspace{1em}}c@{}}
+% === LEFT: SML (plain text — no lexer needed) ===
+\begin{minipage}[t]{0.45\linewidth}
+\centering
+\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue]{text}
 Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 Prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 Prefix ex: <http://ex.org/>
@@ -788,28 +933,25 @@ Create View hotels As
   With
     ?s = uri(?website)
     ?l = plainLiteral(?name,'en')
-    ?v = typedLiteral(?vacancy,
-              xsd:boolean)
+    ?v = typedLiteral(?vacancy,xsd:boolean)
   Constrain
     ?s prefix "http://ex.org/"
   From
-    """SELECT website, name,
-      vacancy FROM hotels"""
-\end{verbatim}
-    \end{scriptsize}
-  \end{minipage}
-  &
-  \begin{minipage}{0.60\linewidth}
-\begin{scriptsize}
-\begin{verbatim}
+    """SELECT website, name,vacancy FROM hotels"""
+\end{minted}
+\end{minipage}
+&
+% === RIGHT: R2RML (uses global turtle style) ===
+\begin{minipage}[t]{0.52\linewidth}
+\centering
+\begin{minted}[fontsize=\tiny,autogobble]{turtle}
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ex: <http://ex.org/> .
 
 <HotelTriplesMap>
   rr:logicalTable [ rr:sqlQuery
-  """SELECT website, name,
-  vacancy  FROM hotels""" ];
+  """SELECT website, name,vacancy  FROM hotels""" ];
 
   rr:subjectMap [
     rr:column "website";
@@ -828,16 +970,16 @@ Create View hotels As
         rr:datatype
           xsd:boolean ];
   ].
-  \end{verbatim}
-\end{scriptsize}
-
+\end{minted}
 \end{minipage}
-\\\bottomrule
 \end{tabular}
-%\vspace{-5pt}
+%\end{adjustbox}
+
 \caption{A simple view in SML and R2RML.}
 \label{fig:sparqlify-ml-r2rml}
-\end{figure*}%\todo{The rdf:type predicateObjectMap is missing in the `A simple view in SML and R2RML' figure. Maybe use ldots to show that it is left out intentionally}
+\end{figure*}
+
+%\todo{The rdf:type predicateObjectMap is missing in the `A simple view in SML and R2RML' figure. Maybe use ldots to show that it is left out intentionally}
 
 %The following paragraphs
 %we base our discussion on the paragraphs as they
@@ -1078,16 +1220,92 @@ syntax allows the SML processor to understand the SQL natively (i.e.
 without requiring an full SQL parser) and thus consider it for optimizations
 such as self join elimination.
 
+%\begin{figure*}[tb]
+%\centering
+%\begin{tabular}{@{}ll@{}}
+%\toprule
+%\emph{SML} & \emph{R2RML}  \\
+%\midrule
+%
+%  \begin{minipage}{0.38\linewidth}
+%    \begin{scriptsize}
+%\begin{verbatim}
+%Prefix ex: <http://ex.org/>
+%
+%Create View departments As
+%  Construct {
+%    ?d a ex:Department
+%  }
+%  With
+%    ?d = uri(ex:dept, ?name)
+%  From
+%    departments
+%
+%Create View employees As
+%  Construct {
+%    ?e a ex:Employee ;
+%      ex:worksIn ?d
+%  }
+%  With
+%    ?e = uri(ex:emp, ?e.id)
+%    ?d = uri(ex:dept, ?d.name)
+%  From
+%    employees e Join departments d
+%      On (d.id = e.dept_id)
+%\end{verbatim}
+%    \end{scriptsize}
+%  \end{minipage}
+%
+%&
+%  \begin{minipage}{0.60\linewidth}
+%    \begin{scriptsize}
+%\begin{verbatim}
+%@prefix ex: <http://ex.org/> .
+%
+%<#Departments>
+%  rr:logicalTable [ rr:tableName "departments" ];
+%
+%  rr:subjectMap [
+%      rr:template "http://ex.org/dept/{id}" ];
+%      rr:class ex:Department
+%  .
+%
+%<#Employees>
+%  rr:logicalTable [ rr:tableName "employees" ];
+%
+%  rr:subjectMap [
+%      rr:template "http://ex.org/emp/{id}" ;
+%      rr:class ex:Employee ];
+%
+%  rr:predicateObjectMap [
+%    rr:predicate ex:worksIn;
+%    rr:objectMap [
+%      rr:parentTriplesMap <#Departments>;
+%      rr:joinCondition [
+%        rr:child "dept_id";
+%        rr:parent "id";
+%      ];
+%    ];
+%  ].
+%\end{verbatim}
+%    \end{scriptsize}
+%  \end{minipage}
+%\\
+%\bottomrule
+%\end{tabular}
+%%\vspace{-5pt}
+%\caption{A view in SML and R2RML with a referencing object map.}
+%\label{fig:sml-r2rml-refobj}
+%\end{figure*}
+
+
 \begin{figure*}[tb]
 \centering
-\begin{tabular}{@{}ll@{}}
-\toprule
-\emph{SML} & \emph{R2RML}  \\
-\midrule
-
-  \begin{minipage}{0.38\linewidth}
-    \begin{scriptsize}
-\begin{verbatim}
+\begin{tabular}{@{}c@{\hspace{1em}}c@{}}
+% === LEFT: SML (plain text, no highlighting needed) ===
+\begin{minipage}[t]{0.38\linewidth}
+\centering
+\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue]{text}
 Prefix ex: <http://ex.org/>
 
 Create View departments As
@@ -1110,23 +1328,22 @@ Create View employees As
   From
     employees e Join departments d
       On (d.id = e.dept_id)
-\end{verbatim}
-    \end{scriptsize}
-  \end{minipage}
-
+\end{minted}
+\end{minipage}
 &
-  \begin{minipage}{0.60\linewidth}
-    \begin{scriptsize}
-\begin{verbatim}
+% === RIGHT: R2RML (Turtle with rr: namespace) ===
+\begin{minipage}[t]{0.60\linewidth}
+\centering
+\begin{minted}[fontsize=\tiny,autogobble]{turtle}
 @prefix ex: <http://ex.org/> .
 
 <#Departments>
   rr:logicalTable [ rr:tableName "departments" ];
 
   rr:subjectMap [
-      rr:template "http://ex.org/dept/{id}" ];
+      rr:template "http://ex.org/dept/{id}" ;
       rr:class ex:Department
-  .
+  ] .
 
 <#Employees>
   rr:logicalTable [ rr:tableName "employees" ];
@@ -1144,17 +1361,16 @@ Create View employees As
         rr:parent "id";
       ];
     ];
-  ].
-\end{verbatim}
-    \end{scriptsize}
-  \end{minipage}
-\\
-\bottomrule
+  ] .
+\end{minted}
+\end{minipage}
 \end{tabular}
-%\vspace{-5pt}
+
 \caption{A view in SML and R2RML with a referencing object map.}
 \label{fig:sml-r2rml-refobj}
 \end{figure*}
+
+
 
 %\vspace{-15pt}
 

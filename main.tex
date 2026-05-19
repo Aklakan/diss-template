@@ -26,7 +26,16 @@
 \usepackage{subcaption}                         % for subfigure
 \usepackage{newfloat}                           % for \DeclareFloatingEnvironment
 \usepackage[section]{placeins}                  % https://tex.stackexchange.com/questions/279/how-do-i-ensure-that-figures-appear-in-the-section-theyre-associated-with
+
+% Citation style: [Leh+17]
 \usepackage[natbib=true,backend=biber,style=alphabetic-verb]{biblatex}
+
+% Citation style: [1]
+%\usepackage[natbib=true,backend=biber,style=numeric]{biblatex}
+
+% Citation style: [Sen+13b][Pin+14]
+%\usepackage[natbib=true,backend=biber,style=alphabetic]{biblatex}
+
 \usepackage{mparhack}                           % For the right placement of marginpars. https://www.texfaq.org/FAQ-marginparside
 \usepackage{xparse}                             % for environments
 \usepackage[strict]{changepage}                 % for wider then the typearea
@@ -431,6 +440,8 @@
 %% Configure Bibliography
 %\addbibresource{references.bib}
 \addbibresource{chapters/01-construction/sml.bib}
+\addbibresource{chapters/01-construction/sparklify.bib}
+\addbibresource{chapters/01-construction/sansa-rml.bib}
 \addbibresource{chapters/01-construction/maven-based-data-publishing.bib}
 
 \addbibresource{chapters/03-analytics/lsq1.bib}
