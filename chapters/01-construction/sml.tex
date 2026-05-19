@@ -98,7 +98,7 @@ In \autoref{sec:eval}, we describe a user study via a public survey with 46 part
 Finally, we conclude this paper in~\autoref{sec:conclusion}.
 
 %\vspace{-5mm}
-\section{RDB2RDF Systems and Mapping \\ Languages Review}
+\section{RDB2RDF Systems and Mapping Languages Review}
 \label{sec:mapping-language-review}
 % Introduction
 
@@ -502,7 +502,32 @@ SQL.
 %essence of the constructs that R2RML introduces for the purpose of constructing
 %a set of RDF terms from a row of a logical table.
 
-\begin{lstlisting}[caption=EBNF for variable definition expressions, label=lst:vardef]
+%\begin{lstlisting}[caption=EBNF for variable definition expressions, label=lst:vardef]
+%varDefinition = (var '=' rdf-term-ctor-expr)* ;
+%
+%rdf-term-ctor-expr
+%    = bNode '(' expr ')'
+%    | uri '(' expr ')'
+%    | plainLiteral '(' expr (',' expr)? ')'
+%    | typedLiteral '(' expr ',' expr ')'
+%    ;
+%
+%expr-list
+%    = (expr (',' expr)*)?
+%    ;
+%
+%expr
+%    = var     // Denotes a reference to a column
+%    | str '(' expr ')'
+%    | concat '(' expr-list ')'
+%    | urlEncode '(' expr ')'
+%    ;
+%\end{lstlisting}
+
+\begin{listing}[H]
+\caption{EBNF for variable definition expressions}
+\label{lst:vardef}
+\begin{minted}{ebnf}
 varDefinition = (var '=' rdf-term-ctor-expr)* ;
 
 rdf-term-ctor-expr
@@ -522,7 +547,8 @@ expr
     | concat '(' expr-list ')'
     | urlEncode '(' expr ')'
     ;
-\end{lstlisting}
+\end{minted}
+\end{listing}
 
 Example:
 Assume a given relation holding the label of a product:
@@ -1454,49 +1480,6 @@ It should be noted that there is an unknown amount of time required to understan
 
 \emph{Overall preference:} Figure~\ref{fig:time_n_pref} shows that there is an overall preference for SML. This preference does not hold when considering only the group of R2RML experts, but is very significant when considering people not familiar with any of the two mapping languages.
 
-
-\section{Conclusions and Future Work} %no future work so far (not strictly needed) %  and Future Work} \todo{[Claus,Jens]}
-\label{sec:conclusion}
-%\vspace{-5mm}
-In this article, we presented work towards a unified model for RDB2RDF mappings and the
-lightweight mapping language \emph{SML} that reuses familiar elements of SPARQL
-and SQL in order to lower the learning curve and ease the manual writing and maintenance of view definitions.
-An extensive public survey confirmed that this is the case.
-%\todo{R3: would need to be supported with a usability study}
-We provided an in-depth comparison of how SML relates to the R2RML standard, and
-detailed how the former can be automatically converted to the latter.
-%A comprehensive formalization of the RDB-RDF rewriting process based the
-%definition of RDF views of a relational database and bindings, which bridge
-%between the relational and SPARQL algebra.
-
-SML has been successfully deployed in several scenarios:
-We created SML mappings for the BSBM and SP2 benchmarks, two
-popular SPARQL benchmarks that are often used for evaluating RDB2RDF
-mappers.
-Most prominently, we created SML mappings for transforming the
-OpenStreetMap (OSM) database to RDF. These efforts are carried out
-as part of the LinkedGeoData\footnote{\url{http://linkedgeodata.org/}} (LGD) project,
-where we give access to more than 25 billion OSM RDF triples created through
-SPARQL-to-SQL rewriting over about 3 billion relational rows via more than 40
-SML view definitions.
-
-%LGD also includes mappings for the GADM dataset
-Furthermore, SML mappings have been created for two large scale
-linguistic resources: One is the mapping of the Wortschatz
-database\footnote{\url{http://www.wortschatz.uni-leipzig.de/}}, which contains
-statistics, such as frequency and co-occurrences, about words in more
-than 240 languages.
-The other resource is PanLex\footnote{\url{http://ld.panlex.org}}, which is
-a database holding translations of about 19 million expression extracted from
-over 2.000 sources. Links to the corresponding SML mappings are published
-together with our other SML related
-resources\footnote{\url{http://sml.aksw.org}}.
-
-In general, we believe that mapping relational structures to RDF will stay a highly important topic in research and practice to provide an unobtrusive transition towards the use of semantic technologies.
-Providing engineers an intuitive yet powerful language is a crucial step to ease this transition.
-Future work will continue on extending the formalizations as well as sorting out details based on community feedb,
-such as whether an explicit \texttt{FROM QUERY} syntax for specifying SQL queries is preferred over
-the current approach where this is implied by the use of triple quotes.
 
 %\todo{R2: The weakness of SML also should be discussed}
 %\url{http://sml.aksw.org}.

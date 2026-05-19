@@ -43,6 +43,7 @@
 \usepackage{ amssymb }
 %%%%%%%%%%%%%%%
 \usepackage{comment}
+\usepackage{adjustbox}
 %\pgfplotsset{width=10cm,compat=1.9}
 \usepackage{graphicx}
 \usepackage{xcolor}
@@ -62,7 +63,6 @@
 \usepackage{import} % For /subimport{./}{sibling-file.tex}
 
 \setuptodonotes{inline}
-
 
 % <lsq2-commands>
 \newcommand{\dbpedia}{\textsc{DBpedia}\xspace}
@@ -159,10 +159,266 @@
 
 
 % <simplified-r2rml>
-\lstdefinestyle{rdf}{numberblanklines=true, morekeywords={}}
-\lstdefinestyle{sparql}{numberblanklines=true, morekeywords={SELECT, WHERE, FILTER, GROUP, BY, IN, AS, SERVICE, GRAPH}}
+%%%%%\lstdefinestyle{rdf}{numberblanklines=true, morekeywords={}}
+%%%%%\lstdefinestyle{sparql}{numberblanklines=true, morekeywords={SELECT, WHERE, FILTER, GROUP, BY, IN, AS, SERVICE, GRAPH}}
+
 \newcommand{\urlfn}[1]{\footnote{\scriptsize\url{#1}}}
+
 % <simplified-r2rml>
+
+
+% <faceted-browsing-benchmark>
+\usetikzlibrary{shapes.geometric} % required for the ellipse shape
+\usetikzlibrary{arrows, backgrounds, calc, hobby, positioning}
+
+\DeclareMathOperator{\dom}{dom}
+\def\ojoin{\setbox0=\hbox{$\bowtie$}%
+  \rule[-.02ex]{.25em}{.4pt}\llap{\rule[\ht0]{.25em}{.4pt}}}
+\def\leftouterjoin{\mathbin{\ojoin\mkern-5.8mu\bowtie}}
+\def\rightouterjoin{\mathbin{\bowtie\mkern-5.8mu\ojoin}}
+\def\fullouterjoin{\mathbin{\ojoin\mkern-5.8mu\bowtie\mkern-5.8mu\ojoin}}
+\usepackage{pgfplots}
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=tikz/]
+\pgfplotsset{width=10cm,compat=1.9}
+
+\tikzset{vertex style/.style={
+    draw=#1,
+    thick,
+    fill=#1!70,
+    text=white,
+    ellipse,
+    minimum width=2cm,
+    minimum height=0.75cm,
+    font=\small,
+    outer sep=3pt,
+  },
+}
+
+\tikzset{
+  text style/.style={
+    sloped, % the text will be parallel to the connection
+    text=black,
+    font=\footnotesize,
+    above
+  }
+}
+\usepackage{ntheorem}
+\theoremstyle{break}
+
+\let\definition\relax % undefine the environment
+\newtheorem{definition}{Definition}%{\bfseries}{\rmfamily}
+
+\usepackage{newfloat,caption,float}
+\DeclareFloatingEnvironment[
+  fileext = loe,
+  listname = Examples,
+  name = Example,
+  placement = H,
+  within = none,
+  ]{example}
+\captionsetup[example]{labelfont=bf}
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[table]{labelfont=bf}
+\captionsetup[lstlisting]{labelfont=bf}
+
+\definecolor{lightblue}{rgb}{.95,.975,1}
+\definecolor{darkblue}{rgb}{.1,.2,.4}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+%%%%%\lstdefinelanguage{sparql}
+%%%%%{
+%%%%%  morekeywords={SELECT,OPTIONAL,FROM,DISTINCT,WHERE,FILTER,GROUP,ORDER,LIMIT,BY,IN,AS,COUNT},
+%%%%%  sensitive=true, % keywords are not case-sensitive
+%%%%%  morecomment=[l]{//}, % l is for line comment
+%%%%%  morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+%%%%%  morestring=[b]" % defines that strings are enclosed in double quotes
+%%%%%}
+
+%%%%%\lstset{
+%%%%%    language=sparql,
+%%%%%%    language=JavaScript,
+%%%%%    morekeywords={SELECT,OPTIONAL,FROM,DISTINCT,WHERE,FILTER,GROUP,ORDER,LIMIT,BY,IN,AS},
+%%%%%    emphstyle={\color{blue}\bfseries},
+%%%%%    backgroundcolor=\color{lightblue},
+%%%%%    basicstyle=\ttfamily \scriptsize,
+%%%%%    breaklines=true,
+%%%%%    captionpos=b,
+%%%%%    extendedchars=true,
+%%%%%    frame=single,
+%%%%%    framexleftmargin=2pt,
+%%%%%    numbers=none,
+%%%%%    numberbychapter=false,
+%%%%%    numbersep=9pt,
+%%%%%    numberstyle=\tiny,
+%%%%%    showspaces=false,
+%%%%%    showstringspaces=false,
+%%%%%    showtabs=false,
+%%%%%    tabsize=2
+%%%%%}
+
+%%%%%\lstdefinelanguage{bgp}
+%%%%%{
+%%%%%  morekeywords={SELECT,OPTIONAL,FROM,DISTINCT,WHERE,FILTER,GROUP,ORDER,LIMIT,BY,IN,AS},
+%%%%%  sensitive=true, % keywords are not case-sensitive
+%%%%%  morecomment=[l]{//}, % l is for line comment
+%%%%%  morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+%%%%%  morestring=[b]" % defines that strings are enclosed in double quotes
+%%%%%}
+%%%%%\lstset{
+%%%%%%
+%%%%%    basicstyle=\ttfamily\small,
+%%%%%    breaklines=true,
+%%%%%    captionpos=b,
+%%%%%    extendedchars=true,
+%%%%%    frame=none,
+%%%%%    framexleftmargin=2pt,
+%%%%%    numbers=none,
+%%%%%    numberbychapter=false,
+%%%%%    numbersep=9pt,
+%%%%%    numberstyle=\tiny,
+%%%%%    showspaces=false,
+%%%%%    showstringspaces=false,
+%%%%%    showtabs=false,
+%%%%%    tabsize=2,
+%%%%%    backgroundcolor=\color{white}
+%%%%%}
+
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\TAND}{\raisebox{-0.2ex}{\scalebox{1}[1.4]{\texttt{AND}}}}
+\newcommand{\Tand}{\raisebox{-0.1ex}{\scalebox{1}[1.2]{\texttt{AND}}}}
+\newcommand{\Tau}{\mathrm{T}}
+
+\newcommand{\TUNION}{\raisebox{-0.2ex}{\scalebox{1}[1.4]{\texttt{UNION}}}}
+
+
+\newcommand{\predicateOf}{\ensuremath{\mathop{predicate}}}
+\newcommand{\dvarOf}{\ensuremath{\mathop{dvar}}}
+\newcommand{\patternOf}{\ensuremath{\mathop{pattern}}}
+\usepackage{xspace}
+\newcommand{\rdftype}{\ensuremath{\texttt{rdf:type}}\xspace}
+
+\newcommand{\facete}{\textit{Facete}\xspace}
+
+\newcommand{\fqc}{\ensuremath{\mathit{fqc}}}
+\newcommand{\fvc}{\ensuremath{\mathit{fvc}}}
+\newcommand{\afv}{\ensuremath{\mathit{afv}}}
+
+% </faceted-browsing-benchmark>
+
+\lstdefinestyle{rdf}{
+    language=turtle,
+    basicstyle=\ttfamily\scriptsize,
+    backgroundcolor=\color{lightblue},
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=9pt,
+    keywordstyle=\color{darkblue}\bfseries,
+    stringstyle=\color{green!40!black},
+    commentstyle=\color{gray},
+    morecomment=[l][\color{darkblue}]{<},
+    morecomment=[l][\color{darkblue}]{>},
+    moredelim=[s][\color{darkblue}]{<}{>},
+    moredelim=[s][\color{green!40!black}]{"}{"},
+    moredelim=[l][\color{gray}]{.},
+}
+
+\lstdefinestyle{sparql}{
+    language=sparql,
+    basicstyle=\ttfamily\scriptsize,
+    backgroundcolor=\color{lightblue},
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=9pt,
+    keywordstyle=\color{darkblue}\bfseries,
+    stringstyle=\color{green!40!black},
+    commentstyle=\color{gray},
+    morecomment=[l]{\#},
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+}
+
+\lstdefinelanguage{turtle}{
+    morekeywords={a,base,prefix},
+    keywordstyle=\color{darkblue}\bfseries,
+    sensitive=false,
+    morecomment=[l]{\#},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    alsoletter={:-/_.},
+    moredelim=[s][\color{darkblue}]{<}{>},
+}
+
+\lstdefinelanguage{sparql}{
+    morekeywords={SELECT,ASK,CONSTRUCT,DESCRIBE,FROM,NAMED,WHERE,ORDER,BY,DISTINCT,LIMIT,OFFSET,SERVICE,OPTIONAL,UNION,FILTER,GRAPH,WITH,INSERT,DELETE,DATA,LOAD, CLEAR, DROP, ADD, MOVE, COPY, CREATE, ALTER, DEFAULT, ALL, NAMED, OPTIONAL, FILTER, BIND, VALUES, UNION, MINUS, SERVICE, GRAPH, PREFIX, BASE, A},
+    keywordstyle=\color{darkblue}\bfseries,
+    sensitive=false,
+    morecomment=[l]{\#},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[d]{"},
+    alsoletter={?_:-/_.@},
+    moredelim=[s][\color{blue}]{<}{>},
+    moredelim=[s][\color{green!40!black}]{"}{"},
+    moredelim=[l][\color{darkblue}]{?},
+    moredelim=[l][\color{purple}]{'},
+    moredelim=[l][\color{purple}]{"},
+}
+
+% Define your color palette (consistent across RDF/Sparql/EBNF)
+\definecolor{lightblue}{rgb}{0.92,0.96,1.0}       % background
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}          % keywords/nonterminals
+\definecolor{green}{rgb}{0.0,0.5,0.0}             % strings/tokens
+\definecolor{gray}{rgb}{0.4,0.4,0.4}              % comments
+\definecolor{purple}{rgb}{0.5,0.0,0.5}            % variables, IRI components
+\definecolor{darkred}{rgb}{0.6,0.0,0.0}           % optional, for SPARQL keywords
+
+% Global minted defaults (like \lstset)
+\setminted{
+  fontsize=\footnotesize,      % small but readable
+  breaklines=true,            % wrap long lines
+  linenos,                    % line numbers on left
+  numbersep=8pt,              % space between line numbers and code
+  frame=leftline,             % vertical bar on left (cleaner than full frame)
+  framesep=3pt,
+  baselinestretch=1.2,
+  bgcolor=lightblue,
+  tabsize=2
+  % Optional: autogobble for copied code
+  % autogobble=true,
+}
+
+% Per-lexer tuning (this is where the magic happens!)
+\setminted[turtle]{
+  %keywordstyle=\color{darkblue}\bfseries,     % @prefix, @base
+  %stringstyle=\color{green},                  % "string"
+  %commentstyle=\color{gray},                  % # comment
+  % IRI highlighting: minted already colors <iri> specially (blue)
+  % but you can tweak:
+  linenos
+}
+
+\setminted[sparql]{
+  %keywordstyle=\color{darkblue}\bfseries,     % SELECT, WHERE, etc.
+  %stringstyle=\color{green},                  % "string"
+  %commentstyle=\color{gray},                  % # comment
+  % Variables: ?var, $var → orange/purple
+  % minted’s sparql lexer already does this — no need to override
+  linenos
+}
+
+\setminted[ebnf]{
+  % Use custom token coloring if desired (Pygments defaults are good, but...)
+  % nonterminals: blue; terminals: green; operators: black; comments: gray
+  % We’ll lean on Pygments’ built-in EBNF lexer (very accurate)
+  linenos
+}
 
 \setlength{\footnotemargin}{\parindent}
 
@@ -173,7 +429,14 @@
 %\end{tikzpicture}}
 
 %% Configure Bibliography
-\addbibresource{references.bib}
+%\addbibresource{references.bib}
+\addbibresource{chapters/01-construction/sml.bib}
+\addbibresource{chapters/01-construction/maven-based-data-publishing.bib}
+
+\addbibresource{chapters/03-analytics/lsq1.bib}
+\addbibresource{chapters/03-analytics/lsq2.bib}
+\addbibresource{chapters/03-analytics/lsq3.bib}
+
 \DeclareRefcontext{web}{labelprefix=Web:}
 
 \setsansfont{Open Sans}[
@@ -321,7 +584,6 @@ BoldFont = {* Condensed Bold},
   }
 }
 
-
 % Just a helper method for length
 % FROM https://tex.stackexchange.com/a/239496/11820
 \makeatletter
@@ -402,13 +664,22 @@ marginparwidth=\marginparsep,
 
 %\input{chapters/introduction}
 \import{chapters/}{introduction}
-\import{chapters/}{preliminaries}
+\import{chapters/00-preliminaries/}{preliminaries}
 \import{chapters/01-construction/}{construction}
-\import{chapters/02-exploration/}{exploration}
-\import{chapters/03-analytics/}{analytics}
+%\import{chapters/02-exploration/}{exploration}
+%\import{chapters/03-analytics/}{analytics}
 \import{chapters/}{conclusions}
+
+%\bibliographystyle{abbrv}
+%\bibliography{chapters/01-construction/sml.bib}
+%\addbibresource{chapters/01-construction/sml.bib}
+
 
 % Management
 %\include{sections/maven-based-datamanagement}
+\clearpage
+%\chapter*{References}
+%\addcontentsline{toc}{chapter}{References}
+\printbibliography
 
 \end{document}

@@ -4,15 +4,40 @@ machine-interpretable representation of domain knowledge, organised as a graph o
 While knowledge graphs can be implemented on various data models—including property graphs,
 relational schemas, or document stores—the RDF-based instantiation stands apart:
 it grounds the graph in formal logic, enabling reasoning, unambiguous interpretation, and semantic interoperability across systems.
-Consequently, RDF knowledge graph construction is not merely a data engineering task — it is a semantic artefact design process,
-requiring explicit attention to ontology alignment, identifier stability, and logical consistency.
-\todo{pragmatically its often data engineering, but for complex use cases it is more}
-%This section focuses on this logically grounded instantiation of KGC.
 
+Consequently, RDF knowledge graph construction, when approached comprehensively, is not merely a data engineering task — it is a semantic artefact design process,
+requiring explicit attention to ontology alignment, identifier stability, and logical consistency.
+\todo{this could be a bridge to data products / product thinking - that the data package with its metadata itself is a unit of value}
+
+
+% The actual workload automated workload of Knowledge Graph Construction is the data transformation.
+In general, there are two primary approaches to transforming data:
+\begin{itemize}
+  \item \textbf{Materialization:} A processor reads the input datasets and transform them into the output dataset.
+  The resulting output is an independent artifact. The phases of reading, transforming, and writing constitute the process known as Extract, Transform, Load (ETL).
+  \item \textbf{Virtualization:} The output data is a virtual view over the input data.
+  Query rewriting is employed to translate accesses to the virtual dataset into accesses to the input datasets, followed by appropriate post-processing.
+\end{itemize}
+
+The two primary approaches for \emph{implementing} data transformation are:
+\begin{itemize}
+  \item \textbf{Programmatic Approach:} This approach employs a general-purpose programming language to construct the output dataset from input sources.
+  It offers maximum flexibility for complex, arbitrary transformations of input records into output structures.
+  However, this generality often obscures domain-specific semantics, making the logic harder to reason about, maintain, and optimize compared to specialized tools.
+
+  \item \textbf{Declarative Mapping Approach:} These languages leverage the specific features and structures of the input and output data models, often resulting in more succinct and expressive syntax.
+  Crucially, certain declarative mapping languages enable the inversion of the relationship between input and output records.
+  This invertibility facilitates \textit{query rewriting}, thereby supporting virtual data access without materializing the output.
+  While this eliminates the storage costs and ETL latency associated with material copies, it introduces significant complexity in indexing and optimizing source data access.
+  Furthermore, even when theoretically feasible, query rewriting engines may struggle to optimize complex access patterns effectively.
+\end{itemize}
+
+%\todo{pragmatically its often data engineering, but for complex use cases it is more}
+%This section focuses on this logically grounded instantiation of KGC.
 %Knowledge Graph Construction (KGC) is the process of designing and populating a semantically well-founded RDF graph,
 %aimed at enabling precise domain representation, interoperability, and reuse.
 
-Its essential facets are:
+Its essential facets are:\todo{There was some paper by OEG from 2010 about this - cite!}
 
 \begin{itemize}
 \item \textbf{URI design and stable identification} — establishing globally unique, dereferenceable, and persistent IRIs to ensure referential stability and avoid ambiguity across datasets.
@@ -22,25 +47,24 @@ Its essential facets are:
 \item \textbf{Knowledge base integration (selective interlinking)} — optional but high-impact linking to external authoritative KGs (e.g., Wikidata, DBpedia) where it supports validation, enrichment, or cross-system reasoning— undertaken deliberately and at scale only when justified by use-case needs.
 \end{itemize}
 
-This process typically involves formtransfo heterogeneous
-\todo{Keypoint: We adapted a virtual RDB2RDF system for evaluation with Apache Spark. Sparqlify ported to the spark API. With Ontop we also did all the work but it was much harder to implement (Lorenz did it) and it was never evaluated.}
+%This process typically involves formtransfo heterogeneous
+%\todo{Keypoint: We adapted a virtual RDB2RDF system for evaluation with Apache Spark. Sparqlify ported to the spark API. With Ontop we also did all the work but it was much harder to implement (Lorenz did it) and it was never evaluated.}
 
 
-\todo{TODO FINISH}
-Knowledge Graphs can be constructed mainly virtualization and ETL.
-In this chapter, we discuss data virtualization and the subsequent materialization based on it.
-Contributions: Virtualization and Materialization of OpenStreetMap, a large spatial knowledge base.
+%In this chapter, we discuss data virtualization and the subsequent materialization based on it.
+%Contributions: Virtualization and Materialization of OpenStreetMap, a large spatial knowledge base.
 
 %    \item How well does virtualization of (spatial) relational databases perform and what are strengths and limitations?
 %    \item To what extent can we leverage (map-reduced-based) Big Data technology, such as Apache Spark?
 %    \item How can we leverage either approach to create summarization meta data from large RDF datasets, such as VoID descriptions?
 
 The remainder of this chapter is structured as follows:
-In~\cref{sec:preliminaries}, the foundations of RDF knowledge graph constructions are introduced. This section also
-explains the virtualization and materialization approaches to data integration.
+In~\cref{sec:kgc-preliminaries}, the foundations of RDF knowledge graph constructions by means of declarative mappings are introduced.
+%This section also explains the virtualization and materialization approaches to data integration.
 In~\cref{sec:sml}, the \emph{Sparqlification Mapping Language} (SML) is presented.
 \Cref{sec:sparklify} present our approach that leverages Apache Spark for generic SPARQL query evaluation using SPARQL-to-SQL rewriting.
-However, the map-reduce paradigmn does not work well for generic SPARQL query workloads.
+%This way, SPARQL can be leveraged for KGC construction.
+We also discuss how map-reduce is a bad match for generic SPARQL query evaluation.
 \Cref{sec:sansa-rml} presents a revised approach for KGC that extends SPARQL with features that make the language suitable for ETL such
 that Apache Spark's map-reduce execution model can be properly leveraged.
 In~\cref{sec:related-work} we present relevant approaches.
@@ -192,6 +216,14 @@ Finally, we conclude this paper in~\autoref{sec:conclusion}.
 \let\section\subsection
 \let\subsection\subsubsection
 \subimport{./}{sansa-rml}
+}
+
+\section{Conclusions}
+%\todo{Essentially: Sparklify query rewriting on Big Data Frameworks possible but the execution model does not (generally) fit the Map-Reduce paradigm - so performance sucks. But we can leverage Apache Spark for ETL based on RML and this works very well.}
+{
+\let\section\subsection
+\let\subsection\subsubsection
+\subimport{./}{conclusions}
 }
 
 \section{Discussion}

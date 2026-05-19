@@ -485,27 +485,6 @@ S2RDF is similar to SPARQLGX, but instead of dealing with direct Spark code (aka
 It introduces a data partitioning strategy that extends VP with additional statistics, containing pre-computed semi-joins for query optimization.
 
 
-\section{Conclusions and Future Work}
-\label{sec:conclusion}
-Querying RDF data becomes challenging when the size of the data increases.
-%Existing systems mostly contain a very moderately information of the data while transforming them to a dedicated storage model (e.g. vertical partitioning).
-%contain a very moderately information of the data
-Existing Spark-based SPARQL systems mostly
-do not retain all RDF term information consistently while transforming them to a dedicated storage model such as using vertical partitioning.
-Often, this process is both data and computing intensive and raises the need for a scalable, efficient and comprehensive query engine which can handle large scale RDF datasets.
-
-In this paper, we propose \emph{Sparklify}: a scalable software component for efficient evaluation of SPARQL queries over distributed RDF datasets.
-It uses Sparqify as a SPARQL-to-SQL rewriter for translating SPARQL queries into Spark executable code.
-By doing so, it leverages the advantages of the Spark framework.
-SANSA features methods to execute SPARQL queries directly as part of Spark workflows instead of writing the code corresponding to those queries (sorting, filtering, etc.).
-It also provides a command-line interface and a W3C standard compliant SPARQL endpoint for externally querying data that has been loaded using the SANSA framework.
-We have shown empirically that our approach can scale horizontally and perform well w.r.t to the state-of-the-art approaches.
-
-With this work, we showed that the application of OBDA tooling to Big Data frameworks achieves promising results in terms of scalability.
-We present a working prototype implementation that can serve as a baseline for further research.
-Our next steps include evaluating other tools, such as Ontop~\cite{Calvanese2017OntopAS}, and analyze how their performance in the Big Data setting can be improved further.
-For example, we intend to investigate how OBDA tools can be combined with dictionary encoding of RDF terms as integers and evaluate the effects.
-
 %Although we have achieved %reasonable results in %terms of scalability, we %further plan to cover more %SPARQL fragments.
 
 %\section*{Acknowledgment}
