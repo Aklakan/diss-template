@@ -328,95 +328,47 @@ Given a set of CONSTRUCT queries, a generic \emph{merge} can be accomplished bas
 %Even though SPARQL 1.2 is
 
 
-%\begin{figure*}[!h]
-% \begin{minipage}[t]{0.29\textwidth}
-%  \centering
-%  \begin{lstlisting}[language=SPARQL]
-%CONSTRUCT {
-%  s1 p1 o1
-%  ...
-%  GRAPH gn { sn pn on }
-%} WHERE
-%  PATTERN
-%}
-%  \end{lstlisting}
-%%  \caption{listing}{Sub caption}
-% \end{minipage}
-% \begin{minipage}[t]{0.69\textwidth}
-%  \centering
-%  \begin{lstlisting}[language=SPARQL]
-%CONSTRUCT { GRAPH ?g { ?s ?p ?o } }
-%WHERE {
-%  SELECT DISTINCT ?g ?s ?p ?o {
-%    PATTERN
-%    LATERAL {
-%        { BIND(DEFAULT AS ?g)
-%          BIND(s1 AS ?s) BIND(p1 AS ?p) BIND(o1 AS ?o) }
-%      UNION
-%        ...
-%      UNION
-%        { BIND(gn AS ?g)
-%          BIND(sn AS ?s) BIND(pn AS ?p) BIND(on AS ?o) }
-%    }
-%  } ORDER BY ?s ?p ?o ?g
-%}
-%  \end{lstlisting}
-%%  \caption{listing}{Another sub caption}
-% \end{minipage}
-% \vspace*{-5mm}
-% \caption{Rewrite of a CONSTRUCT query to its LATERAL form. The identifiers $s_i, p_i, o_i$ and $g_i$ used in the snippet on the left are placeholders for any SPARQL term. The use of DISTINCT and ORDER BY is exemplary to demonstrate the production of truly unique and ordered "intra-query" tuples which is hard to achieve by conventional means if at all.}
-%\label{fig:construct-to-lateral}
-%\end{figure*}
-
-% The identifier \texttt{DEFAULT} is meant as a placeholder for to the default graph.
-
-\begin{figure*}[!ht]
+\begin{figure*}[!h]
+ \begin{minipage}[t]{0.29\textwidth}
   \centering
-  \begin{minipage}[t]{0.31\textwidth}
-    \centering
-    \begin{lstlisting}[language=SPARQL,caption={Original CONSTRUCT query},captionpos=b,frame=single]
+  \begin{lstlisting}[style=sparql]
 CONSTRUCT {
-  <ex:s1> <ex:p1> <ex:o1> .
-  <ex:s2> <ex:p2> <ex:o2> .
-  GRAPH <ex:gn> {
-    <ex:sn> <ex:pn> <ex:on> .
-  }
+  s1 p1 o1
+  ...
+  GRAPH gn { sn pn on }
+} WHERE
+  PATTERN
 }
-WHERE {
-  ?s ?p ?o .
-  FILTER(?s = <ex:s1> || ?s = <ex:s2>)
-}
-    \end{lstlisting}
-  \end{minipage}%
-  \hfill
-  \begin{minipage}[t]{0.67\textwidth}
-    \centering
-    \begin{lstlisting}[language=SPARQL,caption={Rewritten using LATERAL},captionpos=b,frame=single]
+  \end{lstlisting}
+%  \caption{listing}{Sub caption}
+ \end{minipage}
+ \begin{minipage}[t]{0.69\textwidth}
+  \centering
+  \begin{lstlisting}[style=sparql]
 CONSTRUCT { GRAPH ?g { ?s ?p ?o } }
 WHERE {
   SELECT DISTINCT ?g ?s ?p ?o {
-    {
-      # Default graph triples
-      ?s ?p ?o .
-      FILTER(?s = <ex:s1> || ?s = <ex:s2>)
-      BIND("" AS ?g)
+    PATTERN
+    LATERAL {
+        { BIND(DEFAULT AS ?g)
+          BIND(s1 AS ?s) BIND(p1 AS ?p) BIND(o1 AS ?o) }
+      UNION
+        ...
+      UNION
+        { BIND(gn AS ?g)
+          BIND(sn AS ?s) BIND(pn AS ?p) BIND(on AS ?o) }
     }
-    UNION
-    {
-      # Named graph triples
-      GRAPH <ex:gn> { ?s ?p ?o } .
-      BIND(<ex:gn> AS ?g)
-    }
-  } ORDER BY ?g ?s ?p ?o
+  } ORDER BY ?s ?p ?o ?g
 }
-    \end{lstlisting}
-  \end{minipage}
-
-  \vspace*{-5mm}
-  \caption{Rewrite of a \texttt{CONSTRUCT} query to its \texttt{SELECT}+\texttt{LATERAL} form (here expressed via \texttt{UNION}+BIND). The identifiers $s_i, p_i, o_i, g_i$ are placeholders for terms; in this example, $g_i$ is either the default graph (\texttt{""}) or a named graph (\texttt{<ex:gn>}). The use of \texttt{DISTINCT} and \texttt{ORDER BY} ensures reproducible, deduplicated output — a challenge for naive \texttt{CONSTRUCT} due to graph merging semantics.}
-  \label{fig:construct-to-lateral}
+  \end{lstlisting}
+%  \caption{listing}{Another sub caption}
+ \end{minipage}
+ \vspace*{-5mm}
+ \caption{Rewrite of a CONSTRUCT query to its LATERAL form. The identifiers $s_i, p_i, o_i$ and $g_i$ used in the snippet on the left are placeholders for any SPARQL term. The use of DISTINCT and ORDER BY is exemplary to demonstrate the production of truly unique and ordered "intra-query" tuples which is hard to achieve by conventional means if at all.}
+\label{fig:construct-to-lateral}
 \end{figure*}
 
+% The identifier \texttt{DEFAULT} is meant as a placeholder for to the default graph.
 
 \begin{figure*}[htb]
 \centering
@@ -428,48 +380,113 @@ WHERE {
 %\caption{Execution time of partitioned queries using SANSA Query 0.9.0 vs Morph KGC 2.4.0}
 \end{figure*}
 
+% NOTE: The lstlistings are intentional because of the mathescape!
+%\begin{figure*}[!h]
+% \begin{minipage}[t]{0.34\textwidth}
+%  \centering
+%  \begin{lstlisting}[style=sparql, basicstyle=\ttfamily\tiny, numberstyle=\tiny, mathescape=true]
+%# Query $a$
+%CONSTRUCT {
+%  $s_{a_1}$ $p_{a_1}$ $o_{a_1}$
+%  ...
+%  $s_{a_n}$ $p_{a_n}$ $o_{a_n}$
+%} WHERE { $\mathrm{PATTERN_a}$ }
+%
+%# Query $b$
+%CONSTRUCT {
+%  $s_{b_1}$ $p_{b_1}$ $o_{b_1}$
+%  ...
+%  $s_{b_m}$ $p_{b_m}$ $o_{b_m}$
+%} WHERE { $\mathrm{PATTERN_b}$ }
+%  \end{lstlisting}
+%%  \caption{listing}{Sub caption}
+% \end{minipage}
+% \hfill
+% \begin{minipage}[t]{0.64\textwidth}
+%  \centering
+%  \begin{lstlisting}[style=sparql, basicstyle=\ttfamily\tiny, numberstyle=\tiny, mathescape=true]
+%CONSTRUCT { ?s ?p ?o }
+%WHERE {
+%  SELECT DISTINCT ?s ?p ?o {
+%      { $\mathrm{PATTERN}_a$
+%        LATERAL { { BIND($s_{a_i}, p_{a_i}, o_{a_i}$ AS
+%          ?s, ?p, ?o) } UNION ... } } # for i in 1..n
+%    UNION
+%      { $\mathrm{PATTERN}_b$
+%        LATERAL { { BIND($s_{b_j}, p_{b_j}, o_{b_j}$ AS
+%          ?s, ?p, ?o) } UNION ... } } # for j in 1..m
+%  } ORDER BY ?s ?p ?o
+%}
+%  \end{lstlisting}
+%  %| i \in \{ 1, \ldots, n \}$
+%%  \caption{listing}{Another sub caption}
+% \end{minipage}
+% \vspace*{-5mm}
+% \caption{Generic merge of two (triple-based) CONSTRUCT queries into a single one based on their LATERAL form. The use of DISTINCT and ORDER BY is exemplary to demonstrate the production of truly unique and ordered "inter-query" tuples.}
+%\label{fig:combine-lateral}
+%\end{figure*}
 
-\begin{figure*}[!h]
- \begin{minipage}[t]{0.29\textwidth}
-  \centering
-  \begin{lstlisting}[language=SPARQL, mathescape=true]
-# Query $a$
-CONSTRUCT {
-  $s_{a_1}$ $p_{a_1}$ $o_{a_1}$
-  ...
-  $s_{a_n}$ $p_{a_n}$ $o_{a_n}$
-} WHERE { $\mathrm{PATTERN_a}$ }
+\begin{figure*}[!ht]
+\centering
 
-# Query $b$
-CONSTRUCT {
-  $s_{b_1}$ $p_{b_1}$ $o_{b_1}$
-  ...
-  $s_{b_m}$ $p_{b_m}$ $o_{b_m}$
-} WHERE { $\mathrm{PATTERN_b}$ }
-  \end{lstlisting}
-%  \caption{listing}{Sub caption}
- \end{minipage}
- \begin{minipage}[t]{0.69\textwidth}
+\begin{minipage}[t]{0.38\textwidth}
   \centering
-  \begin{lstlisting}[language=SPARQL, mathescape=true]
+  \begin{minted}[
+    fontsize=\tiny,
+    autogobble,
+    linenos,
+    numbersep=8pt,
+    xleftmargin=14pt,
+    escapeinside=||,
+    bgcolor=lightblue,
+%    extrakeywords={LATERAL},
+%    ignorelexererrors=true
+  ]{sparql}
+# Query |$a$|
+CONSTRUCT {
+  |$s_{a_1}$| |$p_{a_1}$| |$o_{a_1}$|
+  ...
+  |$s_{a_n}$| |$p_{a_n}$| |$o_{a_n}$|
+} WHERE { |$\mathrm{PATTERN_a}$| }
+
+# Query |$b$|
+CONSTRUCT {
+  |$s_{b_1}$| |$p_{b_1}$| |$o_{b_1}$|
+  ...
+  |$s_{b_m}$| |$p_{b_m}$| |$o_{b_m}$|
+} WHERE { |$\mathrm{PATTERN_b}$| }
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.58\textwidth}
+  \centering
+  \begin{minted}[
+    fontsize=\tiny,
+    autogobble,
+    linenos,
+    numbersep=8pt,
+    xleftmargin=14pt,
+    escapeinside=||,
+    bgcolor=lightblue,
+%    extrakeywords={LATERAL},
+%    ignorelexererrors=true
+  ]{sparql}
 CONSTRUCT { ?s ?p ?o }
 WHERE {
   SELECT DISTINCT ?s ?p ?o {
-      { $\mathrm{PATTERN}_a$
-        LATERAL { { BIND($s_{a_i}, p_{a_i}, o_{a_i}$ AS
+      { |$\mathrm{PATTERN}_a$|
+        |\textbf{\texttt{LATERAL}}| { { BIND(|$s_{a_i}$|, |$p_{a_i}$|, |$o_{a_i}$| AS
           ?s, ?p, ?o) } UNION ... } } # for i in 1..n
     UNION
-      { $\mathrm{PATTERN}_b$
-        LATERAL { { BIND($s_{b_j}, p_{b_j}, o_{b_j}$ AS
+      { |$\mathrm{PATTERN}_b$|
+        |\textbf{\texttt{LATERAL}}| { { BIND(|$s_{b_j}$|, |$p_{b_j}$|, |$o_{b_j}$| AS
           ?s, ?p, ?o) } UNION ... } } # for j in 1..m
   } ORDER BY ?s ?p ?o
 }
-  \end{lstlisting}
-  %| i \in \{ 1, \ldots, n \}$
-%  \caption{listing}{Another sub caption}
- \end{minipage}
- \vspace*{-5mm}
- \caption{Generic merge of two (triple-based) CONSTRUCT queries into a single one based on their LATERAL form. The use of DISTINCT and ORDER BY is exemplary to demonstrate the production of truly unique and ordered "inter-query" tuples.}
+  \end{minted}
+\end{minipage}
+
+\caption{Generic merge of two (triple-based) CONSTRUCT queries into a single one based on their LATERAL form. The use of DISTINCT and ORDER BY is exemplary to demonstrate the production of truly unique and ordered "inter-query" tuples.}
 \label{fig:combine-lateral}
 \end{figure*}
 

@@ -2,7 +2,7 @@
 \section{Introduction}
 Faceted browsing is ubiquitous on the Web today. Most if not all major online shops and media (video, images and music) platforms provide at least some degree of faceted browsing features to
 navigate their products - or more specifically: the data records about them. Typical examples include support for filtering videos by length, music by genre, or generally products by relevant features[
-%as shown in \autoref{fig:faceted-browsing-demo}. 
+%as shown in \autoref{fig:faceted-browsing-demo}.
 Conceptually, in many cases the underlying data can be seen as knowledge graphs (KG), i.e. entities and values are represented as nodes, and labelled edges are used to specify their semantic relation. In cases where data is modelled using RDF (and ontologies), it already forms a knowledge graph. In this case, SPARQL\footnote{\url{https://www.w3.org/TR/sparql11-query/}} is a standard language for uniformly querying instance and schema information.
 
 In this paper, we present our SPARQL-based faceted browsing benchmark generation framework, designed to generate realistic faceted browsing scenarios on arbitrary data sets and assess triple store performance in regard to the faceted browsing paradigm.
@@ -91,7 +91,7 @@ NodeCentricQuery
   .from(
       CONSTRUCT WHERE {
           ?employee :employedAt ?department ;
-                rdfs:label ?l 
+                rdfs:label ?l
       })
   .partitionBy(?employee)
   .executeOn(sparqlEndpoint)
@@ -108,8 +108,8 @@ Partitioning could also be applied to \emph{SELECT} queries, however, in the cas
 %Similar to as one would access properties of e.g. a JSON object, one can -- starting from a binding of one of the partition variables %--
 %access its retrieved predicates, as sketched in~\autoref{lst:pquery}.
 Note, that the construct template may be empty, in which case the result is a set of RDF terms (such as literals) with no related triples.
-% aspect is, whether to treat each instance of the CONSTRUCT template as an object, or 
-%In fact, the Apache Jena framework\footnote{\url{https://jena.apache.org/}} features tooling to 
+% aspect is, whether to treat each instance of the CONSTRUCT template as an object, or
+%In fact, the Apache Jena framework\footnote{\url{https://jena.apache.org/}} features tooling to
 
 In our work, we use this mechanism for obtaining facet values and counts.
 
@@ -122,7 +122,7 @@ In our work, we use this mechanism for obtaining facet values and counts.
 \caption{Architecture of the Schema-agnostic SPARQL-based Faceted Browsing Benchmark Generation\label{fig:architecture}}
 \end{figure}
 
-\autoref{fig:architecture} depicts the components of our faceted browsing benchmark generation system, which we briefly explain below: 
+\autoref{fig:architecture} depicts the components of our faceted browsing benchmark generation system, which we briefly explain below:
 \begin{itemize}
 \item The \emph{Scenario Generator} drives the benchmark generation and uses the APIs and services provided by the other components.
 A scenario is a sequence of faceted browsing interactions.
@@ -140,7 +140,7 @@ For instance, whenever possible, variables in triple patterns are substituted wi
 %  \item \emph{Property Visibility}: In many cases, it is undesired to have all predicates of a dataset to show up as facets in a faceted browser.
 %  This component can hide predicates by means of injecting appropriate FILTER statements into SPARQL queries based on given whitelists or blacklists.
 %  \item \emph{Virtual Predicate Rewrite}: Sometimes predicates desired to appear in a faceted browser are not directly present in a dataset.
-  For example, browsing people by \emph{age} may feel more natural than by \emph{birth date}. In a data set, typically the latter predicate is preferred as it refers to static information, whereas the former one changes every year. This rewrite component allows one to define custom virtual predicates using SPARQL queries.    
+  For example, browsing people by \emph{age} may feel more natural than by \emph{birth date}. In a data set, typically the latter predicate is preferred as it refers to static information, whereas the former one changes every year. This rewrite component allows one to define custom virtual predicates using SPARQL queries.
 %  \end{itemize}
 \end{itemize}
 
@@ -150,7 +150,7 @@ For instance, whenever possible, variables in triple patterns are substituted wi
 The most fundamental component of our benchmark system is unsurprisingly the faceted browsing system.
 It provides the means necessary to interact with an RDF dataset according to the faceted browsing paradigm.
 First, we present a domain-specific language for expressing faceted queries. Subsequently, we show how they are translated to SPARQL.
-%The faceted browsing engine is one of the two core building blocks of HFBBG. 
+%The faceted browsing engine is one of the two core building blocks of HFBBG.
 
 \subsection{A domain-specific language for Faceted Search}
 In this section, we present a domain-specific language (DSL) for the implementation of a faceted search system.
@@ -187,14 +187,14 @@ The focus of a FacetedQuery is a designated \emph{FacetNode}, whose related inte
 \begin{itemize}
 \item A \emph{FacetNode} instance can be seen as a specific variable in a BGP  and thus intensionally represents a set of resources.
 Using the \emph{.fwd()} or \emph{.bwd()} methods, one obtains a \emph{FacetDirNode} entity that represents the set of facets and facet values
-reachable either in forward or backward \emph{direction}. 
+reachable either in forward or backward \emph{direction}.
 %Note, that in principle a FacetNode could provide the functionality to access the union of both traversals, however we leave that for future work.
 %Note, that presently a FacetNode does not directly support retrieval of facets and facet values.
-%Instead, one first has to 
- 
+%Instead, one first has to
+
 \item \emph{FacetDirNode} An intermediate entity for access to all facets in either forward or backward direction, backed by the \emph{immediate} triples of the resources represented by the FacetNode.
 The methods \emph{availableValues} yields \emph{all} values from which constraints can be created, whereas \emph{remainingValues} yields
-all values that do not yet satisfy any existing constraint. The latter method is used in our benchmark in order to create non-subsumed constraints. 
+all values that do not yet satisfy any existing constraint. The latter method is used in our benchmark in order to create non-subsumed constraints.
 The FacetDirNode interface allows for forward and backward traversals via RDF predicates.
 
 \item \emph{FacetMultiNode} An entity representing all SPARQL variables reached via the same origin and predicate.
@@ -253,13 +253,13 @@ SELECT DISTINCT ?s {
 % Semantic Web   {a, b, c, d} {b}
 % NLP            {a, b, c, d} - (NLP is not a faceted of {b})
 Note, in the disjunctive case, constraining a facet does not affect its facet values and counts - however, it affects those of all \emph{other} facets.
-%The introduced DSL gives a natural way for defining 
+%The introduced DSL gives a natural way for defining
 
 \subsection{SPARQL query generation}
 %\subsection{Core Queries}
 %\subsubsection{The Faceted Browsing Fluent API}
 The FacetedQuery API is a fluent API and features interfaces for data traversals, constraint management and data retrieval.
-%However, generation of the final SPARQL queries involves further steps which are sketched in~\autoref{fig:faceted-query-rewrite}. 
+%However, generation of the final SPARQL queries involves further steps which are sketched in~\autoref{fig:faceted-query-rewrite}.
 In fact, our implementation of the API uses a backing RDF model to capture the state of faceted queries.
 Adding or removing constraints or changing the focus of a faceted query actually modifies an RDF model, which acts as the \emph{session state}.
 This is consistent with our used definition of faceted browsing: \emph{\ldots a session-based and state-dependent interactive method for query formulation \ldots}
@@ -282,7 +282,7 @@ The aspect that makes SPARQL query generation from facet constraints even more c
 Consider this example: A ``year'' facet has the values 2016, 2017 and 2018. If we added the constraint \emph{facetNode.fwd(``:year'').constraints.eq(2018)}, then we have to distinguish these cases:
 \begin{itemize}
 \item Obtain the set of \emph{resources} that satisfy \emph{all} given constraints.
-In this case, essentially a single group graph pattern that covers all constraints needs to be generated.  
+In this case, essentially a single group graph pattern that covers all constraints needs to be generated.
 \item Obtain the set of \emph{available facet values} of the year facet.
 In this case, our previously added constraint for the year 2018 needs to be ignored,
 because we also expect 2016 and 2017 as results.
@@ -293,7 +293,7 @@ a union has to be generated that correctly yields the facets and facet values un
 
 %Given a set of constraint expressions $C$, and an arrow $a$ for which to generate the query for the facet values.
 %First we need to find all constraints that impose a restriction on predicates $r$ that are successors of the arrow $a$.
-%We use this to associate each predicates with its corresponding set of constraints.  
+%We use this to associate each predicates with its corresponding set of constraints.
 %Furthermore, we introduce a special predicate symbol $\textvisiblespace$ to represent the non-constrained predicates.
 
 %  \item Finally, assembly the SPARQL graph patterns from the constraints.
@@ -352,7 +352,7 @@ SELECT ?focus ?isFwd ?facet
       BIND(?isFwd = true) }
   UNION
     { ?facetValue ?facet ?focus
-      BIND(?isFwd = false) }   
+      BIND(?isFwd = false) }
 }
 \end{lstlisting}
 
@@ -474,7 +474,7 @@ These chokepoints were proposed in~\cite{petzka}, in which they are implemented 
 Find all instances which, additional to satisfying all restrictions defined by the state within the browsing scenario, have a certain property value
 \item[CP2] Property path based transition\\
 Find all instances which additionally realise this property path with any property value
-\item[CP3] Property path value based transition\\ 
+\item[CP3] Property path value based transition\\
 Find all instances which additionally have a certain value at the end of a property path.
 N.b. This is CP1 with a property path instead of a property
 \item[CP4] Property class value based transition\\
@@ -583,11 +583,11 @@ An interesting aspect with a DBpedia dataset with 170 million triples was, that 
 
 \section{Related Work}
 \label{sec:related-work}
-The first faceted search approaches were developed in the 1990s for information retrieval systems. They combined the paradigms of \textit{structured retrieval} and \textit{similarity-based ranking} by leveraging the benefits of constraint-based querying over large data sources. Since then, the approach has proven to be tremendously useful for search applications. Hence, faceted browsing is ubiquitous on the Web today. Most if not all major online applications provide at least some degree of faceted browsing feature to navigate the metadata records of their items \cite{tunkelang}.\\ 
+The first faceted search approaches were developed in the 1990s for information retrieval systems. They combined the paradigms of \textit{structured retrieval} and \textit{similarity-based ranking} by leveraging the benefits of constraint-based querying over large data sources. Since then, the approach has proven to be tremendously useful for search applications. Hence, faceted browsing is ubiquitous on the Web today. Most if not all major online applications provide at least some degree of faceted browsing feature to navigate the metadata records of their items \cite{tunkelang}.\\
 This is why this approach has not only been applied for unstructured text documents, but also for knowledge graph data. To this date, a couple of prototypes facilitate indexing and faceted browsing of RDF data \cite{cheng, davies, hahn, waitelonis, moreno-vega}. But since these systems require an index at runtime, they offer limited flexibility regarding the kinds of queries that can be posed. Hence, entity types or facet combinations are hard-wired into the system and can not be easily adapted to changing user needs or different kinds of schemas and data models \cite{wenige}. Other approaches overcome these problems by facilitating ad-hoc exploration and facettation of RDF data from triple stores \cite{stadler, kremen, ferre, arenas}. The query-based faceted search paradigm goes back to Ferr\'{e} et al. who introduced a high level query language to integrate SPARQL querying and property-based navigation \cite{ferre}. The \textit{facete} and the \textit{SemFacet} engines \cite{arenas} have a similar approach. They offer faceted browsing capabilities for triple stores or databases that expose a SPARQL endpoint \cite{stadler}.\\
 Besides enabling end user navigation, ad-hoc RDF-based faceted search also facilitates statistical inspection. In this line of research faceted exploration is also related to Online Analytical Processing (OLAP) systems since both approaches process multi-dimensional data \cite{ben-yitzhak}. But while OLAP cubes follow a predefined metadata schema, query-based facet engines are more flexible in regard to the dimensions that can be explored.\\
-However, SPARQL-based ad-hoc processing comes at the cost of performance as both path traversal and aggregation operations have to be executed at runtime. Thus, there is a need for testing triple stores with regard to their fitness for out-of-the-box browsing on various data sources and schemas. 
-Only then can application providers be supported in identifying suitable infrastructures (e.g. triple stores or hardware resources) as well as potential performance bottlenecks. There exists a wide variety of RDF-based facet engines. However, evaluation methods and datasets for these systems are not yet standardized \cite{tzitzikas}. Hence, there is a need for domain-independent tools to generate faceted browsing benchmarks for different use cases in order to reproduce performance tests throughout different evaluation runs \cite{moreno-vega}. Currently, a considerable amount of benchmarks is available to evaluate the general performance of triple stores (e.g., LUBM \cite{guo}, SP2 \cite{schmidt}, BSBM \cite{bizer}, WatDiv \cite{aluc} and Geographica \cite{garbis}). On the other hand, only a few attempts have been reported in the literature that evaluate RDF-based faceted browsing. For instance, Arenas et al. describe a generic approach with which their \textit{SemFacet} engine can be tested \cite{arenas}. Petzka et al. present a benchmark dataset for different faceted queries \cite{petzka}. What is currently missing, however, is a faceted browsing benchmark generator that can be configured for various schemas, data sources and hence application domains. But in order to set up a generator tool, we need an understanding of the upper bounds of ad-hoc faceted querying. Hence, it has to be investigated which query types are actually feasible for a SPARQL-based facet navigator and can still be answered within reasonable response time limits. Thus, a  meta-benchmarking is also required. To the best of our knowledge, we are the first to present a toolset on schema-agnostic (meta-)benchmarking for faceted browsing over SPARQL endpoints. 
+However, SPARQL-based ad-hoc processing comes at the cost of performance as both path traversal and aggregation operations have to be executed at runtime. Thus, there is a need for testing triple stores with regard to their fitness for out-of-the-box browsing on various data sources and schemas.
+Only then can application providers be supported in identifying suitable infrastructures (e.g. triple stores or hardware resources) as well as potential performance bottlenecks. There exists a wide variety of RDF-based facet engines. However, evaluation methods and datasets for these systems are not yet standardized \cite{tzitzikas}. Hence, there is a need for domain-independent tools to generate faceted browsing benchmarks for different use cases in order to reproduce performance tests throughout different evaluation runs \cite{moreno-vega}. Currently, a considerable amount of benchmarks is available to evaluate the general performance of triple stores (e.g., LUBM \cite{guo}, SP2 \cite{schmidt}, BSBM \cite{bizer}, WatDiv \cite{aluc} and Geographica \cite{garbis}). On the other hand, only a few attempts have been reported in the literature that evaluate RDF-based faceted browsing. For instance, Arenas et al. describe a generic approach with which their \textit{SemFacet} engine can be tested \cite{arenas}. Petzka et al. present a benchmark dataset for different faceted queries \cite{petzka}. What is currently missing, however, is a faceted browsing benchmark generator that can be configured for various schemas, data sources and hence application domains. But in order to set up a generator tool, we need an understanding of the upper bounds of ad-hoc faceted querying. Hence, it has to be investigated which query types are actually feasible for a SPARQL-based facet navigator and can still be answered within reasonable response time limits. Thus, a  meta-benchmarking is also required. To the best of our knowledge, we are the first to present a toolset on schema-agnostic (meta-)benchmarking for faceted browsing over SPARQL endpoints.
 
 %\section{Discussion}
 %Maybe it makes sense to add such a section.
@@ -610,27 +610,27 @@ In any case, our benchmark generator can be used to automatically evaluate facet
 %\section*{Acknowledgements}
 %This work was supported by grants from the EU H2020 Programme for the projects HOBBIT (GA no. 688227) and QROWD (GA no. 732194).
 
-\begin{thebibliography}{99}
-\bibitem{podigg} Taelman, R.; Verborgh, R.; Nies, T. D. \& Mannens, E. (2017), PoDiGG: A Public Transport RDF Dataset Generator., in Rick Barrett; Rick Cummings; Eugene Agichtein \& Evgeniy Gabrilovich, ed., 'WWW (Companion Volume)', ACM, pp. 843-844.
-\bibitem{aluc} Alu\c{c} G, Hartig O, \"{O}zsu MT, Daudjee K (2014). Diversified stress testing of RDF data management systems. In: International Semantic Web Conference, pp. 197-212. 
-\bibitem{arenas} Arenas M, Grau BC, Kharlamov E, Marciuška Š,  Zheleznyakov D (2016). Faceted search over RDF-based knowledge graphs. Journal of Web Semantics, 37, pp. 55-74.
-\bibitem{ben-yitzhak} Ben-Yitzhak O, Golbandi N, Har'El N, Lempel R, Neumann A, Ofek-Koifman S, Yogev S. (2008). Beyond basic faceted search. In: Proceedings of the 2008 International Conference on Web Search and Data Mining, pp. 33-44. 
-\bibitem{bizer} Bizer C, Schultz A (2009). The Berlin SPARQL benchmark. International Journal on Semantic Web and Information Systems (IJSWIS), 5(2), pp. 1-24.
-\bibitem{cheng} Cheng G, Ge W, Qu Y (2008). Falcons: searching and browsing entities on the semantic web. In Proceedings of the 17th international conference on World Wide Web, pp. 1101-1102.
-\bibitem{davies} Davies J, Weeks R (2004). QuizRDF: Search technology for the semantic web. In: Proceedings of the 37th Annual Hawaii International Conference on System Sciences.
-\bibitem{ferre} Ferr\'{e} S, Hermann A (2012). Reconciling faceted search and query languages for the Semantic Web. Int. J. Metadata, Semantics and Ontologies, 7(1), pp. 37-54.
-\bibitem{garbis} Garbis G, Kyzirakos K, Koubarakis M (2013). Geographica: A benchmark for geospatial RDF stores. In: International Semantic Web Conference, pp. 343-359. 
-\bibitem{guo} Guo Y, Pan Z, Heflin J (2005). LUBM: A benchmark for OWL knowledge base systems. Web Semantics: Science, Services and Agents on the World Wide Web, 3(2-3), pp. 158-182.
-\bibitem{hahn} Hahn R, Bizer C, Sahnwaldt C, Herta C, Robinson S, Buergle M, Scheel U (2010). Faceted wikipedia search. In: International Conference on Business Information Systems, pp. 1-11. Springer, Berlin, Heidelberg.
-\bibitem{kremen} Kremen P, Saeeda L, Blaško M. (2018). Dataset dashboard–a SPARQL endpoint explorer. In: CEUR Workshop Proceedings of Fourth International Workshop on Visualization and Interaction for Ontologies and Linked Data, VOILA.
-\bibitem{moreno-vega} Moreno-Vega J, Hogan A (2018). GraFa: Scalable Faceted Browsing for RDF Graphs. In: International Semantic Web Conference, pp. 301-317. Springer, Cham.
-\bibitem{petzka} Petzka H, Stadler C, Katsimpras G, Haarmann B, Lehmann J (2017). Benchmarking faceted browsing capabilities of triplestores. In: Proceedings of the 13th International Conference on Semantic Systems, pp. 128-135.
-\bibitem{schmidt} Schmidt M, Hornung T, Lausen G, Pinkel C (2009). SP2Bench: a SPARQL performance benchmark. In: 2009 IEEE 25th International Conference on Data Engineering pp. 222-233. 
-\bibitem{stadler} Stadler C, Martin M, Auer S (2014). Exploring the web of spatial data with facete. In: Proceedings of the 23rd International Conference on World Wide Web, pp. 175-178.
-\bibitem{tunkelang} Tunkelang D (2009). Faceted search. Synthesis lectures on information concepts, retrieval, and services, 1(1), pp. 1-80.
-\bibitem{tzitzikas} Tzitzikas Y, Manolis N, Papadakos P (2017). Faceted exploration of RDF/S datasets: a survey. Journal of Intelligent Information Systems, 48(2), pp. 329-364.
-\bibitem{waitelonis} Waitelonis J, Sack H (2012). Towards exploratory video search using linked data. In: Multimedia Tools and Applications, 59(2), pp. 645-672.
-\bibitem{wenige} Wenige L, Ruhland J. Similarity-based Knowledge Graph Queries for Recommendation Retrieval. 
-\end{thebibliography}
+%\begin{thebibliography}{99}
+%\bibitem{podigg} Taelman, R.; Verborgh, R.; Nies, T. D. \& Mannens, E. (2017), PoDiGG: A Public Transport RDF Dataset Generator., in Rick Barrett; Rick Cummings; Eugene Agichtein \& Evgeniy Gabrilovich, ed., 'WWW (Companion Volume)', ACM, pp. 843-844.
+%\bibitem{aluc} Alu\c{c} G, Hartig O, \"{O}zsu MT, Daudjee K (2014). Diversified stress testing of RDF data management systems. In: International Semantic Web Conference, pp. 197-212.
+%\bibitem{arenas} Arenas M, Grau BC, Kharlamov E, Marciuška Š,  Zheleznyakov D (2016). Faceted search over RDF-based knowledge graphs. Journal of Web Semantics, 37, pp. 55-74.
+%\bibitem{ben-yitzhak} Ben-Yitzhak O, Golbandi N, Har'El N, Lempel R, Neumann A, Ofek-Koifman S, Yogev S. (2008). Beyond basic faceted search. In: Proceedings of the 2008 International Conference on Web Search and Data Mining, pp. 33-44.
+%\bibitem{bizer} Bizer C, Schultz A (2009). The Berlin SPARQL benchmark. International Journal on Semantic Web and Information Systems (IJSWIS), 5(2), pp. 1-24.
+%\bibitem{cheng} Cheng G, Ge W, Qu Y (2008). Falcons: searching and browsing entities on the semantic web. In Proceedings of the 17th international conference on World Wide Web, pp. 1101-1102.
+%\bibitem{davies} Davies J, Weeks R (2004). QuizRDF: Search technology for the semantic web. In: Proceedings of the 37th Annual Hawaii International Conference on System Sciences.
+%\bibitem{ferre} Ferr\'{e} S, Hermann A (2012). Reconciling faceted search and query languages for the Semantic Web. Int. J. Metadata, Semantics and Ontologies, 7(1), pp. 37-54.
+%\bibitem{garbis} Garbis G, Kyzirakos K, Koubarakis M (2013). Geographica: A benchmark for geospatial RDF stores. In: International Semantic Web Conference, pp. 343-359.
+%\bibitem{guo} Guo Y, Pan Z, Heflin J (2005). LUBM: A benchmark for OWL knowledge base systems. Web Semantics: Science, Services and Agents on the World Wide Web, 3(2-3), pp. 158-182.
+%\bibitem{hahn} Hahn R, Bizer C, Sahnwaldt C, Herta C, Robinson S, Buergle M, Scheel U (2010). Faceted wikipedia search. In: International Conference on Business Information Systems, pp. 1-11. Springer, Berlin, Heidelberg.
+%\bibitem{kremen} Kremen P, Saeeda L, Blaško M. (2018). Dataset dashboard–a SPARQL endpoint explorer. In: CEUR Workshop Proceedings of Fourth International Workshop on Visualization and Interaction for Ontologies and Linked Data, VOILA.
+%\bibitem{moreno-vega} Moreno-Vega J, Hogan A (2018). GraFa: Scalable Faceted Browsing for RDF Graphs. In: International Semantic Web Conference, pp. 301-317. Springer, Cham.
+%\bibitem{petzka} Petzka H, Stadler C, Katsimpras G, Haarmann B, Lehmann J (2017). Benchmarking faceted browsing capabilities of triplestores. In: Proceedings of the 13th International Conference on Semantic Systems, pp. 128-135.
+%\bibitem{schmidt} Schmidt M, Hornung T, Lausen G, Pinkel C (2009). SP2Bench: a SPARQL performance benchmark. In: 2009 IEEE 25th International Conference on Data Engineering pp. 222-233.
+%\bibitem{stadler} Stadler C, Martin M, Auer S (2014). Exploring the web of spatial data with facete. In: Proceedings of the 23rd International Conference on World Wide Web, pp. 175-178.
+%\bibitem{tunkelang} Tunkelang D (2009). Faceted search. Synthesis lectures on information concepts, retrieval, and services, 1(1), pp. 1-80.
+%\bibitem{tzitzikas} Tzitzikas Y, Manolis N, Papadakos P (2017). Faceted exploration of RDF/S datasets: a survey. Journal of Intelligent Information Systems, 48(2), pp. 329-364.
+%\bibitem{waitelonis} Waitelonis J, Sack H (2012). Towards exploratory video search using linked data. In: Multimedia Tools and Applications, 59(2), pp. 645-672.
+%\bibitem{wenige} Wenige L, Ruhland J. Similarity-based Knowledge Graph Queries for Recommendation Retrieval.
+%\end{thebibliography}
 
 

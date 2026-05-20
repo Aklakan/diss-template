@@ -912,14 +912,85 @@ Both syntactic formats can be converted to each other.
 %\label{fig:sparqlify-ml-r2rml}
 %\end{figure*}
 
-\begin{figure*}[t]
+%\begin{figure*}[t]
+%\centering
+%%\begin{adjustbox}{max width=\textwidth,center}
+%\begin{tabular}{@{}c@{\hspace{1em}}c@{}}
+%% === LEFT: SML (plain text — no lexer needed) ===
+%\begin{minipage}[t]{0.45\linewidth}
+%\centering
+%\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue]{text}
+%Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+%Prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+%Prefix ex: <http://ex.org/>
+%
+%Create View hotels As
+%  Construct {
+%    ?s a ex:Hotel ;
+%      rdfs:label ?l ;
+%      ex:vacancy ?v
+%  }
+%  With
+%    ?s = uri(?website)
+%    ?l = plainLiteral(?name,'en')
+%    ?v = typedLiteral(?vacancy,xsd:boolean)
+%  Constrain
+%    ?s prefix "http://ex.org/"
+%  From
+%    """SELECT website, name,vacancy FROM hotels"""
+%\end{minted}
+%\end{minipage}
+%&
+%% === RIGHT: R2RML (uses global turtle style) ===
+%\begin{minipage}[t]{0.52\linewidth}
+%\centering
+%\begin{minted}[fontsize=\tiny,autogobble]{turtle}
+%@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+%@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+%@prefix ex: <http://ex.org/> .
+%
+%<HotelTriplesMap>
+%  rr:logicalTable [ rr:sqlQuery
+%  """SELECT website, name,vacancy  FROM hotels""" ];
+%
+%  rr:subjectMap [
+%    rr:column "website";
+%    rr:class ex:Hotel
+%  ];
+%  rr:predicateObjectMap [
+%    rr:predicate rdfs:label;
+%    rr:objectMap
+%      [ rr:column "name";
+%        rr:language "en"];
+%  ];
+%  rr:predicateObjectMap [
+%    rr:predicate ex:vacancy;
+%    rr:objectMap
+%      [ rr:column "vacancy";
+%        rr:datatype
+%          xsd:boolean ];
+%  ].
+%\end{minted}
+%\end{minipage}
+%\end{tabular}
+%%\end{adjustbox}
+%
+%\caption{A simple view in SML and R2RML.}
+%\label{fig:sparqlify-ml-r2rml}
+%\end{figure*}
+
+
+% NOTE: Turtle by now supports prefix - previously it had to be @prefix! - well but minted does not support new variant\ldots
+\begin{figure*}[tb]
 \centering
-%\begin{adjustbox}{max width=\textwidth,center}
-\begin{tabular}{@{}c@{\hspace{1em}}c@{}}
-% === LEFT: SML (plain text — no lexer needed) ===
-\begin{minipage}[t]{0.45\linewidth}
+%\begin{adjustbox}{width=1.1\textwidth,center}
+
+\begin{tabular}{@{}c@{\hspace{2em}}c@{}}  % increased from 1em to 2em
+
+% === LEFT: SML ===
+\begin{minipage}[t]{0.55\linewidth}   % slightly narrower to give more room to right
 \centering
-\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue]{text}
+\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue,linenos,numbersep=4pt]{text}
 Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 Prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 Prefix ex: <http://ex.org/>
@@ -941,17 +1012,17 @@ Create View hotels As
 \end{minted}
 \end{minipage}
 &
-% === RIGHT: R2RML (uses global turtle style) ===
-\begin{minipage}[t]{0.52\linewidth}
+% === RIGHT: R2RML ===
+\begin{minipage}[t]{0.55\linewidth}
 \centering
-\begin{minted}[fontsize=\tiny,autogobble]{turtle}
+\begin{minted}[fontsize=\tiny,autogobble,linenos,numbersep=4pt]{turtle}
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ex: <http://ex.org/> .
 
 <HotelTriplesMap>
   rr:logicalTable [ rr:sqlQuery
-  """SELECT website, name,vacancy  FROM hotels""" ];
+  """SELECT website, name, vacancy FROM hotels""" ];
 
   rr:subjectMap [
     rr:column "website";
@@ -973,11 +1044,12 @@ Create View hotels As
 \end{minted}
 \end{minipage}
 \end{tabular}
-%\end{adjustbox}
 
+%\end{adjustbox}
 \caption{A simple view in SML and R2RML.}
 \label{fig:sparqlify-ml-r2rml}
 \end{figure*}
+
 
 %\todo{The rdf:type predicateObjectMap is missing in the `A simple view in SML and R2RML' figure. Maybe use ldots to show that it is left out intentionally}
 
@@ -1299,13 +1371,86 @@ such as self join elimination.
 %\end{figure*}
 
 
+%\begin{figure*}[tb]
+%\centering
+%\begin{tabular}{@{}c@{\hspace{1em}}c@{}}
+%% === LEFT: SML (plain text, no highlighting needed) ===
+%\begin{minipage}[t]{0.38\linewidth}
+%\centering
+%\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue]{text}
+%Prefix ex: <http://ex.org/>
+%
+%Create View departments As
+%  Construct {
+%    ?d a ex:Department
+%  }
+%  With
+%    ?d = uri(ex:dept, ?name)
+%  From
+%    departments
+%
+%Create View employees As
+%  Construct {
+%    ?e a ex:Employee ;
+%      ex:worksIn ?d
+%  }
+%  With
+%    ?e = uri(ex:emp, ?e.id)
+%    ?d = uri(ex:dept, ?d.name)
+%  From
+%    employees e Join departments d
+%      On (d.id = e.dept_id)
+%\end{minted}
+%\end{minipage}
+%&
+%% === RIGHT: R2RML (Turtle with rr: namespace) ===
+%\begin{minipage}[t]{0.60\linewidth}
+%\centering
+%\begin{minted}[fontsize=\tiny,autogobble]{turtle}
+%@prefix ex: <http://ex.org/> .
+%
+%<#Departments>
+%  rr:logicalTable [ rr:tableName "departments" ];
+%
+%  rr:subjectMap [
+%      rr:template "http://ex.org/dept/{id}" ;
+%      rr:class ex:Department
+%  ] .
+%
+%<#Employees>
+%  rr:logicalTable [ rr:tableName "employees" ];
+%
+%  rr:subjectMap [
+%      rr:template "http://ex.org/emp/{id}" ;
+%      rr:class ex:Employee ];
+%
+%  rr:predicateObjectMap [
+%    rr:predicate ex:worksIn;
+%    rr:objectMap [
+%      rr:parentTriplesMap <#Departments>;
+%      rr:joinCondition [
+%        rr:child "dept_id";
+%        rr:parent "id";
+%      ];
+%    ];
+%  ] .
+%\end{minted}
+%\end{minipage}
+%\end{tabular}
+%
+%\caption{A view in SML and R2RML with a referencing object map.}
+%\label{fig:sml-r2rml-refobj}
+%\end{figure*}
+
+
 \begin{figure*}[tb]
 \centering
-\begin{tabular}{@{}c@{\hspace{1em}}c@{}}
-% === LEFT: SML (plain text, no highlighting needed) ===
-\begin{minipage}[t]{0.38\linewidth}
+\begin{tabular}{@{}c@{\hspace{2em}}c@{}}  % increased from 1em to 2em
+
+% === LEFT: SML ===
+\begin{minipage}[t]{0.40\linewidth}   % slightly narrower to give more room to right
 \centering
-\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue]{text}
+\begin{minted}[fontsize=\tiny,autogobble,bgcolor=lightblue,linenos,numbersep=8pt]{text}
 Prefix ex: <http://ex.org/>
 
 Create View departments As
@@ -1331,10 +1476,10 @@ Create View employees As
 \end{minted}
 \end{minipage}
 &
-% === RIGHT: R2RML (Turtle with rr: namespace) ===
-\begin{minipage}[t]{0.60\linewidth}
+% === RIGHT: R2RML ===
+\begin{minipage}[t]{0.57\linewidth}
 \centering
-\begin{minted}[fontsize=\tiny,autogobble]{turtle}
+\begin{minted}[fontsize=\tiny,autogobble,linenos,numbersep=8pt]{turtle}
 @prefix ex: <http://ex.org/> .
 
 <#Departments>
@@ -1369,7 +1514,6 @@ Create View employees As
 \caption{A view in SML and R2RML with a referencing object map.}
 \label{fig:sml-r2rml-refobj}
 \end{figure*}
-
 
 
 %\vspace{-15pt}
